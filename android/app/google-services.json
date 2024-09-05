@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "639867107940",
+    "project_id": "az-cash-24050",
+    "storage_bucket": "az-cash-24050.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639867107940:android:c4ad21422316c9b10fbd71",
+        "android_client_info": {
+          "package_name": "com.azdemon.az_cash"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAq-GSn_Kg_xGiNLPjZIyXevA9qqT3lBJs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
