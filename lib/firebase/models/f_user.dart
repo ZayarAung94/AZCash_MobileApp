@@ -6,6 +6,8 @@ class FUser {
   final String? deviceSerie;
   final String level;
   final DateTime? expireDate;
+  // credited
+  //
 
   FUser({
     required this.name,

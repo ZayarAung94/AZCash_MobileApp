@@ -124,6 +124,8 @@ class _AddDepositState extends State<AddDeposit> {
                           type: "deposit",
                           status: 'done',
                           isCredit: false,
+                          isPromotion: false,
+                          agentCode: "",
                           created: DateTime.now(),
                         ))
                         .then((_) {

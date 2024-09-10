@@ -12,6 +12,8 @@ class Orders extends Table {
   TextColumn get code => text()();
   TextColumn get status => text()();
   BoolColumn get isCredit => boolean()();
+  BoolColumn get isPromotion => boolean()();
+  TextColumn get agentCode => text()();
   DateTimeColumn get created => dateTime()();
 }
 
@@ -71,5 +73,12 @@ class AppDatabase extends _$AppDatabase {
         withdraw: Value(AppData.totalWd),
       ),
     );
+  }
+
+  Future clearAllData() async {
+    await delete(orders).go();
+    await delete(payments).go();
+    AppData.totalDepo = 0;
+    AppData.totalWd = 0;
   }
 }

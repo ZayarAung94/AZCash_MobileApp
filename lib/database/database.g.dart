@@ -51,6 +51,21 @@ class $OrdersTable extends Orders with TableInfo<$OrdersTable, Order> {
       requiredDuringInsert: true,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('CHECK ("is_credit" IN (0, 1))'));
+  static const VerificationMeta _isPromotionMeta =
+      const VerificationMeta('isPromotion');
+  @override
+  late final GeneratedColumn<bool> isPromotion = GeneratedColumn<bool>(
+      'is_promotion', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_promotion" IN (0, 1))'));
+  static const VerificationMeta _agentCodeMeta =
+      const VerificationMeta('agentCode');
+  @override
+  late final GeneratedColumn<String> agentCode = GeneratedColumn<String>(
+      'agent_code', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _createdMeta =
       const VerificationMeta('created');
   @override
@@ -58,8 +73,18 @@ class $OrdersTable extends Orders with TableInfo<$OrdersTable, Order> {
       'created', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, userId, amount, type, code, status, isCredit, created];
+  List<GeneratedColumn> get $columns => [
+        id,
+        userId,
+        amount,
+        type,
+        code,
+        status,
+        isCredit,
+        isPromotion,
+        agentCode,
+        created
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -109,6 +134,20 @@ class $OrdersTable extends Orders with TableInfo<$OrdersTable, Order> {
     } else if (isInserting) {
       context.missing(_isCreditMeta);
     }
+    if (data.containsKey('is_promotion')) {
+      context.handle(
+          _isPromotionMeta,
+          isPromotion.isAcceptableOrUnknown(
+              data['is_promotion']!, _isPromotionMeta));
+    } else if (isInserting) {
+      context.missing(_isPromotionMeta);
+    }
+    if (data.containsKey('agent_code')) {
+      context.handle(_agentCodeMeta,
+          agentCode.isAcceptableOrUnknown(data['agent_code']!, _agentCodeMeta));
+    } else if (isInserting) {
+      context.missing(_agentCodeMeta);
+    }
     if (data.containsKey('created')) {
       context.handle(_createdMeta,
           created.isAcceptableOrUnknown(data['created']!, _createdMeta));
@@ -138,6 +177,10 @@ class $OrdersTable extends Orders with TableInfo<$OrdersTable, Order> {
           .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
       isCredit: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_credit'])!,
+      isPromotion: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_promotion'])!,
+      agentCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}agent_code'])!,
       created: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
     );
@@ -157,6 +200,8 @@ class Order extends DataClass implements Insertable<Order> {
   final String code;
   final String status;
   final bool isCredit;
+  final bool isPromotion;
+  final String agentCode;
   final DateTime created;
   const Order(
       {required this.id,
@@ -166,6 +211,8 @@ class Order extends DataClass implements Insertable<Order> {
       required this.code,
       required this.status,
       required this.isCredit,
+      required this.isPromotion,
+      required this.agentCode,
       required this.created});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -177,6 +224,8 @@ class Order extends DataClass implements Insertable<Order> {
     map['code'] = Variable<String>(code);
     map['status'] = Variable<String>(status);
     map['is_credit'] = Variable<bool>(isCredit);
+    map['is_promotion'] = Variable<bool>(isPromotion);
+    map['agent_code'] = Variable<String>(agentCode);
     map['created'] = Variable<DateTime>(created);
     return map;
   }
@@ -190,6 +239,8 @@ class Order extends DataClass implements Insertable<Order> {
       code: Value(code),
       status: Value(status),
       isCredit: Value(isCredit),
+      isPromotion: Value(isPromotion),
+      agentCode: Value(agentCode),
       created: Value(created),
     );
   }
@@ -205,6 +256,8 @@ class Order extends DataClass implements Insertable<Order> {
       code: serializer.fromJson<String>(json['code']),
       status: serializer.fromJson<String>(json['status']),
       isCredit: serializer.fromJson<bool>(json['isCredit']),
+      isPromotion: serializer.fromJson<bool>(json['isPromotion']),
+      agentCode: serializer.fromJson<String>(json['agentCode']),
       created: serializer.fromJson<DateTime>(json['created']),
     );
   }
@@ -219,6 +272,8 @@ class Order extends DataClass implements Insertable<Order> {
       'code': serializer.toJson<String>(code),
       'status': serializer.toJson<String>(status),
       'isCredit': serializer.toJson<bool>(isCredit),
+      'isPromotion': serializer.toJson<bool>(isPromotion),
+      'agentCode': serializer.toJson<String>(agentCode),
       'created': serializer.toJson<DateTime>(created),
     };
   }
@@ -231,6 +286,8 @@ class Order extends DataClass implements Insertable<Order> {
           String? code,
           String? status,
           bool? isCredit,
+          bool? isPromotion,
+          String? agentCode,
           DateTime? created}) =>
       Order(
         id: id ?? this.id,
@@ -240,6 +297,8 @@ class Order extends DataClass implements Insertable<Order> {
         code: code ?? this.code,
         status: status ?? this.status,
         isCredit: isCredit ?? this.isCredit,
+        isPromotion: isPromotion ?? this.isPromotion,
+        agentCode: agentCode ?? this.agentCode,
         created: created ?? this.created,
       );
   Order copyWithCompanion(OrdersCompanion data) {
@@ -251,6 +310,9 @@ class Order extends DataClass implements Insertable<Order> {
       code: data.code.present ? data.code.value : this.code,
       status: data.status.present ? data.status.value : this.status,
       isCredit: data.isCredit.present ? data.isCredit.value : this.isCredit,
+      isPromotion:
+          data.isPromotion.present ? data.isPromotion.value : this.isPromotion,
+      agentCode: data.agentCode.present ? data.agentCode.value : this.agentCode,
       created: data.created.present ? data.created.value : this.created,
     );
   }
@@ -265,14 +327,16 @@ class Order extends DataClass implements Insertable<Order> {
           ..write('code: $code, ')
           ..write('status: $status, ')
           ..write('isCredit: $isCredit, ')
+          ..write('isPromotion: $isPromotion, ')
+          ..write('agentCode: $agentCode, ')
           ..write('created: $created')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, amount, type, code, status, isCredit, created);
+  int get hashCode => Object.hash(id, userId, amount, type, code, status,
+      isCredit, isPromotion, agentCode, created);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -284,6 +348,8 @@ class Order extends DataClass implements Insertable<Order> {
           other.code == this.code &&
           other.status == this.status &&
           other.isCredit == this.isCredit &&
+          other.isPromotion == this.isPromotion &&
+          other.agentCode == this.agentCode &&
           other.created == this.created);
 }
 
@@ -295,6 +361,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
   final Value<String> code;
   final Value<String> status;
   final Value<bool> isCredit;
+  final Value<bool> isPromotion;
+  final Value<String> agentCode;
   final Value<DateTime> created;
   const OrdersCompanion({
     this.id = const Value.absent(),
@@ -304,6 +372,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
     this.code = const Value.absent(),
     this.status = const Value.absent(),
     this.isCredit = const Value.absent(),
+    this.isPromotion = const Value.absent(),
+    this.agentCode = const Value.absent(),
     this.created = const Value.absent(),
   });
   OrdersCompanion.insert({
@@ -314,6 +384,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
     required String code,
     required String status,
     required bool isCredit,
+    required bool isPromotion,
+    required String agentCode,
     required DateTime created,
   })  : userId = Value(userId),
         amount = Value(amount),
@@ -321,6 +393,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
         code = Value(code),
         status = Value(status),
         isCredit = Value(isCredit),
+        isPromotion = Value(isPromotion),
+        agentCode = Value(agentCode),
         created = Value(created);
   static Insertable<Order> custom({
     Expression<int>? id,
@@ -330,6 +404,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
     Expression<String>? code,
     Expression<String>? status,
     Expression<bool>? isCredit,
+    Expression<bool>? isPromotion,
+    Expression<String>? agentCode,
     Expression<DateTime>? created,
   }) {
     return RawValuesInsertable({
@@ -340,6 +416,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
       if (code != null) 'code': code,
       if (status != null) 'status': status,
       if (isCredit != null) 'is_credit': isCredit,
+      if (isPromotion != null) 'is_promotion': isPromotion,
+      if (agentCode != null) 'agent_code': agentCode,
       if (created != null) 'created': created,
     });
   }
@@ -352,6 +430,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
       Value<String>? code,
       Value<String>? status,
       Value<bool>? isCredit,
+      Value<bool>? isPromotion,
+      Value<String>? agentCode,
       Value<DateTime>? created}) {
     return OrdersCompanion(
       id: id ?? this.id,
@@ -361,6 +441,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
       code: code ?? this.code,
       status: status ?? this.status,
       isCredit: isCredit ?? this.isCredit,
+      isPromotion: isPromotion ?? this.isPromotion,
+      agentCode: agentCode ?? this.agentCode,
       created: created ?? this.created,
     );
   }
@@ -389,6 +471,12 @@ class OrdersCompanion extends UpdateCompanion<Order> {
     if (isCredit.present) {
       map['is_credit'] = Variable<bool>(isCredit.value);
     }
+    if (isPromotion.present) {
+      map['is_promotion'] = Variable<bool>(isPromotion.value);
+    }
+    if (agentCode.present) {
+      map['agent_code'] = Variable<String>(agentCode.value);
+    }
     if (created.present) {
       map['created'] = Variable<DateTime>(created.value);
     }
@@ -405,6 +493,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
           ..write('code: $code, ')
           ..write('status: $status, ')
           ..write('isCredit: $isCredit, ')
+          ..write('isPromotion: $isPromotion, ')
+          ..write('agentCode: $agentCode, ')
           ..write('created: $created')
           ..write(')'))
         .toString();
@@ -1064,6 +1154,8 @@ typedef $$OrdersTableCreateCompanionBuilder = OrdersCompanion Function({
   required String code,
   required String status,
   required bool isCredit,
+  required bool isPromotion,
+  required String agentCode,
   required DateTime created,
 });
 typedef $$OrdersTableUpdateCompanionBuilder = OrdersCompanion Function({
@@ -1074,6 +1166,8 @@ typedef $$OrdersTableUpdateCompanionBuilder = OrdersCompanion Function({
   Value<String> code,
   Value<String> status,
   Value<bool> isCredit,
+  Value<bool> isPromotion,
+  Value<String> agentCode,
   Value<DateTime> created,
 });
 
@@ -1101,6 +1195,8 @@ class $$OrdersTableTableManager extends RootTableManager<
             Value<String> code = const Value.absent(),
             Value<String> status = const Value.absent(),
             Value<bool> isCredit = const Value.absent(),
+            Value<bool> isPromotion = const Value.absent(),
+            Value<String> agentCode = const Value.absent(),
             Value<DateTime> created = const Value.absent(),
           }) =>
               OrdersCompanion(
@@ -1111,6 +1207,8 @@ class $$OrdersTableTableManager extends RootTableManager<
             code: code,
             status: status,
             isCredit: isCredit,
+            isPromotion: isPromotion,
+            agentCode: agentCode,
             created: created,
           ),
           createCompanionCallback: ({
@@ -1121,6 +1219,8 @@ class $$OrdersTableTableManager extends RootTableManager<
             required String code,
             required String status,
             required bool isCredit,
+            required bool isPromotion,
+            required String agentCode,
             required DateTime created,
           }) =>
               OrdersCompanion.insert(
@@ -1131,6 +1231,8 @@ class $$OrdersTableTableManager extends RootTableManager<
             code: code,
             status: status,
             isCredit: isCredit,
+            isPromotion: isPromotion,
+            agentCode: agentCode,
             created: created,
           ),
         ));
@@ -1171,6 +1273,16 @@ class $$OrdersTableFilterComposer
 
   ColumnFilters<bool> get isCredit => $state.composableBuilder(
       column: $state.table.isCredit,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isPromotion => $state.composableBuilder(
+      column: $state.table.isPromotion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get agentCode => $state.composableBuilder(
+      column: $state.table.agentCode,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -1215,6 +1327,16 @@ class $$OrdersTableOrderingComposer
 
   ColumnOrderings<bool> get isCredit => $state.composableBuilder(
       column: $state.table.isCredit,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isPromotion => $state.composableBuilder(
+      column: $state.table.isPromotion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get agentCode => $state.composableBuilder(
+      column: $state.table.agentCode,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

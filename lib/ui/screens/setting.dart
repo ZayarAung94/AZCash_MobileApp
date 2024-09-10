@@ -1,5 +1,6 @@
 import 'package:az_cash/ui/components/under_develop.dart';
 import 'package:az_cash/ui/constant.dart';
+import 'package:az_cash/ui/dialogs/clear_all_data.dart';
 import 'package:az_cash/ui/dialogs/commission_setting.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/screens/auth/login.dart';
@@ -138,10 +139,12 @@ class _SettingScreenState extends State<SettingScreen> {
             value: "",
           ),
           settingValue(
-            icon: Icons.clear_all,
-            label: "Clear all Data",
-            value: "",
-          ),
+              icon: Icons.clear_all,
+              label: "Clear all Data",
+              value: "",
+              onTap: () {
+                Get.dialog(const ClearAllData());
+              }),
           const SizedBox(height: 30),
         ],
       ),

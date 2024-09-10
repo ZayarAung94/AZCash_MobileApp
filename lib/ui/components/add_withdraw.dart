@@ -125,6 +125,8 @@ class _AddWithdrawState extends State<AddWithdraw> {
                           code: _codeController.text,
                           status: 'done',
                           isCredit: false,
+                          isPromotion: false,
+                          agentCode: "",
                           created: DateTime.now(),
                         ))
                         .then((_) {

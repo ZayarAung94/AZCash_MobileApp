@@ -7,10 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class DeleteOrder extends StatelessWidget {
+class DeleteOrder extends StatefulWidget {
   final Order order;
   const DeleteOrder({super.key, required this.order});
 
+  @override
+  State<DeleteOrder> createState() => _DeleteOrderState();
+}
+
+class _DeleteOrderState extends State<DeleteOrder> {
+  bool deleteLoading = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -62,16 +68,17 @@ class DeleteOrder extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                Text("(${order.userId})"),
+                                Text("(${widget.order.userId})"),
                               ],
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  NumberFormat('#,##0').format(order.amount),
+                                  NumberFormat('#,##0')
+                                      .format(widget.order.amount),
                                   style: TextStyle(
-                                    color: order.type == "withdraw"
+                                    color: widget.order.type == "withdraw"
                                         ? Colors.red
                                         : Colors.green,
                                     fontWeight: FontWeight.bold,
@@ -79,7 +86,8 @@ class DeleteOrder extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  DateFormat("hh:mm a").format(order.created),
+                                  DateFormat("hh:mm a")
+                                      .format(widget.order.created),
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 11,
@@ -120,11 +128,14 @@ class DeleteOrder extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  OrderController().drop(order.id);
-                  if (order.type == "deposit") {
-                    AppData.totalDepo = AppData.totalDepo - order.amount;
+                  setState(() {
+                    deleteLoading = true;
+                  });
+                  OrderController().drop(widget.order.id);
+                  if (widget.order.type == "deposit") {
+                    AppData.totalDepo = AppData.totalDepo - widget.order.amount;
                   } else {
-                    AppData.totalWd = AppData.totalWd - order.amount;
+                    AppData.totalWd = AppData.totalWd - widget.order.amount;
                   }
 
                   Future.delayed(const Duration(seconds: 1), () {
@@ -132,11 +143,17 @@ class DeleteOrder extends StatelessWidget {
                     PaymentController().appStartCheck();
                   });
                 },
-                child: const SizedBox(
+                child: SizedBox(
                   height: 40,
                   width: double.infinity,
                   child: Center(
-                    child: Text("Delete"),
+                    child: deleteLoading
+                        ? const SizedBox(
+                            width: 10,
+                            height: 10,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text("Delete"),
                   ),
                 ),
               ),
