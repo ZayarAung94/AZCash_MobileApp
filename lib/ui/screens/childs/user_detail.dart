@@ -1,3 +1,4 @@
+import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -72,20 +73,10 @@ class UserDetailScreen extends StatelessWidget {
                           DateFormat("dd MMMM, yyyy").format(DateTime.now()),
                     ),
                     const SizedBox(height: 25),
-                    MaterialButton(
+                    AppBtn.normalBtn(
                       color: Colors.green.shade800,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 30.0, vertical: 10),
-                        child: Text("Save Data"),
-                      ),
-                    ),
+                      label: "Save Data",
+                    )
                   ],
                 ),
               ),
@@ -153,22 +144,34 @@ class UserDetailScreen extends StatelessWidget {
                       intValue: "12 August, 2024",
                     ),
                     const SizedBox(height: 25),
-                    MaterialButton(
-                      color: AppColors.background,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 30.0, vertical: 10),
-                        child: Text("Save Data"),
-                      ),
-                    ),
+                    AppBtn.normalBtn(
+                      color: Colors.blue.shade800,
+                      label: "Save Data",
+                    )
                   ],
                 ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: AppBtn.expendedBtn(
+                color: Colors.yellow.shade800,
+                label: "Warning User",
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: AppBtn.expendedBtn(
+                color: Colors.red.shade800,
+                label: "Block User",
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: AppBtn.expendedBtn(
+                color: Colors.red.shade800,
+                label: "Report to Server",
               ),
             ),
             const SizedBox(height: 20),

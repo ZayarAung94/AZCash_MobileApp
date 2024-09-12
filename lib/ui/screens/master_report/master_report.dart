@@ -1,4 +1,9 @@
 import 'package:az_cash/ui/constant.dart';
+import 'package:az_cash/ui/screens/master_report/childs/agents.dart';
+import 'package:az_cash/ui/screens/master_report/childs/financial.dart';
+import 'package:az_cash/ui/screens/master_report/childs/reports.dart';
+import 'package:az_cash/ui/screens/master_report/childs/settings.dart';
+import 'package:az_cash/ui/screens/master_report/childs/summary.dart';
 import 'package:flutter/material.dart';
 
 class MasterReportScreen extends StatefulWidget {
@@ -11,7 +16,13 @@ class MasterReportScreen extends StatefulWidget {
 class _MasterReportScreenState extends State<MasterReportScreen> {
   int activeIndex = 0;
 
-  List<Widget> tabScreens = [];
+  List<Widget> tabScreens = [
+    const MasterModSummary(),
+    const MasterModReports(),
+    const MasterModAgents(),
+    const MasterModeFinancial(),
+    const MasterModeSettings(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +30,7 @@ class _MasterReportScreenState extends State<MasterReportScreen> {
       children: [
         Container(
           width: double.infinity,
-          height: 100,
+          height: 80,
           color: AppColors.background,
           child: ListView(
             scrollDirection: Axis.horizontal,
@@ -39,12 +50,12 @@ class _MasterReportScreenState extends State<MasterReportScreen> {
                 icon: Icons.group_outlined,
               ),
               tabBtn(
-                index: 4,
+                index: 3,
                 label: "Financial",
                 icon: Icons.monetization_on_outlined,
               ),
               tabBtn(
-                index: 5,
+                index: 4,
                 label: "Settings",
                 icon: Icons.settings,
               ),
@@ -52,6 +63,9 @@ class _MasterReportScreenState extends State<MasterReportScreen> {
             ],
           ),
         ),
+        Expanded(
+          child: tabScreens[activeIndex],
+        )
       ],
     );
   }
@@ -72,7 +86,7 @@ class _MasterReportScreenState extends State<MasterReportScreen> {
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8.0),
-        width: 100,
+        width: 90,
         decoration: BoxDecoration(
           color: index == activeIndex ? AppColors.softBg : Colors.transparent,
           borderRadius: BorderRadius.circular(8.0),

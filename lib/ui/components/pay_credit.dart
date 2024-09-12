@@ -1,3 +1,4 @@
+import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:flutter/material.dart';
 
 import '../constant.dart';
@@ -67,25 +68,20 @@ class PayCredit extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: MaterialButton(
-                color: Colors.green,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-                onPressed: () {},
-                child: const SizedBox(
-                  height: 40,
-                  width: double.infinity,
-                  child: Center(
-                    child: Text("Pay Credit"),
-                  ),
-                ),
-              ),
-            )
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: AppBtn.expendedBtn(
+                  color: Colors.green,
+                  label: "Paid Credit",
+                )),
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: AppBtn.expendedBtn(
+                  color: Colors.grey,
+                  label: 'View History',
+                )),
+            const SizedBox(height: 20),
           ],
         ),
       ),
