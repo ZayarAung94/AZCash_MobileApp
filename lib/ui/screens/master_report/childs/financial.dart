@@ -1,3 +1,5 @@
+import 'package:az_cash/ui/components/setting_value_change.dart';
+import 'package:az_cash/ui/helper/validator.dart';
 import 'package:az_cash/ui/helper/widget_helper.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +10,7 @@ class MasterModeFinancial extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final depoForm = GlobalKey<FormState>();
     return Column(
       children: [
         Expanded(
@@ -24,7 +27,7 @@ class MasterModeFinancial extends StatelessWidget {
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("12-August-2024 12:00pm"),
+                          Text("12/10/2024 12:00pm"),
                           Text("2,000,000"),
                         ],
                       ),
@@ -53,6 +56,60 @@ class MasterModeFinancial extends StatelessWidget {
           child: AppBtn.expendedBtn(
             color: Colors.green.shade900,
             label: "Add MobCash Deposit",
+            onPressed: () async {
+              await showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) {
+                  return SettingValueChange(
+                    title: 'Add MobCash Deposit',
+                    btnLabel: "Add Depo",
+                    onPressed: () {
+                      if (depoForm.currentState!.validate()) {}
+                    },
+                    body: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Form(
+                        key: depoForm,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              validator: (v) {
+                                if (v == null || !Validator.isDouble(v)) {
+                                  return "Enter valide amount!!!";
+                                }
+
+                                return null;
+                              },
+                              decoration: const InputDecoration(
+                                labelText: "Deposit Amount",
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.always,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              validator: (v) {
+                                if (v == null || !Validator.isDouble(v)) {
+                                  return "Enter valide amount!!!";
+                                }
+
+                                return null;
+                              },
+                              decoration: const InputDecoration(
+                                labelText: "Limit After Deposit",
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.always,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ),
       ],

@@ -1,7 +1,9 @@
 import 'package:az_cash/ui/constant.dart';
 import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:az_cash/ui/helper/widget_helper.dart';
+import 'package:az_cash/ui/screens/master_report/childs/agents_orders.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 
 class MasterModReports extends StatefulWidget {
@@ -119,10 +121,10 @@ class _MasterModReportsState extends State<MasterModReports> {
         const SizedBox(height: 10),
         Expanded(
           child: ListView.builder(
-            itemCount: 10,
+            itemCount: 4,
             itemBuilder: (context, index) {
               return Card(
-                elevation: 10,
+                elevation: 4,
                 margin: const EdgeInsets.all(8),
                 child: Container(
                   padding: const EdgeInsets.all(20),
@@ -160,6 +162,9 @@ class _MasterModReportsState extends State<MasterModReports> {
                       AppBtn.expendedBtn(
                         color: AppColors.softBg,
                         label: "Views Orders",
+                        onPressed: () {
+                          Get.to(() => const AgentsOrders());
+                        },
                       ),
                     ],
                   ),
