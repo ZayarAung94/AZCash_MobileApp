@@ -35,7 +35,9 @@ class MasterModeSettings extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(height: 10),
-                              TextField(),
+                              TextField(
+                                decoration: InputDecoration(),
+                              ),
                             ],
                           ),
                         ),
