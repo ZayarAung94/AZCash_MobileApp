@@ -4,7 +4,6 @@ import 'package:az_cash/ui/dialogs/clear_all_data.dart';
 import 'package:az_cash/ui/dialogs/commission_setting.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/screens/auth/login.dart';
-import 'package:az_cash/ui/screens/masterMod/master_main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -112,16 +111,10 @@ class _SettingScreenState extends State<SettingScreen> {
             },
           ),
           settingValue(
-              icon: Icons.verified_user_outlined,
-              label: "Master Mod",
-              value: AppSetting.masterMod ? "ON" : "OFF",
-              onTap: () {
-                if (AppData.level == "Master") {
-                  Get.to(() => const MasterMainScreen());
-                } else {
-                  Get.to(() => const MasterMainScreen());
-                }
-              }),
+            icon: Icons.verified_user_outlined,
+            label: "Master Mod",
+            value: AppSetting.masterMod ? "ON" : "OFF",
+          ),
           settingTitle("Data Settings"),
           settingValue(
             icon: Icons.data_exploration,

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../components/under_develop.dart';
+import '../constant.dart';
 
 class AppWidget {
   static Widget oneDataRow({
@@ -97,6 +101,63 @@ class AppWidget {
               body
             ],
           )),
+    );
+  }
+
+  static Widget settingValue({
+    required IconData icon,
+    required String label,
+    required String value,
+    void Function()? onTap,
+  }) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap ??
+          () {
+            Get.dialog(
+              const Dialog(
+                backgroundColor: AppColors.background,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 50),
+                  child: UnderDevelop(),
+                ),
+              ),
+            );
+          },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(icon, color: Colors.grey),
+                const SizedBox(width: 8),
+                Text(label),
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 130,
+                  child: Text(value,
+                      textAlign: TextAlign.end,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: value == "N/A" ? Colors.red : Colors.white,
+                      )),
+                ),
+                const SizedBox(width: 8),
+                const Icon(
+                  Icons.chevron_right,
+                  color: Colors.grey,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
