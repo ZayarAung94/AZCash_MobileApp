@@ -1,3 +1,5 @@
+import 'package:az_cash/database/controllers/users_controllers.dart';
+import 'package:az_cash/database/database.dart';
 import 'package:az_cash/ui/screens/childs/user_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,52 +33,76 @@ class UserManageScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 20,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Get.to(() => const UserDetailScreen());
-                  },
-                  child: Card(
-                    margin: const EdgeInsets.only(
-                      left: 8.0,
-                      right: 8,
-                      bottom: 8,
-                    ),
-                    color: AppColors.background,
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      width: double.infinity,
-                      child: const Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+            child: FutureBuilder(
+                future: UsersController().getAll(),
+                builder: (context, snap) {
+                  if (snap.connectionState == ConnectionState.done) {
+                    List<User> data = snap.data;
+                    return ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        User user = data[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(() => UserDetailScreen(user: user));
+                          },
+                          child: Card(
+                            margin: const EdgeInsets.only(
+                              left: 8.0,
+                              right: 8,
+                              bottom: 8,
+                            ),
+                            color: AppColors.background,
+                            child: Container(
+                              padding: const EdgeInsets.all(15),
+                              width: double.infinity,
+                              child: Column(
                                 children: [
-                                  Text(
-                                    "User Name",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text("(123456789)")
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            user.userName,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Text("(${user.userId})")
+                                        ],
+                                      ),
+                                      const Text("Normal")
+                                    ],
+                                  )
                                 ],
                               ),
-                              Text("Normal")
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return const Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(height: 100),
+                        SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(),
+                        ),
+                        SizedBox(height: 10),
+                        Text('Loading...')
+                      ],
+                    );
+                  }
+                }),
           ),
         ],
       ),

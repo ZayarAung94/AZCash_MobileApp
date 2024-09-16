@@ -11,8 +11,8 @@ class Orders extends Table {
   TextColumn get type => text()();
   TextColumn get code => text()();
   TextColumn get status => text()();
-  BoolColumn get isCredit => boolean()();
-  BoolColumn get isPromotion => boolean()();
+  IntColumn get credit => integer().withDefault(const Constant(0))();
+  IntColumn get promotion => integer().withDefault(const Constant(0))();
   TextColumn get agentCode => text()();
   DateTimeColumn get created => dateTime()();
 }
@@ -34,7 +34,43 @@ class Payments extends Table {
       dateTime().withDefault(Constant(DateTime.now()))();
 }
 
-@DriftDatabase(tables: [Orders, Payments])
+class Users extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get userId => text()();
+  TextColumn get userName =>
+      text().withDefault(const Constant('Unidentified'))();
+  TextColumn get phone => text().withDefault(const Constant(""))();
+  TextColumn get status => text().withDefault(const Constant('Normal'))();
+  BoolColumn get isPartner => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get joinedDate =>
+      dateTime().withDefault(Constant(DateTime.now()))();
+  DateTimeColumn get lastTransition =>
+      dateTime().withDefault(Constant(DateTime.now()))();
+  IntColumn get totalCredit => integer().withDefault(const Constant(0))();
+  DateTimeColumn get lastCreditDate => dateTime().nullable()();
+
+  TextColumn get facebook => text().nullable()();
+  TextColumn get viber => text().nullable()();
+  TextColumn get telegram => text().nullable()();
+}
+
+class Agents extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+  TextColumn get agentCode => text()();
+  DateTimeColumn get joinedDate =>
+      dateTime().withDefault(Constant(DateTime.now()))();
+}
+
+class MobCashDepo extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get amount => integer()();
+  DateTimeColumn get created => dateTime()();
+  RealColumn get beforeLimit => real()();
+  RealColumn get afterLimit => real()();
+}
+
+@DriftDatabase(tables: [Orders, Payments, Users, Agents, MobCashDepo])
 class AppDatabase extends _$AppDatabase {
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
@@ -78,6 +114,7 @@ class AppDatabase extends _$AppDatabase {
   Future clearAllData() async {
     await delete(orders).go();
     await delete(payments).go();
+    await delete(users).go();
     AppData.totalDepo = 0;
     AppData.totalWd = 0;
   }

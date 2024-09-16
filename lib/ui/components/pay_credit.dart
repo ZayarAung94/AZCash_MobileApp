@@ -1,5 +1,7 @@
 import 'package:az_cash/ui/helper/btn_helper.dart';
+import 'package:az_cash/ui/screens/childs/credit_history.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 
 import '../constant.dart';
 
@@ -70,17 +72,21 @@ class PayCredit extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: AppBtn.expendedBtn(
-                  color: Colors.green,
-                  label: "Paid Credit",
-                )),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: AppBtn.expendedBtn(
+                color: Colors.green,
+                label: "Paid Credit",
+              ),
+            ),
             Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: AppBtn.expendedBtn(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: AppBtn.expendedBtn(
                   color: Colors.grey,
-                  label: 'View History',
-                )),
+                  label: 'View Credit History',
+                  onPressed: () {
+                    Get.to(() => const CreditHistory());
+                  }),
+            ),
             const SizedBox(height: 20),
           ],
         ),

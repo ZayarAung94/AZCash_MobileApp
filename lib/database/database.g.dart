@@ -42,24 +42,21 @@ class $OrdersTable extends Orders with TableInfo<$OrdersTable, Order> {
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
       'status', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _isCreditMeta =
-      const VerificationMeta('isCredit');
+  static const VerificationMeta _creditMeta = const VerificationMeta('credit');
   @override
-  late final GeneratedColumn<bool> isCredit = GeneratedColumn<bool>(
-      'is_credit', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_credit" IN (0, 1))'));
-  static const VerificationMeta _isPromotionMeta =
-      const VerificationMeta('isPromotion');
+  late final GeneratedColumn<int> credit = GeneratedColumn<int>(
+      'credit', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _promotionMeta =
+      const VerificationMeta('promotion');
   @override
-  late final GeneratedColumn<bool> isPromotion = GeneratedColumn<bool>(
-      'is_promotion', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_promotion" IN (0, 1))'));
+  late final GeneratedColumn<int> promotion = GeneratedColumn<int>(
+      'promotion', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   static const VerificationMeta _agentCodeMeta =
       const VerificationMeta('agentCode');
   @override
@@ -80,8 +77,8 @@ class $OrdersTable extends Orders with TableInfo<$OrdersTable, Order> {
         type,
         code,
         status,
-        isCredit,
-        isPromotion,
+        credit,
+        promotion,
         agentCode,
         created
       ];
@@ -128,19 +125,13 @@ class $OrdersTable extends Orders with TableInfo<$OrdersTable, Order> {
     } else if (isInserting) {
       context.missing(_statusMeta);
     }
-    if (data.containsKey('is_credit')) {
-      context.handle(_isCreditMeta,
-          isCredit.isAcceptableOrUnknown(data['is_credit']!, _isCreditMeta));
-    } else if (isInserting) {
-      context.missing(_isCreditMeta);
+    if (data.containsKey('credit')) {
+      context.handle(_creditMeta,
+          credit.isAcceptableOrUnknown(data['credit']!, _creditMeta));
     }
-    if (data.containsKey('is_promotion')) {
-      context.handle(
-          _isPromotionMeta,
-          isPromotion.isAcceptableOrUnknown(
-              data['is_promotion']!, _isPromotionMeta));
-    } else if (isInserting) {
-      context.missing(_isPromotionMeta);
+    if (data.containsKey('promotion')) {
+      context.handle(_promotionMeta,
+          promotion.isAcceptableOrUnknown(data['promotion']!, _promotionMeta));
     }
     if (data.containsKey('agent_code')) {
       context.handle(_agentCodeMeta,
@@ -175,10 +166,10 @@ class $OrdersTable extends Orders with TableInfo<$OrdersTable, Order> {
           .read(DriftSqlType.string, data['${effectivePrefix}code'])!,
       status: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
-      isCredit: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_credit'])!,
-      isPromotion: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_promotion'])!,
+      credit: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}credit'])!,
+      promotion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}promotion'])!,
       agentCode: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}agent_code'])!,
       created: attachedDatabase.typeMapping
@@ -199,8 +190,8 @@ class Order extends DataClass implements Insertable<Order> {
   final String type;
   final String code;
   final String status;
-  final bool isCredit;
-  final bool isPromotion;
+  final int credit;
+  final int promotion;
   final String agentCode;
   final DateTime created;
   const Order(
@@ -210,8 +201,8 @@ class Order extends DataClass implements Insertable<Order> {
       required this.type,
       required this.code,
       required this.status,
-      required this.isCredit,
-      required this.isPromotion,
+      required this.credit,
+      required this.promotion,
       required this.agentCode,
       required this.created});
   @override
@@ -223,8 +214,8 @@ class Order extends DataClass implements Insertable<Order> {
     map['type'] = Variable<String>(type);
     map['code'] = Variable<String>(code);
     map['status'] = Variable<String>(status);
-    map['is_credit'] = Variable<bool>(isCredit);
-    map['is_promotion'] = Variable<bool>(isPromotion);
+    map['credit'] = Variable<int>(credit);
+    map['promotion'] = Variable<int>(promotion);
     map['agent_code'] = Variable<String>(agentCode);
     map['created'] = Variable<DateTime>(created);
     return map;
@@ -238,8 +229,8 @@ class Order extends DataClass implements Insertable<Order> {
       type: Value(type),
       code: Value(code),
       status: Value(status),
-      isCredit: Value(isCredit),
-      isPromotion: Value(isPromotion),
+      credit: Value(credit),
+      promotion: Value(promotion),
       agentCode: Value(agentCode),
       created: Value(created),
     );
@@ -255,8 +246,8 @@ class Order extends DataClass implements Insertable<Order> {
       type: serializer.fromJson<String>(json['type']),
       code: serializer.fromJson<String>(json['code']),
       status: serializer.fromJson<String>(json['status']),
-      isCredit: serializer.fromJson<bool>(json['isCredit']),
-      isPromotion: serializer.fromJson<bool>(json['isPromotion']),
+      credit: serializer.fromJson<int>(json['credit']),
+      promotion: serializer.fromJson<int>(json['promotion']),
       agentCode: serializer.fromJson<String>(json['agentCode']),
       created: serializer.fromJson<DateTime>(json['created']),
     );
@@ -271,8 +262,8 @@ class Order extends DataClass implements Insertable<Order> {
       'type': serializer.toJson<String>(type),
       'code': serializer.toJson<String>(code),
       'status': serializer.toJson<String>(status),
-      'isCredit': serializer.toJson<bool>(isCredit),
-      'isPromotion': serializer.toJson<bool>(isPromotion),
+      'credit': serializer.toJson<int>(credit),
+      'promotion': serializer.toJson<int>(promotion),
       'agentCode': serializer.toJson<String>(agentCode),
       'created': serializer.toJson<DateTime>(created),
     };
@@ -285,8 +276,8 @@ class Order extends DataClass implements Insertable<Order> {
           String? type,
           String? code,
           String? status,
-          bool? isCredit,
-          bool? isPromotion,
+          int? credit,
+          int? promotion,
           String? agentCode,
           DateTime? created}) =>
       Order(
@@ -296,8 +287,8 @@ class Order extends DataClass implements Insertable<Order> {
         type: type ?? this.type,
         code: code ?? this.code,
         status: status ?? this.status,
-        isCredit: isCredit ?? this.isCredit,
-        isPromotion: isPromotion ?? this.isPromotion,
+        credit: credit ?? this.credit,
+        promotion: promotion ?? this.promotion,
         agentCode: agentCode ?? this.agentCode,
         created: created ?? this.created,
       );
@@ -309,9 +300,8 @@ class Order extends DataClass implements Insertable<Order> {
       type: data.type.present ? data.type.value : this.type,
       code: data.code.present ? data.code.value : this.code,
       status: data.status.present ? data.status.value : this.status,
-      isCredit: data.isCredit.present ? data.isCredit.value : this.isCredit,
-      isPromotion:
-          data.isPromotion.present ? data.isPromotion.value : this.isPromotion,
+      credit: data.credit.present ? data.credit.value : this.credit,
+      promotion: data.promotion.present ? data.promotion.value : this.promotion,
       agentCode: data.agentCode.present ? data.agentCode.value : this.agentCode,
       created: data.created.present ? data.created.value : this.created,
     );
@@ -326,8 +316,8 @@ class Order extends DataClass implements Insertable<Order> {
           ..write('type: $type, ')
           ..write('code: $code, ')
           ..write('status: $status, ')
-          ..write('isCredit: $isCredit, ')
-          ..write('isPromotion: $isPromotion, ')
+          ..write('credit: $credit, ')
+          ..write('promotion: $promotion, ')
           ..write('agentCode: $agentCode, ')
           ..write('created: $created')
           ..write(')'))
@@ -336,7 +326,7 @@ class Order extends DataClass implements Insertable<Order> {
 
   @override
   int get hashCode => Object.hash(id, userId, amount, type, code, status,
-      isCredit, isPromotion, agentCode, created);
+      credit, promotion, agentCode, created);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -347,8 +337,8 @@ class Order extends DataClass implements Insertable<Order> {
           other.type == this.type &&
           other.code == this.code &&
           other.status == this.status &&
-          other.isCredit == this.isCredit &&
-          other.isPromotion == this.isPromotion &&
+          other.credit == this.credit &&
+          other.promotion == this.promotion &&
           other.agentCode == this.agentCode &&
           other.created == this.created);
 }
@@ -360,8 +350,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
   final Value<String> type;
   final Value<String> code;
   final Value<String> status;
-  final Value<bool> isCredit;
-  final Value<bool> isPromotion;
+  final Value<int> credit;
+  final Value<int> promotion;
   final Value<String> agentCode;
   final Value<DateTime> created;
   const OrdersCompanion({
@@ -371,8 +361,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
     this.type = const Value.absent(),
     this.code = const Value.absent(),
     this.status = const Value.absent(),
-    this.isCredit = const Value.absent(),
-    this.isPromotion = const Value.absent(),
+    this.credit = const Value.absent(),
+    this.promotion = const Value.absent(),
     this.agentCode = const Value.absent(),
     this.created = const Value.absent(),
   });
@@ -383,8 +373,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
     required String type,
     required String code,
     required String status,
-    required bool isCredit,
-    required bool isPromotion,
+    this.credit = const Value.absent(),
+    this.promotion = const Value.absent(),
     required String agentCode,
     required DateTime created,
   })  : userId = Value(userId),
@@ -392,8 +382,6 @@ class OrdersCompanion extends UpdateCompanion<Order> {
         type = Value(type),
         code = Value(code),
         status = Value(status),
-        isCredit = Value(isCredit),
-        isPromotion = Value(isPromotion),
         agentCode = Value(agentCode),
         created = Value(created);
   static Insertable<Order> custom({
@@ -403,8 +391,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
     Expression<String>? type,
     Expression<String>? code,
     Expression<String>? status,
-    Expression<bool>? isCredit,
-    Expression<bool>? isPromotion,
+    Expression<int>? credit,
+    Expression<int>? promotion,
     Expression<String>? agentCode,
     Expression<DateTime>? created,
   }) {
@@ -415,8 +403,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
       if (type != null) 'type': type,
       if (code != null) 'code': code,
       if (status != null) 'status': status,
-      if (isCredit != null) 'is_credit': isCredit,
-      if (isPromotion != null) 'is_promotion': isPromotion,
+      if (credit != null) 'credit': credit,
+      if (promotion != null) 'promotion': promotion,
       if (agentCode != null) 'agent_code': agentCode,
       if (created != null) 'created': created,
     });
@@ -429,8 +417,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
       Value<String>? type,
       Value<String>? code,
       Value<String>? status,
-      Value<bool>? isCredit,
-      Value<bool>? isPromotion,
+      Value<int>? credit,
+      Value<int>? promotion,
       Value<String>? agentCode,
       Value<DateTime>? created}) {
     return OrdersCompanion(
@@ -440,8 +428,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
       type: type ?? this.type,
       code: code ?? this.code,
       status: status ?? this.status,
-      isCredit: isCredit ?? this.isCredit,
-      isPromotion: isPromotion ?? this.isPromotion,
+      credit: credit ?? this.credit,
+      promotion: promotion ?? this.promotion,
       agentCode: agentCode ?? this.agentCode,
       created: created ?? this.created,
     );
@@ -468,11 +456,11 @@ class OrdersCompanion extends UpdateCompanion<Order> {
     if (status.present) {
       map['status'] = Variable<String>(status.value);
     }
-    if (isCredit.present) {
-      map['is_credit'] = Variable<bool>(isCredit.value);
+    if (credit.present) {
+      map['credit'] = Variable<int>(credit.value);
     }
-    if (isPromotion.present) {
-      map['is_promotion'] = Variable<bool>(isPromotion.value);
+    if (promotion.present) {
+      map['promotion'] = Variable<int>(promotion.value);
     }
     if (agentCode.present) {
       map['agent_code'] = Variable<String>(agentCode.value);
@@ -492,8 +480,8 @@ class OrdersCompanion extends UpdateCompanion<Order> {
           ..write('type: $type, ')
           ..write('code: $code, ')
           ..write('status: $status, ')
-          ..write('isCredit: $isCredit, ')
-          ..write('isPromotion: $isPromotion, ')
+          ..write('credit: $credit, ')
+          ..write('promotion: $promotion, ')
           ..write('agentCode: $agentCode, ')
           ..write('created: $created')
           ..write(')'))
@@ -1134,16 +1122,1211 @@ class PaymentsCompanion extends UpdateCompanion<Payment> {
   }
 }
 
+class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UsersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+      'user_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _userNameMeta =
+      const VerificationMeta('userName');
+  @override
+  late final GeneratedColumn<String> userName = GeneratedColumn<String>(
+      'user_name', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('Unidentified'));
+  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
+  @override
+  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
+      'phone', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(""));
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('Normal'));
+  static const VerificationMeta _isPartnerMeta =
+      const VerificationMeta('isPartner');
+  @override
+  late final GeneratedColumn<bool> isPartner = GeneratedColumn<bool>(
+      'is_partner', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_partner" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _joinedDateMeta =
+      const VerificationMeta('joinedDate');
+  @override
+  late final GeneratedColumn<DateTime> joinedDate = GeneratedColumn<DateTime>(
+      'joined_date', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: Constant(DateTime.now()));
+  static const VerificationMeta _lastTransitionMeta =
+      const VerificationMeta('lastTransition');
+  @override
+  late final GeneratedColumn<DateTime> lastTransition =
+      GeneratedColumn<DateTime>('last_transition', aliasedName, false,
+          type: DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          defaultValue: Constant(DateTime.now()));
+  static const VerificationMeta _totalCreditMeta =
+      const VerificationMeta('totalCredit');
+  @override
+  late final GeneratedColumn<int> totalCredit = GeneratedColumn<int>(
+      'total_credit', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _lastCreditDateMeta =
+      const VerificationMeta('lastCreditDate');
+  @override
+  late final GeneratedColumn<DateTime> lastCreditDate =
+      GeneratedColumn<DateTime>('last_credit_date', aliasedName, true,
+          type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _facebookMeta =
+      const VerificationMeta('facebook');
+  @override
+  late final GeneratedColumn<String> facebook = GeneratedColumn<String>(
+      'facebook', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _viberMeta = const VerificationMeta('viber');
+  @override
+  late final GeneratedColumn<String> viber = GeneratedColumn<String>(
+      'viber', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _telegramMeta =
+      const VerificationMeta('telegram');
+  @override
+  late final GeneratedColumn<String> telegram = GeneratedColumn<String>(
+      'telegram', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        userId,
+        userName,
+        phone,
+        status,
+        isPartner,
+        joinedDate,
+        lastTransition,
+        totalCredit,
+        lastCreditDate,
+        facebook,
+        viber,
+        telegram
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'users';
+  @override
+  VerificationContext validateIntegrity(Insertable<User> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('user_name')) {
+      context.handle(_userNameMeta,
+          userName.isAcceptableOrUnknown(data['user_name']!, _userNameMeta));
+    }
+    if (data.containsKey('phone')) {
+      context.handle(
+          _phoneMeta, phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('is_partner')) {
+      context.handle(_isPartnerMeta,
+          isPartner.isAcceptableOrUnknown(data['is_partner']!, _isPartnerMeta));
+    }
+    if (data.containsKey('joined_date')) {
+      context.handle(
+          _joinedDateMeta,
+          joinedDate.isAcceptableOrUnknown(
+              data['joined_date']!, _joinedDateMeta));
+    }
+    if (data.containsKey('last_transition')) {
+      context.handle(
+          _lastTransitionMeta,
+          lastTransition.isAcceptableOrUnknown(
+              data['last_transition']!, _lastTransitionMeta));
+    }
+    if (data.containsKey('total_credit')) {
+      context.handle(
+          _totalCreditMeta,
+          totalCredit.isAcceptableOrUnknown(
+              data['total_credit']!, _totalCreditMeta));
+    }
+    if (data.containsKey('last_credit_date')) {
+      context.handle(
+          _lastCreditDateMeta,
+          lastCreditDate.isAcceptableOrUnknown(
+              data['last_credit_date']!, _lastCreditDateMeta));
+    }
+    if (data.containsKey('facebook')) {
+      context.handle(_facebookMeta,
+          facebook.isAcceptableOrUnknown(data['facebook']!, _facebookMeta));
+    }
+    if (data.containsKey('viber')) {
+      context.handle(
+          _viberMeta, viber.isAcceptableOrUnknown(data['viber']!, _viberMeta));
+    }
+    if (data.containsKey('telegram')) {
+      context.handle(_telegramMeta,
+          telegram.isAcceptableOrUnknown(data['telegram']!, _telegramMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return User(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user_id'])!,
+      userName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user_name'])!,
+      phone: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}phone'])!,
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
+      isPartner: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_partner'])!,
+      joinedDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}joined_date'])!,
+      lastTransition: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}last_transition'])!,
+      totalCredit: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}total_credit'])!,
+      lastCreditDate: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}last_credit_date']),
+      facebook: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}facebook']),
+      viber: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}viber']),
+      telegram: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}telegram']),
+    );
+  }
+
+  @override
+  $UsersTable createAlias(String alias) {
+    return $UsersTable(attachedDatabase, alias);
+  }
+}
+
+class User extends DataClass implements Insertable<User> {
+  final int id;
+  final String userId;
+  final String userName;
+  final String phone;
+  final String status;
+  final bool isPartner;
+  final DateTime joinedDate;
+  final DateTime lastTransition;
+  final int totalCredit;
+  final DateTime? lastCreditDate;
+  final String? facebook;
+  final String? viber;
+  final String? telegram;
+  const User(
+      {required this.id,
+      required this.userId,
+      required this.userName,
+      required this.phone,
+      required this.status,
+      required this.isPartner,
+      required this.joinedDate,
+      required this.lastTransition,
+      required this.totalCredit,
+      this.lastCreditDate,
+      this.facebook,
+      this.viber,
+      this.telegram});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['user_name'] = Variable<String>(userName);
+    map['phone'] = Variable<String>(phone);
+    map['status'] = Variable<String>(status);
+    map['is_partner'] = Variable<bool>(isPartner);
+    map['joined_date'] = Variable<DateTime>(joinedDate);
+    map['last_transition'] = Variable<DateTime>(lastTransition);
+    map['total_credit'] = Variable<int>(totalCredit);
+    if (!nullToAbsent || lastCreditDate != null) {
+      map['last_credit_date'] = Variable<DateTime>(lastCreditDate);
+    }
+    if (!nullToAbsent || facebook != null) {
+      map['facebook'] = Variable<String>(facebook);
+    }
+    if (!nullToAbsent || viber != null) {
+      map['viber'] = Variable<String>(viber);
+    }
+    if (!nullToAbsent || telegram != null) {
+      map['telegram'] = Variable<String>(telegram);
+    }
+    return map;
+  }
+
+  UsersCompanion toCompanion(bool nullToAbsent) {
+    return UsersCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      userName: Value(userName),
+      phone: Value(phone),
+      status: Value(status),
+      isPartner: Value(isPartner),
+      joinedDate: Value(joinedDate),
+      lastTransition: Value(lastTransition),
+      totalCredit: Value(totalCredit),
+      lastCreditDate: lastCreditDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastCreditDate),
+      facebook: facebook == null && nullToAbsent
+          ? const Value.absent()
+          : Value(facebook),
+      viber:
+          viber == null && nullToAbsent ? const Value.absent() : Value(viber),
+      telegram: telegram == null && nullToAbsent
+          ? const Value.absent()
+          : Value(telegram),
+    );
+  }
+
+  factory User.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return User(
+      id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      userName: serializer.fromJson<String>(json['userName']),
+      phone: serializer.fromJson<String>(json['phone']),
+      status: serializer.fromJson<String>(json['status']),
+      isPartner: serializer.fromJson<bool>(json['isPartner']),
+      joinedDate: serializer.fromJson<DateTime>(json['joinedDate']),
+      lastTransition: serializer.fromJson<DateTime>(json['lastTransition']),
+      totalCredit: serializer.fromJson<int>(json['totalCredit']),
+      lastCreditDate: serializer.fromJson<DateTime?>(json['lastCreditDate']),
+      facebook: serializer.fromJson<String?>(json['facebook']),
+      viber: serializer.fromJson<String?>(json['viber']),
+      telegram: serializer.fromJson<String?>(json['telegram']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<String>(userId),
+      'userName': serializer.toJson<String>(userName),
+      'phone': serializer.toJson<String>(phone),
+      'status': serializer.toJson<String>(status),
+      'isPartner': serializer.toJson<bool>(isPartner),
+      'joinedDate': serializer.toJson<DateTime>(joinedDate),
+      'lastTransition': serializer.toJson<DateTime>(lastTransition),
+      'totalCredit': serializer.toJson<int>(totalCredit),
+      'lastCreditDate': serializer.toJson<DateTime?>(lastCreditDate),
+      'facebook': serializer.toJson<String?>(facebook),
+      'viber': serializer.toJson<String?>(viber),
+      'telegram': serializer.toJson<String?>(telegram),
+    };
+  }
+
+  User copyWith(
+          {int? id,
+          String? userId,
+          String? userName,
+          String? phone,
+          String? status,
+          bool? isPartner,
+          DateTime? joinedDate,
+          DateTime? lastTransition,
+          int? totalCredit,
+          Value<DateTime?> lastCreditDate = const Value.absent(),
+          Value<String?> facebook = const Value.absent(),
+          Value<String?> viber = const Value.absent(),
+          Value<String?> telegram = const Value.absent()}) =>
+      User(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        userName: userName ?? this.userName,
+        phone: phone ?? this.phone,
+        status: status ?? this.status,
+        isPartner: isPartner ?? this.isPartner,
+        joinedDate: joinedDate ?? this.joinedDate,
+        lastTransition: lastTransition ?? this.lastTransition,
+        totalCredit: totalCredit ?? this.totalCredit,
+        lastCreditDate:
+            lastCreditDate.present ? lastCreditDate.value : this.lastCreditDate,
+        facebook: facebook.present ? facebook.value : this.facebook,
+        viber: viber.present ? viber.value : this.viber,
+        telegram: telegram.present ? telegram.value : this.telegram,
+      );
+  User copyWithCompanion(UsersCompanion data) {
+    return User(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      userName: data.userName.present ? data.userName.value : this.userName,
+      phone: data.phone.present ? data.phone.value : this.phone,
+      status: data.status.present ? data.status.value : this.status,
+      isPartner: data.isPartner.present ? data.isPartner.value : this.isPartner,
+      joinedDate:
+          data.joinedDate.present ? data.joinedDate.value : this.joinedDate,
+      lastTransition: data.lastTransition.present
+          ? data.lastTransition.value
+          : this.lastTransition,
+      totalCredit:
+          data.totalCredit.present ? data.totalCredit.value : this.totalCredit,
+      lastCreditDate: data.lastCreditDate.present
+          ? data.lastCreditDate.value
+          : this.lastCreditDate,
+      facebook: data.facebook.present ? data.facebook.value : this.facebook,
+      viber: data.viber.present ? data.viber.value : this.viber,
+      telegram: data.telegram.present ? data.telegram.value : this.telegram,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('User(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('userName: $userName, ')
+          ..write('phone: $phone, ')
+          ..write('status: $status, ')
+          ..write('isPartner: $isPartner, ')
+          ..write('joinedDate: $joinedDate, ')
+          ..write('lastTransition: $lastTransition, ')
+          ..write('totalCredit: $totalCredit, ')
+          ..write('lastCreditDate: $lastCreditDate, ')
+          ..write('facebook: $facebook, ')
+          ..write('viber: $viber, ')
+          ..write('telegram: $telegram')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      userId,
+      userName,
+      phone,
+      status,
+      isPartner,
+      joinedDate,
+      lastTransition,
+      totalCredit,
+      lastCreditDate,
+      facebook,
+      viber,
+      telegram);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is User &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.userName == this.userName &&
+          other.phone == this.phone &&
+          other.status == this.status &&
+          other.isPartner == this.isPartner &&
+          other.joinedDate == this.joinedDate &&
+          other.lastTransition == this.lastTransition &&
+          other.totalCredit == this.totalCredit &&
+          other.lastCreditDate == this.lastCreditDate &&
+          other.facebook == this.facebook &&
+          other.viber == this.viber &&
+          other.telegram == this.telegram);
+}
+
+class UsersCompanion extends UpdateCompanion<User> {
+  final Value<int> id;
+  final Value<String> userId;
+  final Value<String> userName;
+  final Value<String> phone;
+  final Value<String> status;
+  final Value<bool> isPartner;
+  final Value<DateTime> joinedDate;
+  final Value<DateTime> lastTransition;
+  final Value<int> totalCredit;
+  final Value<DateTime?> lastCreditDate;
+  final Value<String?> facebook;
+  final Value<String?> viber;
+  final Value<String?> telegram;
+  const UsersCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.userName = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.status = const Value.absent(),
+    this.isPartner = const Value.absent(),
+    this.joinedDate = const Value.absent(),
+    this.lastTransition = const Value.absent(),
+    this.totalCredit = const Value.absent(),
+    this.lastCreditDate = const Value.absent(),
+    this.facebook = const Value.absent(),
+    this.viber = const Value.absent(),
+    this.telegram = const Value.absent(),
+  });
+  UsersCompanion.insert({
+    this.id = const Value.absent(),
+    required String userId,
+    this.userName = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.status = const Value.absent(),
+    this.isPartner = const Value.absent(),
+    this.joinedDate = const Value.absent(),
+    this.lastTransition = const Value.absent(),
+    this.totalCredit = const Value.absent(),
+    this.lastCreditDate = const Value.absent(),
+    this.facebook = const Value.absent(),
+    this.viber = const Value.absent(),
+    this.telegram = const Value.absent(),
+  }) : userId = Value(userId);
+  static Insertable<User> custom({
+    Expression<int>? id,
+    Expression<String>? userId,
+    Expression<String>? userName,
+    Expression<String>? phone,
+    Expression<String>? status,
+    Expression<bool>? isPartner,
+    Expression<DateTime>? joinedDate,
+    Expression<DateTime>? lastTransition,
+    Expression<int>? totalCredit,
+    Expression<DateTime>? lastCreditDate,
+    Expression<String>? facebook,
+    Expression<String>? viber,
+    Expression<String>? telegram,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (userName != null) 'user_name': userName,
+      if (phone != null) 'phone': phone,
+      if (status != null) 'status': status,
+      if (isPartner != null) 'is_partner': isPartner,
+      if (joinedDate != null) 'joined_date': joinedDate,
+      if (lastTransition != null) 'last_transition': lastTransition,
+      if (totalCredit != null) 'total_credit': totalCredit,
+      if (lastCreditDate != null) 'last_credit_date': lastCreditDate,
+      if (facebook != null) 'facebook': facebook,
+      if (viber != null) 'viber': viber,
+      if (telegram != null) 'telegram': telegram,
+    });
+  }
+
+  UsersCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? userId,
+      Value<String>? userName,
+      Value<String>? phone,
+      Value<String>? status,
+      Value<bool>? isPartner,
+      Value<DateTime>? joinedDate,
+      Value<DateTime>? lastTransition,
+      Value<int>? totalCredit,
+      Value<DateTime?>? lastCreditDate,
+      Value<String?>? facebook,
+      Value<String?>? viber,
+      Value<String?>? telegram}) {
+    return UsersCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      phone: phone ?? this.phone,
+      status: status ?? this.status,
+      isPartner: isPartner ?? this.isPartner,
+      joinedDate: joinedDate ?? this.joinedDate,
+      lastTransition: lastTransition ?? this.lastTransition,
+      totalCredit: totalCredit ?? this.totalCredit,
+      lastCreditDate: lastCreditDate ?? this.lastCreditDate,
+      facebook: facebook ?? this.facebook,
+      viber: viber ?? this.viber,
+      telegram: telegram ?? this.telegram,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (userName.present) {
+      map['user_name'] = Variable<String>(userName.value);
+    }
+    if (phone.present) {
+      map['phone'] = Variable<String>(phone.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (isPartner.present) {
+      map['is_partner'] = Variable<bool>(isPartner.value);
+    }
+    if (joinedDate.present) {
+      map['joined_date'] = Variable<DateTime>(joinedDate.value);
+    }
+    if (lastTransition.present) {
+      map['last_transition'] = Variable<DateTime>(lastTransition.value);
+    }
+    if (totalCredit.present) {
+      map['total_credit'] = Variable<int>(totalCredit.value);
+    }
+    if (lastCreditDate.present) {
+      map['last_credit_date'] = Variable<DateTime>(lastCreditDate.value);
+    }
+    if (facebook.present) {
+      map['facebook'] = Variable<String>(facebook.value);
+    }
+    if (viber.present) {
+      map['viber'] = Variable<String>(viber.value);
+    }
+    if (telegram.present) {
+      map['telegram'] = Variable<String>(telegram.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UsersCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('userName: $userName, ')
+          ..write('phone: $phone, ')
+          ..write('status: $status, ')
+          ..write('isPartner: $isPartner, ')
+          ..write('joinedDate: $joinedDate, ')
+          ..write('lastTransition: $lastTransition, ')
+          ..write('totalCredit: $totalCredit, ')
+          ..write('lastCreditDate: $lastCreditDate, ')
+          ..write('facebook: $facebook, ')
+          ..write('viber: $viber, ')
+          ..write('telegram: $telegram')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AgentsTable extends Agents with TableInfo<$AgentsTable, Agent> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AgentsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _agentCodeMeta =
+      const VerificationMeta('agentCode');
+  @override
+  late final GeneratedColumn<String> agentCode = GeneratedColumn<String>(
+      'agent_code', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _joinedDateMeta =
+      const VerificationMeta('joinedDate');
+  @override
+  late final GeneratedColumn<DateTime> joinedDate = GeneratedColumn<DateTime>(
+      'joined_date', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: Constant(DateTime.now()));
+  @override
+  List<GeneratedColumn> get $columns => [id, name, agentCode, joinedDate];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'agents';
+  @override
+  VerificationContext validateIntegrity(Insertable<Agent> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('agent_code')) {
+      context.handle(_agentCodeMeta,
+          agentCode.isAcceptableOrUnknown(data['agent_code']!, _agentCodeMeta));
+    } else if (isInserting) {
+      context.missing(_agentCodeMeta);
+    }
+    if (data.containsKey('joined_date')) {
+      context.handle(
+          _joinedDateMeta,
+          joinedDate.isAcceptableOrUnknown(
+              data['joined_date']!, _joinedDateMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Agent map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Agent(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      agentCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}agent_code'])!,
+      joinedDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}joined_date'])!,
+    );
+  }
+
+  @override
+  $AgentsTable createAlias(String alias) {
+    return $AgentsTable(attachedDatabase, alias);
+  }
+}
+
+class Agent extends DataClass implements Insertable<Agent> {
+  final int id;
+  final String name;
+  final String agentCode;
+  final DateTime joinedDate;
+  const Agent(
+      {required this.id,
+      required this.name,
+      required this.agentCode,
+      required this.joinedDate});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    map['agent_code'] = Variable<String>(agentCode);
+    map['joined_date'] = Variable<DateTime>(joinedDate);
+    return map;
+  }
+
+  AgentsCompanion toCompanion(bool nullToAbsent) {
+    return AgentsCompanion(
+      id: Value(id),
+      name: Value(name),
+      agentCode: Value(agentCode),
+      joinedDate: Value(joinedDate),
+    );
+  }
+
+  factory Agent.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Agent(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      agentCode: serializer.fromJson<String>(json['agentCode']),
+      joinedDate: serializer.fromJson<DateTime>(json['joinedDate']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'agentCode': serializer.toJson<String>(agentCode),
+      'joinedDate': serializer.toJson<DateTime>(joinedDate),
+    };
+  }
+
+  Agent copyWith(
+          {int? id, String? name, String? agentCode, DateTime? joinedDate}) =>
+      Agent(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        agentCode: agentCode ?? this.agentCode,
+        joinedDate: joinedDate ?? this.joinedDate,
+      );
+  Agent copyWithCompanion(AgentsCompanion data) {
+    return Agent(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      agentCode: data.agentCode.present ? data.agentCode.value : this.agentCode,
+      joinedDate:
+          data.joinedDate.present ? data.joinedDate.value : this.joinedDate,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Agent(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('agentCode: $agentCode, ')
+          ..write('joinedDate: $joinedDate')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, agentCode, joinedDate);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Agent &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.agentCode == this.agentCode &&
+          other.joinedDate == this.joinedDate);
+}
+
+class AgentsCompanion extends UpdateCompanion<Agent> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<String> agentCode;
+  final Value<DateTime> joinedDate;
+  const AgentsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.agentCode = const Value.absent(),
+    this.joinedDate = const Value.absent(),
+  });
+  AgentsCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    required String agentCode,
+    this.joinedDate = const Value.absent(),
+  })  : name = Value(name),
+        agentCode = Value(agentCode);
+  static Insertable<Agent> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? agentCode,
+    Expression<DateTime>? joinedDate,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (agentCode != null) 'agent_code': agentCode,
+      if (joinedDate != null) 'joined_date': joinedDate,
+    });
+  }
+
+  AgentsCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? name,
+      Value<String>? agentCode,
+      Value<DateTime>? joinedDate}) {
+    return AgentsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      agentCode: agentCode ?? this.agentCode,
+      joinedDate: joinedDate ?? this.joinedDate,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (agentCode.present) {
+      map['agent_code'] = Variable<String>(agentCode.value);
+    }
+    if (joinedDate.present) {
+      map['joined_date'] = Variable<DateTime>(joinedDate.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AgentsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('agentCode: $agentCode, ')
+          ..write('joinedDate: $joinedDate')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MobCashDepoTable extends MobCashDepo
+    with TableInfo<$MobCashDepoTable, MobCashDepoData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MobCashDepoTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+      'amount', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _createdMeta =
+      const VerificationMeta('created');
+  @override
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _beforeLimitMeta =
+      const VerificationMeta('beforeLimit');
+  @override
+  late final GeneratedColumn<double> beforeLimit = GeneratedColumn<double>(
+      'before_limit', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  static const VerificationMeta _afterLimitMeta =
+      const VerificationMeta('afterLimit');
+  @override
+  late final GeneratedColumn<double> afterLimit = GeneratedColumn<double>(
+      'after_limit', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, amount, created, beforeLimit, afterLimit];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'mob_cash_depo';
+  @override
+  VerificationContext validateIntegrity(Insertable<MobCashDepoData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('amount')) {
+      context.handle(_amountMeta,
+          amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('created')) {
+      context.handle(_createdMeta,
+          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
+    } else if (isInserting) {
+      context.missing(_createdMeta);
+    }
+    if (data.containsKey('before_limit')) {
+      context.handle(
+          _beforeLimitMeta,
+          beforeLimit.isAcceptableOrUnknown(
+              data['before_limit']!, _beforeLimitMeta));
+    } else if (isInserting) {
+      context.missing(_beforeLimitMeta);
+    }
+    if (data.containsKey('after_limit')) {
+      context.handle(
+          _afterLimitMeta,
+          afterLimit.isAcceptableOrUnknown(
+              data['after_limit']!, _afterLimitMeta));
+    } else if (isInserting) {
+      context.missing(_afterLimitMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MobCashDepoData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MobCashDepoData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      amount: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}amount'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      beforeLimit: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}before_limit'])!,
+      afterLimit: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}after_limit'])!,
+    );
+  }
+
+  @override
+  $MobCashDepoTable createAlias(String alias) {
+    return $MobCashDepoTable(attachedDatabase, alias);
+  }
+}
+
+class MobCashDepoData extends DataClass implements Insertable<MobCashDepoData> {
+  final int id;
+  final int amount;
+  final DateTime created;
+  final double beforeLimit;
+  final double afterLimit;
+  const MobCashDepoData(
+      {required this.id,
+      required this.amount,
+      required this.created,
+      required this.beforeLimit,
+      required this.afterLimit});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['amount'] = Variable<int>(amount);
+    map['created'] = Variable<DateTime>(created);
+    map['before_limit'] = Variable<double>(beforeLimit);
+    map['after_limit'] = Variable<double>(afterLimit);
+    return map;
+  }
+
+  MobCashDepoCompanion toCompanion(bool nullToAbsent) {
+    return MobCashDepoCompanion(
+      id: Value(id),
+      amount: Value(amount),
+      created: Value(created),
+      beforeLimit: Value(beforeLimit),
+      afterLimit: Value(afterLimit),
+    );
+  }
+
+  factory MobCashDepoData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MobCashDepoData(
+      id: serializer.fromJson<int>(json['id']),
+      amount: serializer.fromJson<int>(json['amount']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      beforeLimit: serializer.fromJson<double>(json['beforeLimit']),
+      afterLimit: serializer.fromJson<double>(json['afterLimit']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'amount': serializer.toJson<int>(amount),
+      'created': serializer.toJson<DateTime>(created),
+      'beforeLimit': serializer.toJson<double>(beforeLimit),
+      'afterLimit': serializer.toJson<double>(afterLimit),
+    };
+  }
+
+  MobCashDepoData copyWith(
+          {int? id,
+          int? amount,
+          DateTime? created,
+          double? beforeLimit,
+          double? afterLimit}) =>
+      MobCashDepoData(
+        id: id ?? this.id,
+        amount: amount ?? this.amount,
+        created: created ?? this.created,
+        beforeLimit: beforeLimit ?? this.beforeLimit,
+        afterLimit: afterLimit ?? this.afterLimit,
+      );
+  MobCashDepoData copyWithCompanion(MobCashDepoCompanion data) {
+    return MobCashDepoData(
+      id: data.id.present ? data.id.value : this.id,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      created: data.created.present ? data.created.value : this.created,
+      beforeLimit:
+          data.beforeLimit.present ? data.beforeLimit.value : this.beforeLimit,
+      afterLimit:
+          data.afterLimit.present ? data.afterLimit.value : this.afterLimit,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MobCashDepoData(')
+          ..write('id: $id, ')
+          ..write('amount: $amount, ')
+          ..write('created: $created, ')
+          ..write('beforeLimit: $beforeLimit, ')
+          ..write('afterLimit: $afterLimit')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, amount, created, beforeLimit, afterLimit);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MobCashDepoData &&
+          other.id == this.id &&
+          other.amount == this.amount &&
+          other.created == this.created &&
+          other.beforeLimit == this.beforeLimit &&
+          other.afterLimit == this.afterLimit);
+}
+
+class MobCashDepoCompanion extends UpdateCompanion<MobCashDepoData> {
+  final Value<int> id;
+  final Value<int> amount;
+  final Value<DateTime> created;
+  final Value<double> beforeLimit;
+  final Value<double> afterLimit;
+  const MobCashDepoCompanion({
+    this.id = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.created = const Value.absent(),
+    this.beforeLimit = const Value.absent(),
+    this.afterLimit = const Value.absent(),
+  });
+  MobCashDepoCompanion.insert({
+    this.id = const Value.absent(),
+    required int amount,
+    required DateTime created,
+    required double beforeLimit,
+    required double afterLimit,
+  })  : amount = Value(amount),
+        created = Value(created),
+        beforeLimit = Value(beforeLimit),
+        afterLimit = Value(afterLimit);
+  static Insertable<MobCashDepoData> custom({
+    Expression<int>? id,
+    Expression<int>? amount,
+    Expression<DateTime>? created,
+    Expression<double>? beforeLimit,
+    Expression<double>? afterLimit,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (amount != null) 'amount': amount,
+      if (created != null) 'created': created,
+      if (beforeLimit != null) 'before_limit': beforeLimit,
+      if (afterLimit != null) 'after_limit': afterLimit,
+    });
+  }
+
+  MobCashDepoCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? amount,
+      Value<DateTime>? created,
+      Value<double>? beforeLimit,
+      Value<double>? afterLimit}) {
+    return MobCashDepoCompanion(
+      id: id ?? this.id,
+      amount: amount ?? this.amount,
+      created: created ?? this.created,
+      beforeLimit: beforeLimit ?? this.beforeLimit,
+      afterLimit: afterLimit ?? this.afterLimit,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (beforeLimit.present) {
+      map['before_limit'] = Variable<double>(beforeLimit.value);
+    }
+    if (afterLimit.present) {
+      map['after_limit'] = Variable<double>(afterLimit.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MobCashDepoCompanion(')
+          ..write('id: $id, ')
+          ..write('amount: $amount, ')
+          ..write('created: $created, ')
+          ..write('beforeLimit: $beforeLimit, ')
+          ..write('afterLimit: $afterLimit')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $OrdersTable orders = $OrdersTable(this);
   late final $PaymentsTable payments = $PaymentsTable(this);
+  late final $UsersTable users = $UsersTable(this);
+  late final $AgentsTable agents = $AgentsTable(this);
+  late final $MobCashDepoTable mobCashDepo = $MobCashDepoTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [orders, payments];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [orders, payments, users, agents, mobCashDepo];
 }
 
 typedef $$OrdersTableCreateCompanionBuilder = OrdersCompanion Function({
@@ -1153,8 +2336,8 @@ typedef $$OrdersTableCreateCompanionBuilder = OrdersCompanion Function({
   required String type,
   required String code,
   required String status,
-  required bool isCredit,
-  required bool isPromotion,
+  Value<int> credit,
+  Value<int> promotion,
   required String agentCode,
   required DateTime created,
 });
@@ -1165,8 +2348,8 @@ typedef $$OrdersTableUpdateCompanionBuilder = OrdersCompanion Function({
   Value<String> type,
   Value<String> code,
   Value<String> status,
-  Value<bool> isCredit,
-  Value<bool> isPromotion,
+  Value<int> credit,
+  Value<int> promotion,
   Value<String> agentCode,
   Value<DateTime> created,
 });
@@ -1194,8 +2377,8 @@ class $$OrdersTableTableManager extends RootTableManager<
             Value<String> type = const Value.absent(),
             Value<String> code = const Value.absent(),
             Value<String> status = const Value.absent(),
-            Value<bool> isCredit = const Value.absent(),
-            Value<bool> isPromotion = const Value.absent(),
+            Value<int> credit = const Value.absent(),
+            Value<int> promotion = const Value.absent(),
             Value<String> agentCode = const Value.absent(),
             Value<DateTime> created = const Value.absent(),
           }) =>
@@ -1206,8 +2389,8 @@ class $$OrdersTableTableManager extends RootTableManager<
             type: type,
             code: code,
             status: status,
-            isCredit: isCredit,
-            isPromotion: isPromotion,
+            credit: credit,
+            promotion: promotion,
             agentCode: agentCode,
             created: created,
           ),
@@ -1218,8 +2401,8 @@ class $$OrdersTableTableManager extends RootTableManager<
             required String type,
             required String code,
             required String status,
-            required bool isCredit,
-            required bool isPromotion,
+            Value<int> credit = const Value.absent(),
+            Value<int> promotion = const Value.absent(),
             required String agentCode,
             required DateTime created,
           }) =>
@@ -1230,8 +2413,8 @@ class $$OrdersTableTableManager extends RootTableManager<
             type: type,
             code: code,
             status: status,
-            isCredit: isCredit,
-            isPromotion: isPromotion,
+            credit: credit,
+            promotion: promotion,
             agentCode: agentCode,
             created: created,
           ),
@@ -1271,13 +2454,13 @@ class $$OrdersTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<bool> get isCredit => $state.composableBuilder(
-      column: $state.table.isCredit,
+  ColumnFilters<int> get credit => $state.composableBuilder(
+      column: $state.table.credit,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<bool> get isPromotion => $state.composableBuilder(
-      column: $state.table.isPromotion,
+  ColumnFilters<int> get promotion => $state.composableBuilder(
+      column: $state.table.promotion,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -1325,13 +2508,13 @@ class $$OrdersTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<bool> get isCredit => $state.composableBuilder(
-      column: $state.table.isCredit,
+  ColumnOrderings<int> get credit => $state.composableBuilder(
+      column: $state.table.credit,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<bool> get isPromotion => $state.composableBuilder(
-      column: $state.table.isPromotion,
+  ColumnOrderings<int> get promotion => $state.composableBuilder(
+      column: $state.table.promotion,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -1594,6 +2777,480 @@ class $$PaymentsTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$UsersTableCreateCompanionBuilder = UsersCompanion Function({
+  Value<int> id,
+  required String userId,
+  Value<String> userName,
+  Value<String> phone,
+  Value<String> status,
+  Value<bool> isPartner,
+  Value<DateTime> joinedDate,
+  Value<DateTime> lastTransition,
+  Value<int> totalCredit,
+  Value<DateTime?> lastCreditDate,
+  Value<String?> facebook,
+  Value<String?> viber,
+  Value<String?> telegram,
+});
+typedef $$UsersTableUpdateCompanionBuilder = UsersCompanion Function({
+  Value<int> id,
+  Value<String> userId,
+  Value<String> userName,
+  Value<String> phone,
+  Value<String> status,
+  Value<bool> isPartner,
+  Value<DateTime> joinedDate,
+  Value<DateTime> lastTransition,
+  Value<int> totalCredit,
+  Value<DateTime?> lastCreditDate,
+  Value<String?> facebook,
+  Value<String?> viber,
+  Value<String?> telegram,
+});
+
+class $$UsersTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $UsersTable,
+    User,
+    $$UsersTableFilterComposer,
+    $$UsersTableOrderingComposer,
+    $$UsersTableCreateCompanionBuilder,
+    $$UsersTableUpdateCompanionBuilder> {
+  $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$UsersTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$UsersTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> userId = const Value.absent(),
+            Value<String> userName = const Value.absent(),
+            Value<String> phone = const Value.absent(),
+            Value<String> status = const Value.absent(),
+            Value<bool> isPartner = const Value.absent(),
+            Value<DateTime> joinedDate = const Value.absent(),
+            Value<DateTime> lastTransition = const Value.absent(),
+            Value<int> totalCredit = const Value.absent(),
+            Value<DateTime?> lastCreditDate = const Value.absent(),
+            Value<String?> facebook = const Value.absent(),
+            Value<String?> viber = const Value.absent(),
+            Value<String?> telegram = const Value.absent(),
+          }) =>
+              UsersCompanion(
+            id: id,
+            userId: userId,
+            userName: userName,
+            phone: phone,
+            status: status,
+            isPartner: isPartner,
+            joinedDate: joinedDate,
+            lastTransition: lastTransition,
+            totalCredit: totalCredit,
+            lastCreditDate: lastCreditDate,
+            facebook: facebook,
+            viber: viber,
+            telegram: telegram,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String userId,
+            Value<String> userName = const Value.absent(),
+            Value<String> phone = const Value.absent(),
+            Value<String> status = const Value.absent(),
+            Value<bool> isPartner = const Value.absent(),
+            Value<DateTime> joinedDate = const Value.absent(),
+            Value<DateTime> lastTransition = const Value.absent(),
+            Value<int> totalCredit = const Value.absent(),
+            Value<DateTime?> lastCreditDate = const Value.absent(),
+            Value<String?> facebook = const Value.absent(),
+            Value<String?> viber = const Value.absent(),
+            Value<String?> telegram = const Value.absent(),
+          }) =>
+              UsersCompanion.insert(
+            id: id,
+            userId: userId,
+            userName: userName,
+            phone: phone,
+            status: status,
+            isPartner: isPartner,
+            joinedDate: joinedDate,
+            lastTransition: lastTransition,
+            totalCredit: totalCredit,
+            lastCreditDate: lastCreditDate,
+            facebook: facebook,
+            viber: viber,
+            telegram: telegram,
+          ),
+        ));
+}
+
+class $$UsersTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $UsersTable> {
+  $$UsersTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get userId => $state.composableBuilder(
+      column: $state.table.userId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get userName => $state.composableBuilder(
+      column: $state.table.userName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get phone => $state.composableBuilder(
+      column: $state.table.phone,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isPartner => $state.composableBuilder(
+      column: $state.table.isPartner,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<DateTime> get joinedDate => $state.composableBuilder(
+      column: $state.table.joinedDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<DateTime> get lastTransition => $state.composableBuilder(
+      column: $state.table.lastTransition,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get totalCredit => $state.composableBuilder(
+      column: $state.table.totalCredit,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<DateTime> get lastCreditDate => $state.composableBuilder(
+      column: $state.table.lastCreditDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get facebook => $state.composableBuilder(
+      column: $state.table.facebook,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get viber => $state.composableBuilder(
+      column: $state.table.viber,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get telegram => $state.composableBuilder(
+      column: $state.table.telegram,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$UsersTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $UsersTable> {
+  $$UsersTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get userId => $state.composableBuilder(
+      column: $state.table.userId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get userName => $state.composableBuilder(
+      column: $state.table.userName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get phone => $state.composableBuilder(
+      column: $state.table.phone,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isPartner => $state.composableBuilder(
+      column: $state.table.isPartner,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<DateTime> get joinedDate => $state.composableBuilder(
+      column: $state.table.joinedDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<DateTime> get lastTransition => $state.composableBuilder(
+      column: $state.table.lastTransition,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get totalCredit => $state.composableBuilder(
+      column: $state.table.totalCredit,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<DateTime> get lastCreditDate => $state.composableBuilder(
+      column: $state.table.lastCreditDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get facebook => $state.composableBuilder(
+      column: $state.table.facebook,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get viber => $state.composableBuilder(
+      column: $state.table.viber,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get telegram => $state.composableBuilder(
+      column: $state.table.telegram,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$AgentsTableCreateCompanionBuilder = AgentsCompanion Function({
+  Value<int> id,
+  required String name,
+  required String agentCode,
+  Value<DateTime> joinedDate,
+});
+typedef $$AgentsTableUpdateCompanionBuilder = AgentsCompanion Function({
+  Value<int> id,
+  Value<String> name,
+  Value<String> agentCode,
+  Value<DateTime> joinedDate,
+});
+
+class $$AgentsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $AgentsTable,
+    Agent,
+    $$AgentsTableFilterComposer,
+    $$AgentsTableOrderingComposer,
+    $$AgentsTableCreateCompanionBuilder,
+    $$AgentsTableUpdateCompanionBuilder> {
+  $$AgentsTableTableManager(_$AppDatabase db, $AgentsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$AgentsTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$AgentsTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String> agentCode = const Value.absent(),
+            Value<DateTime> joinedDate = const Value.absent(),
+          }) =>
+              AgentsCompanion(
+            id: id,
+            name: name,
+            agentCode: agentCode,
+            joinedDate: joinedDate,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String name,
+            required String agentCode,
+            Value<DateTime> joinedDate = const Value.absent(),
+          }) =>
+              AgentsCompanion.insert(
+            id: id,
+            name: name,
+            agentCode: agentCode,
+            joinedDate: joinedDate,
+          ),
+        ));
+}
+
+class $$AgentsTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $AgentsTable> {
+  $$AgentsTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get agentCode => $state.composableBuilder(
+      column: $state.table.agentCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<DateTime> get joinedDate => $state.composableBuilder(
+      column: $state.table.joinedDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$AgentsTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $AgentsTable> {
+  $$AgentsTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get agentCode => $state.composableBuilder(
+      column: $state.table.agentCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<DateTime> get joinedDate => $state.composableBuilder(
+      column: $state.table.joinedDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$MobCashDepoTableCreateCompanionBuilder = MobCashDepoCompanion
+    Function({
+  Value<int> id,
+  required int amount,
+  required DateTime created,
+  required double beforeLimit,
+  required double afterLimit,
+});
+typedef $$MobCashDepoTableUpdateCompanionBuilder = MobCashDepoCompanion
+    Function({
+  Value<int> id,
+  Value<int> amount,
+  Value<DateTime> created,
+  Value<double> beforeLimit,
+  Value<double> afterLimit,
+});
+
+class $$MobCashDepoTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $MobCashDepoTable,
+    MobCashDepoData,
+    $$MobCashDepoTableFilterComposer,
+    $$MobCashDepoTableOrderingComposer,
+    $$MobCashDepoTableCreateCompanionBuilder,
+    $$MobCashDepoTableUpdateCompanionBuilder> {
+  $$MobCashDepoTableTableManager(_$AppDatabase db, $MobCashDepoTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$MobCashDepoTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$MobCashDepoTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> amount = const Value.absent(),
+            Value<DateTime> created = const Value.absent(),
+            Value<double> beforeLimit = const Value.absent(),
+            Value<double> afterLimit = const Value.absent(),
+          }) =>
+              MobCashDepoCompanion(
+            id: id,
+            amount: amount,
+            created: created,
+            beforeLimit: beforeLimit,
+            afterLimit: afterLimit,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int amount,
+            required DateTime created,
+            required double beforeLimit,
+            required double afterLimit,
+          }) =>
+              MobCashDepoCompanion.insert(
+            id: id,
+            amount: amount,
+            created: created,
+            beforeLimit: beforeLimit,
+            afterLimit: afterLimit,
+          ),
+        ));
+}
+
+class $$MobCashDepoTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $MobCashDepoTable> {
+  $$MobCashDepoTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get amount => $state.composableBuilder(
+      column: $state.table.amount,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<DateTime> get created => $state.composableBuilder(
+      column: $state.table.created,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get beforeLimit => $state.composableBuilder(
+      column: $state.table.beforeLimit,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get afterLimit => $state.composableBuilder(
+      column: $state.table.afterLimit,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$MobCashDepoTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $MobCashDepoTable> {
+  $$MobCashDepoTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get amount => $state.composableBuilder(
+      column: $state.table.amount,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<DateTime> get created => $state.composableBuilder(
+      column: $state.table.created,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get beforeLimit => $state.composableBuilder(
+      column: $state.table.beforeLimit,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get afterLimit => $state.composableBuilder(
+      column: $state.table.afterLimit,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
@@ -1601,4 +3258,10 @@ class $AppDatabaseManager {
       $$OrdersTableTableManager(_db, _db.orders);
   $$PaymentsTableTableManager get payments =>
       $$PaymentsTableTableManager(_db, _db.payments);
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db, _db.users);
+  $$AgentsTableTableManager get agents =>
+      $$AgentsTableTableManager(_db, _db.agents);
+  $$MobCashDepoTableTableManager get mobCashDepo =>
+      $$MobCashDepoTableTableManager(_db, _db.mobCashDepo);
 }

@@ -9,6 +9,7 @@ class AppDialog {
     required String submitBtnText,
     Function()? submitBtnTap,
     Function()? backBtnTap,
+    Color? btnColor,
   }) {
     return Dialog(
       backgroundColor: AppColors.background,
@@ -39,7 +40,7 @@ class AppDialog {
                 children: [
                   Expanded(
                     child: MaterialButton(
-                      color: Colors.green,
+                      color: btnColor ?? Colors.green,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(10),

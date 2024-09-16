@@ -1,3 +1,4 @@
+import 'package:az_cash/database/controllers/users_controllers.dart';
 import 'package:az_cash/database/database.dart';
 import 'package:az_cash/models/controllers.dart/payment_controller.dart';
 import 'package:az_cash/ui/helper/snack.dart';
@@ -21,6 +22,7 @@ class _AddDepositState extends State<AddDeposit> {
   final TextEditingController _amountController = TextEditingController();
 
   final database = AppDatabase();
+  final userController = UsersController();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -115,6 +117,7 @@ class _AddDepositState extends State<AddDeposit> {
                 onPressed: () async {
                   if (_userIdController.text != "" &&
                       Validator.isNumber(_amountController.text.trim())) {
+                    //Add Order
                     await database
                         .into(database.orders)
                         .insert(OrdersCompanion.insert(
@@ -123,12 +126,10 @@ class _AddDepositState extends State<AddDeposit> {
                           code: '',
                           type: "deposit",
                           status: 'done',
-                          isCredit: false,
-                          isPromotion: false,
                           agentCode: "",
                           created: DateTime.now(),
                         ))
-                        .then((_) {
+                        .then((_) async {
                       int amount = int.parse(_amountController.text);
 
                       if (DateTime.now().isAfter(AppData.activeSession)) {
@@ -142,7 +143,7 @@ class _AddDepositState extends State<AddDeposit> {
                         AppData.totalDepo = AppData.totalDepo + amount;
                       }
 
-                      PaymentController().appStartCheck();
+                      await PaymentController().appStartCheck();
                     });
                     Clipboard.setData(
                       ClipboardData(
@@ -153,6 +154,7 @@ class _AddDepositState extends State<AddDeposit> {
 
                     Get.back();
                     AppMessage.copied();
+                    userController.addUser(_userIdController.text.trim());
                   } else {
                     AppMessage.error(
                       "'User Id' and 'Topup Amount' are required. You must give input both.",

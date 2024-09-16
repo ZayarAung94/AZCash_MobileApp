@@ -8,6 +8,7 @@ class AppWidget {
   static Widget oneDataRow({
     required String label1,
     required String value1,
+    bool? underline = true,
   }) {
     return Column(
       children: [
@@ -26,7 +27,7 @@ class AppWidget {
             ],
           ),
         ),
-        const Divider(),
+        if (underline!) const Divider(),
       ],
     );
   }

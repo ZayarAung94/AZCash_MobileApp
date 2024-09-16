@@ -168,89 +168,99 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
                             itemBuilder: (context, index) {
                               index = orders!.length - (index + 1);
                               Order order = orders[index];
-                              return Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                              return Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: Column(
                                       children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Row(
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                const Text(
-                                                  "User Name",
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  "(${order.userId})",
-                                                  style: const TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 11,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "Status : ${order.status}, ",
-                                                  style: const TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 11,
-                                                  ),
-                                                ),
-                                                if (order.code != "")
-                                                  Text(
-                                                    "WD Code : ${order.code}, ",
-                                                    style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 11,
+                                                Row(
+                                                  children: [
+                                                    const Text(
+                                                      "User Name",
+                                                      style: TextStyle(
+                                                        fontSize: 15,
+                                                      ),
                                                     ),
-                                                  ),
+                                                    const SizedBox(width: 8),
+                                                    Text(
+                                                      "(${order.userId})",
+                                                      style: const TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 11,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Status : ${order.status}, ",
+                                                      style: const TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 11,
+                                                      ),
+                                                    ),
+                                                    if (order.code != "")
+                                                      Text(
+                                                        "WD Code : ${order.code}, ",
+                                                        style: const TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 11,
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
                                               ],
                                             ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  NumberFormat('#,##0')
+                                                      .format(order.amount),
+                                                  style: TextStyle(
+                                                    color:
+                                                        order.type == "withdraw"
+                                                            ? Colors.red
+                                                            : Colors.green,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  DateFormat("hh:mm a")
+                                                      .format(order.created),
+                                                  style: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 11,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
                                           ],
                                         ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              NumberFormat('#,##0')
-                                                  .format(order.amount),
-                                              style: TextStyle(
-                                                color: order.type == "withdraw"
-                                                    ? Colors.red
-                                                    : Colors.green,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              DateFormat("hh:mm a")
-                                                  .format(order.created),
-                                              style: const TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 11,
-                                              ),
-                                            ),
-                                          ],
-                                        )
+                                        const SizedBox(height: 8),
                                       ],
                                     ),
-                                    const SizedBox(height: 8),
-                                  ],
-                                ),
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 1,
+                                    color: AppColors.softBg,
+                                  )
+                                ],
                               );
                             }),
                       ),

@@ -43,7 +43,7 @@ class SplashScreen extends StatelessWidget {
     });
 
     Future.delayed(
-      const Duration(seconds: 7),
+      const Duration(seconds: 3),
       () => {
         if (AppData.isUpdate)
           {Get.offAll(() => const AppUpdateScreen())}
