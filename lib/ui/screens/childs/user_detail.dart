@@ -1,3 +1,4 @@
+import 'package:az_cash/database/controllers/users_controllers.dart';
 import 'package:az_cash/database/database.dart';
 import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:az_cash/ui/helper/input_helper.dart';
@@ -12,6 +13,10 @@ class UserDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userName = TextEditingController();
+    final phoneC = TextEditingController();
+    bool? partner;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -65,15 +70,23 @@ class UserDetailScreen extends StatelessWidget {
                     detailInput(
                       label: "User Name",
                       intValue: user.userName,
+                      controller: userName,
                     ),
                     detailInput(
                       label: "Phone Number",
                       intValue: user.phone,
+                      controller: phoneC,
                     ),
                     AppInput.selectedMenu(
                       label: "Is Your Partner",
                       list: ["Yes", "No"],
-                      onChange: (value) {},
+                      onChange: (value) {
+                        if (value == "Yes") {
+                          partner = true;
+                        } else {
+                          partner = false;
+                        }
+                      },
                       value: user.isPartner ? "Yes" : "No",
                     ),
                     detailInput(
@@ -90,9 +103,24 @@ class UserDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 25),
                     AppBtn.normalBtn(
-                      color: Colors.green.shade800,
-                      label: "Update Profile",
-                    )
+                        color: Colors.green.shade800,
+                        label: "Update Profile",
+                        onPressed: () async {
+                          String name = userName.text.trim() == ""
+                              ? user.userName
+                              : userName.text.trim();
+                          String phone = phoneC.text.trim() == ""
+                              ? user.phone
+                              : phoneC.text.trim();
+                          bool isPartner = partner ?? user.isPartner;
+
+                          UsersController().updateUserProfile(
+                            id: user.id,
+                            name: name,
+                            phone: phone,
+                            isPartner: isPartner,
+                          );
+                        })
                   ],
                 ),
               ),
@@ -123,6 +151,16 @@ class UserDetailScreen extends StatelessWidget {
                       readOnly: true,
                       intValue: DateFormat("dd MMMM, yyyy")
                           .format(user.lastCreditDate ?? user.joinedDate),
+                    ),
+                    detailInput(
+                      label: "Total Promotions",
+                      readOnly: true,
+                      intValue: NumberFormat("#,##0").format(user.totalCredit),
+                    ),
+                    detailInput(
+                      label: "Promotions Times",
+                      readOnly: true,
+                      intValue: NumberFormat("#,##0").format(user.totalCredit),
                     ),
                     const SizedBox(height: 10),
                   ],
@@ -204,11 +242,13 @@ class UserDetailScreen extends StatelessWidget {
     bool? readOnly,
     bool? linkOpen = false,
     Function()? linkOpenClick,
+    TextEditingController? controller,
   }) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: TextField(
         readOnly: readOnly ?? false,
+        controller: controller,
         decoration: InputDecoration(
           labelText: label,
           suffix: linkOpen!

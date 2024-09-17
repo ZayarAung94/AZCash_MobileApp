@@ -64,6 +64,10 @@ class MasterModSummary extends StatelessWidget {
                   value1: "100,000",
                 ),
                 AppWidget.oneDataRow(
+                  label1: "Withdraw Commission (K) : ",
+                  value1: "100,000",
+                ),
+                AppWidget.oneDataRow(
                   label1: "Active Agents : ",
                   value1: "23",
                 ),
