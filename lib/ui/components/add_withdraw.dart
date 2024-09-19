@@ -97,8 +97,8 @@ class _AddWithdrawState extends State<AddWithdraw> {
             const SizedBox(height: 20),
             SegmentedButton<int>(
               segments: const [
-                ButtonSegment(value: 0, label: Text('Payment Data Off')),
-                ButtonSegment(value: 1, label: Text('Payment Data On')),
+                ButtonSegment(value: 0, label: Text('Paided')),
+                ButtonSegment(value: 1, label: Text('Payback the Credit')),
               ],
               selected: const <int>{0},
               onSelectionChanged: (Set<int> newSelection) {

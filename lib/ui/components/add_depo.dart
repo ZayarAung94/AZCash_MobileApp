@@ -19,6 +19,8 @@ class _AddDepositState extends State<AddDeposit> {
   int payType = 0;
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _promoController = TextEditingController();
+  final TextEditingController _creditController = TextEditingController();
 
   final database = AppDatabase();
   final userController = UsersController();
@@ -98,7 +100,7 @@ class _AddDepositState extends State<AddDeposit> {
                 ),
               ),
               onSelectionChanged: (Set<int> newSelection) {
-                if (newSelection.first > 0) {
+                if (newSelection.first > 3) {
                   AppMessage.requirePremium();
                 } else {
                   setState(() {
@@ -107,6 +109,43 @@ class _AddDepositState extends State<AddDeposit> {
                 }
               },
             ),
+            const SizedBox(height: 10),
+            if (payType == 1)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+                child: TextField(
+                  controller: _promoController,
+                  keyboardType: const TextInputType.numberWithOptions(),
+                  decoration: const InputDecoration(
+                    label: Text("Promotions Amount :"),
+                    hintText: "If no input, all amount will be Promotions.",
+                    hintStyle: TextStyle(
+                      fontSize: 11,
+                      color: Colors.red,
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+            if (payType == 2)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+                child: TextField(
+                  keyboardType: const TextInputType.numberWithOptions(),
+                  controller: _creditController,
+                  decoration: const InputDecoration(
+                    label: Text("Credit Amount :"),
+                    hintText: "If no input, all amount will be Credit.",
+                    hintStyle: TextStyle(
+                      fontSize: 11,
+                      color: Colors.red,
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: MaterialButton(
@@ -123,10 +162,31 @@ class _AddDepositState extends State<AddDeposit> {
                       isLoading = true;
                     });
 
-                    await orderController.addDeposit(
-                      userId: _userIdController.text.trim(),
-                      amount: int.parse(_amountController.text),
-                    );
+                    if (payType == 0) {
+                      await orderController.addDeposit(
+                        userId: _userIdController.text.trim(),
+                        amount: int.parse(_amountController.text),
+                      );
+                    } else if (payType == 1) {
+                    } else if (payType == 2) {
+                      int? crd = int.parse(_amountController.text);
+
+                      if (_creditController.text != "") {
+                        crd = int.tryParse(_creditController.text);
+                        if (crd == null) {
+                          AppMessage.error(
+                            "Enter valid value in Credit Amount!!!",
+                          );
+                          return;
+                        }
+                      }
+
+                      await orderController.addCreditDepo(
+                        userId: _userIdController.text.trim(),
+                        amount: int.parse(_amountController.text),
+                        crdAmount: crd,
+                      );
+                    }
 
                     Get.back();
                     AppMessage.copied();

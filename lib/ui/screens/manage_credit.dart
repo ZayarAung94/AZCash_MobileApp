@@ -1,4 +1,7 @@
+import 'package:az_cash/database/controllers/users_controllers.dart';
+import 'package:az_cash/database/database.dart';
 import 'package:az_cash/ui/components/pay_credit.dart';
+import 'package:az_cash/ui/helper/widget_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,10 +14,6 @@ class ManageCredit extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.softBg,
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   child: const Icon(Icons.add),
-      // ),
       body: Column(
         children: [
           Container(
@@ -31,76 +30,91 @@ class ManageCredit extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 20,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () async {
-                    await showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (context) {
-                        return const PayCredit();
-                      },
-                    );
-                  },
-                  child: Card(
-                    margin: const EdgeInsets.only(
-                      left: 8.0,
-                      right: 8,
-                      bottom: 8,
-                    ),
-                    color: AppColors.background,
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      width: double.infinity,
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+            child: FutureBuilder(
+                future: UsersController().getCreditUser(),
+                builder: (context, snap) {
+                  if (snap.connectionState == ConnectionState.done) {
+                    List<User> data = snap.data;
+                    return ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        User user = data[index];
+                        return GestureDetector(
+                          onTap: () async {
+                            await showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) {
+                                return PayCredit(user: user);
+                              },
+                            );
+                          },
+                          child: Card(
+                            margin: const EdgeInsets.only(
+                              left: 8.0,
+                              right: 8,
+                              bottom: 8,
+                            ),
+                            color: AppColors.background,
+                            child: Container(
+                              padding: const EdgeInsets.all(15),
+                              width: double.infinity,
+                              child: Column(
                                 children: [
-                                  Text(
-                                    "Undefined",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text("(123456789)")
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            user.userName,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Text("(${user.userId})"),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            NumberFormat("#,##0").format(
+                                              user.totalCredit,
+                                            ),
+                                            style: const TextStyle(
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                          Text(
+                                            DateFormat("dd/MM/yyyy hh:mm a")
+                                                .format(user.lastCreditDate!),
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  )
                                 ],
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  const Text(
-                                    "30,000",
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                  Text(
-                                    DateFormat("dd-MM-yyyy")
-                                        .format(DateTime.now()),
-                                    style: const TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return AppWidget.loading();
+                  }
+                }),
           ),
         ],
       ),

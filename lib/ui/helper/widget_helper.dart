@@ -161,4 +161,34 @@ class AppWidget {
       ),
     );
   }
+
+  static Widget loading() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(
+          height: 100,
+          width: double.infinity,
+        ),
+        Container(
+          decoration: const BoxDecoration(
+            border: Border(),
+          ),
+          child: const Column(
+            children: [
+              SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  color: AppColors.softBg,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text('Loading...'),
+            ],
+          ),
+        )
+      ],
+    );
+  }
 }

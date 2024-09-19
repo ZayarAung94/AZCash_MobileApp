@@ -1,3 +1,4 @@
+import 'package:az_cash/database/database.dart';
 import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:az_cash/ui/screens/childs/credit_history.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,8 @@ import 'package:get/route_manager.dart';
 import '../constant.dart';
 
 class PayCredit extends StatelessWidget {
-  const PayCredit({super.key});
+  final User user;
+  const PayCredit({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +86,7 @@ class PayCredit extends StatelessWidget {
                   color: Colors.grey,
                   label: 'View Credit History',
                   onPressed: () {
-                    Get.to(() => const CreditHistory());
+                    Get.to(() => CreditHistory(user: user));
                   }),
             ),
             const SizedBox(height: 20),

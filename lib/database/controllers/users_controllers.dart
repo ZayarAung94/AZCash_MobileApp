@@ -9,6 +9,23 @@ class UsersController {
         .getSingleOrNull();
   }
 
+  Future getAll() async {
+    var data = db.select(db.users).get();
+    return data;
+  }
+
+  Future getCreditUser() async {
+    return await (db.select(db.users)
+          ..where(
+            (u) => u.totalCredit.isBiggerThanValue(0),
+          )
+          ..orderBy([
+            (u) =>
+                OrderingTerm(expression: u.totalCredit, mode: OrderingMode.desc)
+          ]))
+        .get();
+  }
+
   Future addUser(String userId) async {
     User? data = await (db.select(db.users)
           ..where((u) => u.userId.equals(userId)))
@@ -49,8 +66,10 @@ class UsersController {
   Future updateCredit({
     required String type,
     required int amount,
-    required User user,
+    required String userId,
   }) async {
+    User user = await getUser(userId);
+
     int newCrd = user.totalCredit;
     if (type == "add") {
       newCrd = amount + user.totalCredit;
@@ -83,11 +102,6 @@ class UsersController {
           telegram: Value(""),
         ),
       );
-  }
-
-  Future getAll() async {
-    var data = db.select(db.users).get();
-    return data;
   }
 
   Future warningUser() async {}
