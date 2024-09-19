@@ -41,4 +41,42 @@ class PaymentController {
       database.ongoingPayemntUpdate(payment.id);
     }
   }
+
+  Future depoAdd(int amount) async {
+    var result = await database.getPaymentOfMonth(now);
+
+    if (result.isEmpty) {
+      _addPayment();
+    } else {
+      Payment payment = result[0];
+      int newDepo = payment.deposit + amount;
+
+      database.update(database.payments)
+        ..where((p) => p.id.equals(payment.id))
+        ..write(
+          PaymentsCompanion(
+            deposit: Value(newDepo),
+          ),
+        );
+    }
+  }
+
+  Future wdAdd(int amount) async {
+    var result = await database.getPaymentOfMonth(now);
+
+    if (result.isEmpty) {
+      _addPayment();
+    } else {
+      Payment payment = result[0];
+      int newWd = payment.withdraw + amount;
+
+      database.update(database.payments)
+        ..where((p) => p.id.equals(payment.id))
+        ..write(
+          PaymentsCompanion(
+            withdraw: Value(newWd),
+          ),
+        );
+    }
+  }
 }

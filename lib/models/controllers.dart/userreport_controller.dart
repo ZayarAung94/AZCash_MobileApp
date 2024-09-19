@@ -1,3 +1,4 @@
+import 'package:az_cash/database/controllers/users_controllers.dart';
 import 'package:az_cash/database/database.dart';
 import 'package:az_cash/models/userreport.dart';
 
@@ -13,10 +14,16 @@ class UserReportController {
 
       if (result.isEmpty) {
         var orderOfUser = orders.where((o) => o.userId == order.userId);
+        User? user = await UsersController().getUser(order.userId);
+        String userName = "Unknow User";
+
+        if (user != null) {
+          userName = user.userName;
+        }
 
         UserReport newReport = UserReport(
           userId: order.userId,
-          userName: "Unknow User",
+          userName: userName,
           totalDepo: 0,
           totalWd: 0,
           deopTimes: 0,

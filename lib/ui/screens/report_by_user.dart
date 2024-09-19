@@ -219,6 +219,14 @@ class _ReportByUserScreenState extends State<ReportByUserScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: AppColors.softBg,
+                            ),
+                          ),
+                          SizedBox(height: 10),
                           Text("Calculating..."),
                           Text("Paitent...It may take some time."),
                           SizedBox(height: 200)

@@ -185,15 +185,15 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
                                               children: [
                                                 Row(
                                                   children: [
-                                                    const Text(
-                                                      "User Name",
-                                                      style: TextStyle(
+                                                    Text(
+                                                      order.userId,
+                                                      style: const TextStyle(
                                                         fontSize: 15,
                                                       ),
                                                     ),
                                                     const SizedBox(width: 8),
                                                     Text(
-                                                      "(${order.userId})",
+                                                      "(${order.type})",
                                                       style: const TextStyle(
                                                         color: Colors.grey,
                                                         fontSize: 11,

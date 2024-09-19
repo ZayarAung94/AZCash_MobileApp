@@ -4,6 +4,11 @@ import 'package:drift/drift.dart';
 class UsersController {
   final db = AppDatabase();
 
+  Future getUser(String userId) async {
+    return await (db.select(db.users)..where((u) => u.userId.equals(userId)))
+        .getSingleOrNull();
+  }
+
   Future addUser(String userId) async {
     User? data = await (db.select(db.users)
           ..where((u) => u.userId.equals(userId)))

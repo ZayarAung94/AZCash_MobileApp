@@ -1,10 +1,9 @@
 import 'package:az_cash/database/controllers/users_controllers.dart';
 import 'package:az_cash/database/database.dart';
-import 'package:az_cash/models/controllers.dart/payment_controller.dart';
+import 'package:az_cash/models/controllers.dart/order_controller.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/helper/validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../constant.dart';
@@ -23,6 +22,9 @@ class _AddDepositState extends State<AddDeposit> {
 
   final database = AppDatabase();
   final userController = UsersController();
+  final orderController = OrderController();
+
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -117,39 +119,13 @@ class _AddDepositState extends State<AddDeposit> {
                 onPressed: () async {
                   if (_userIdController.text != "" &&
                       Validator.isNumber(_amountController.text.trim())) {
-                    //Add Order
-                    await database
-                        .into(database.orders)
-                        .insert(OrdersCompanion.insert(
-                          userId: _userIdController.text.trim(),
-                          amount: int.parse(_amountController.text.trim()),
-                          code: '',
-                          type: "deposit",
-                          status: 'done',
-                          agentCode: "",
-                          created: DateTime.now(),
-                        ))
-                        .then((_) async {
-                      int amount = int.parse(_amountController.text);
-
-                      if (DateTime.now().isAfter(AppData.activeSession)) {
-                        DateTime today = DateTime.now();
-                        AppData.totalDepo = amount;
-                        AppData.totalWd = 0;
-                        AppData.activeSession =
-                            DateTime(today.year, today.month + 1, 1, 23, 59, 59)
-                                .subtract(const Duration(days: 1));
-                      } else {
-                        AppData.totalDepo = AppData.totalDepo + amount;
-                      }
-
-                      await PaymentController().appStartCheck();
+                    setState(() {
+                      isLoading = true;
                     });
-                    Clipboard.setData(
-                      ClipboardData(
-                        text:
-                            "#Deposit \nId : ${_userIdController.text} \nAmount : ${_amountController.text} \nP Name : ",
-                      ),
+
+                    await orderController.addDeposit(
+                      userId: _userIdController.text.trim(),
+                      amount: int.parse(_amountController.text),
                     );
 
                     Get.back();
@@ -161,11 +137,17 @@ class _AddDepositState extends State<AddDeposit> {
                     );
                   }
                 },
-                child: const SizedBox(
+                child: SizedBox(
                   height: 40,
                   width: double.infinity,
                   child: Center(
-                    child: Text("Deposit"),
+                    child: isLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text("Deposit"),
                   ),
                 ),
               ),

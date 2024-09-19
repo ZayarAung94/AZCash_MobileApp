@@ -1,9 +1,9 @@
+import 'package:az_cash/database/controllers/users_controllers.dart';
 import 'package:az_cash/database/database.dart';
-import 'package:az_cash/models/controllers.dart/payment_controller.dart';
+import 'package:az_cash/models/controllers.dart/order_controller.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/helper/validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../constant.dart';
@@ -21,6 +21,8 @@ class _AddWithdrawState extends State<AddWithdraw> {
   final TextEditingController _codeController = TextEditingController();
 
   final database = AppDatabase();
+  final orderController = OrderController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -116,53 +118,35 @@ class _AddWithdrawState extends State<AddWithdraw> {
                   if (_userIdController.text != "" &&
                       Validator.isNumber(_amountController.text.trim()) &&
                       _codeController.text != "") {
-                    await database
-                        .into(database.orders)
-                        .insert(OrdersCompanion.insert(
-                          userId: _userIdController.text,
-                          amount: int.parse(_amountController.text.trim()),
-                          type: 'withdraw',
-                          code: _codeController.text,
-                          status: 'done',
-                          agentCode: "",
-                          created: DateTime.now(),
-                        ))
-                        .then((_) {
-                      int amount = int.parse(_amountController.text);
-
-                      if (DateTime.now().isAfter(AppData.activeSession)) {
-                        DateTime today = DateTime.now();
-                        AppData.totalWd = amount;
-                        AppData.totalDepo = 0;
-                        AppData.activeSession =
-                            DateTime(today.year, today.month + 1, 1, 23, 59, 59)
-                                .subtract(const Duration(days: 1));
-                      } else {
-                        AppData.totalWd = AppData.totalWd + amount;
-                      }
-
-                      PaymentController().appStartCheck();
+                    setState(() {
+                      isLoading = true;
                     });
 
-                    Clipboard.setData(
-                      ClipboardData(
-                        text:
-                            "#Withdraw \nId : ${_userIdController.text} \nAmount : ${_amountController.text} \nCode : ${_codeController.text}",
-                      ),
+                    await orderController.addWithdraw(
+                      userId: _userIdController.text.trim(),
+                      amount: int.parse(_amountController.text),
+                      code: _codeController.text.trim(),
                     );
 
                     Get.back();
                     AppMessage.copied();
+                    UsersController().addUser(_userIdController.text.trim());
                   } else {
                     AppMessage.error(
                         '"User ID", "Withdraw Amount" and "Code" are required. You must type this all data.');
                   }
                 },
-                child: const SizedBox(
+                child: SizedBox(
                   height: 40,
                   width: double.infinity,
                   child: Center(
-                    child: Text("Withdraw"),
+                    child: isLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text("Withdraw"),
                   ),
                 ),
               ),

@@ -56,6 +56,7 @@ class _MainScreenState extends State<MainScreen> {
         if (!Get.isSnackbarOpen) {
           canAppClose = true;
 
+
           Get.snackbar(
             'Are you sure to close app?',
             'You want to close application click back button next time before this missage dismiss.',
