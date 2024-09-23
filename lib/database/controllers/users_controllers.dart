@@ -79,13 +79,20 @@ class UsersController {
 
     db.update(db.users)
       ..where((u) => u.id.equals(user.id))
-      ..write(UsersCompanion(
-        totalCredit: Value(newCrd),
-        lastCreditDate: Value(DateTime.now()),
-      ));
+      ..write(
+        UsersCompanion(
+          totalCredit: Value(newCrd),
+          lastCreditDate: Value(DateTime.now()),
+        ),
+      );
   }
 
-  Future updatePromotion() async {}
+  Future updatePromotion({
+    required String userId,
+    required int promoAmount,
+  }) async {
+    User user = await getUser(userId);
+  }
 
   Future updateContacts({
     required User user,

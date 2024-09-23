@@ -1,5 +1,5 @@
+import 'package:az_cash/database/controllers/order_controller.dart';
 import 'package:az_cash/database/database.dart';
-import 'package:az_cash/models/controllers.dart/order_controller.dart';
 import 'package:az_cash/ui/components/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

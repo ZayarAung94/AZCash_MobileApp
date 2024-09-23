@@ -1,5 +1,5 @@
-import 'package:az_cash/models/controllers.dart/userreport_controller.dart';
-import 'package:az_cash/models/userreport.dart';
+import 'package:az_cash/database/controllers/userreport_controller.dart';
+import 'package:az_cash/database/models/userreport.dart';
 import 'package:az_cash/ui/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

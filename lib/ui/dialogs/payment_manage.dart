@@ -1,5 +1,5 @@
+import 'package:az_cash/database/controllers/payment_controller.dart';
 import 'package:az_cash/database/database.dart';
-import 'package:az_cash/models/controllers.dart/payment_controller.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/helper/validator.dart';
 import 'package:flutter/material.dart';

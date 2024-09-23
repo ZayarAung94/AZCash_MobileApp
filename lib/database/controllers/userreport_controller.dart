@@ -1,6 +1,6 @@
 import 'package:az_cash/database/controllers/users_controllers.dart';
 import 'package:az_cash/database/database.dart';
-import 'package:az_cash/models/userreport.dart';
+import 'package:az_cash/database/models/userreport.dart';
 
 class UserReportController {
   final database = AppDatabase();

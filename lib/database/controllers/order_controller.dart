@@ -1,6 +1,6 @@
+import 'package:az_cash/database/controllers/payment_controller.dart';
 import 'package:az_cash/database/controllers/users_controllers.dart';
 import 'package:az_cash/database/database.dart';
-import 'package:az_cash/models/controllers.dart/payment_controller.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/services.dart';
 

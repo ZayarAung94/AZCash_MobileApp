@@ -1,6 +1,6 @@
+import 'package:az_cash/database/controllers/payment_controller.dart';
 import 'package:az_cash/database/database.dart';
-import 'package:az_cash/firebase/appdata_controller.dart';
-import 'package:az_cash/models/controllers.dart/payment_controller.dart';
+import 'package:az_cash/firebase/controllers/appdata_controller.dart';
 import 'package:az_cash/ui/constant.dart';
 import 'package:az_cash/ui/screens/auth/appupdate.dart';
 import 'package:az_cash/ui/screens/auth/login.dart';

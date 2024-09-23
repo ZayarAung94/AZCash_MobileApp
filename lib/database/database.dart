@@ -1,4 +1,4 @@
-import 'package:az_cash/models/controllers.dart/order_controller.dart';
+import 'package:az_cash/database/controllers/order_controller.dart';
 import 'package:az_cash/ui/constant.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
