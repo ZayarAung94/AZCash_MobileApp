@@ -198,15 +198,6 @@ class _ReportByUserScreenState extends State<ReportByUserScreen> {
                               value1: "${report.deopTimes}",
                               value2: "${report.wdTimes}",
                             ),
-                            reportDataRow(
-                              label1: 'Credit :',
-                              label2: 'Credit Carryover :',
-                              value1:
-                                  NumberFormat("#,##0").format(report.credit),
-                              value2: NumberFormat("#,##0")
-                                  .format(report.creditCarryover),
-                              value2Color: Colors.amber[200],
-                            ),
                           ],
                         ),
                       );

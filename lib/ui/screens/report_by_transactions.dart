@@ -1,4 +1,5 @@
 import 'package:az_cash/database/database.dart';
+import 'package:az_cash/models/controllers.dart/order_controller.dart';
 import 'package:az_cash/ui/components/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -108,20 +109,20 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
         ),
         Expanded(
           child: FutureBuilder(
-              future: database.getOrderByRange(
+              future: database.getOrderWithUserByRange(
                   DateTime(selectedDate.year, selectedDate.month,
                       selectedDate.day, 0, 0, 0),
                   DateTime(selectedDate.year, selectedDate.month,
                       selectedDate.day, 23, 59, 59)),
               builder: (context, snap) {
                 if (snap.connectionState == ConnectionState.done) {
-                  List<Order>? orders = snap.data;
+                  List<OrderWithUser>? orders = snap.data;
                   if (orders != null) {
                     for (var order in orders) {
-                      if (order.type == 'deposit') {
-                        totalDepo = totalDepo + order.amount;
+                      if (order.order.type == 'deposit') {
+                        totalDepo = totalDepo + order.order.amount;
                       } else {
-                        totalWd = totalWd + order.amount;
+                        totalWd = totalWd + order.order.amount;
                       }
                     }
                   }
@@ -166,8 +167,8 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
                         child: ListView.builder(
                             itemCount: orders == null ? 0 : orders.length,
                             itemBuilder: (context, index) {
-                              index = orders!.length - (index + 1);
-                              Order order = orders[index];
+                              Order order = orders![index].order;
+                              User user = orders[index].user;
                               return Column(
                                 children: [
                                   Container(
@@ -186,14 +187,14 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      order.userId,
+                                                      user.userName,
                                                       style: const TextStyle(
                                                         fontSize: 15,
                                                       ),
                                                     ),
                                                     const SizedBox(width: 8),
                                                     Text(
-                                                      "(${order.type})",
+                                                      "(${order.userId})",
                                                       style: const TextStyle(
                                                         color: Colors.grey,
                                                         fontSize: 11,
@@ -205,7 +206,7 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      "Status : ${order.status}, ",
+                                                      "Crd : ${order.credit}, ",
                                                       style: const TextStyle(
                                                         color: Colors.grey,
                                                         fontSize: 11,

@@ -44,14 +44,16 @@ class CreditHistory extends StatelessWidget {
                                     Row(
                                       children: [
                                         Text(
-                                          order.userId,
+                                          order.type == "deposit"
+                                              ? "Credit"
+                                              : "Credit Payback",
                                           style: const TextStyle(
                                             fontSize: 15,
                                           ),
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
-                                          "(${order.type})",
+                                          "(${order.userId})",
                                           style: const TextStyle(
                                             color: Colors.grey,
                                             fontSize: 11,
@@ -60,9 +62,9 @@ class CreditHistory extends StatelessWidget {
                                       ],
                                     ),
                                     const SizedBox(height: 8),
-                                    const Text(
-                                      "Status",
-                                      style: TextStyle(
+                                    Text(
+                                      "Order Trans (K) : ${order.amount}",
+                                      style: const TextStyle(
                                         color: Colors.grey,
                                         fontSize: 11,
                                       ),
@@ -84,8 +86,8 @@ class CreditHistory extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      DateFormat("hh:mm a")
-                                          .format(DateTime.now()),
+                                      DateFormat("dd/MM/yy hh:mm a")
+                                          .format(order.created),
                                       style: const TextStyle(
                                         color: Colors.grey,
                                         fontSize: 11,

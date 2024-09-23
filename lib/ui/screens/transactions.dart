@@ -1,4 +1,5 @@
 import 'package:az_cash/database/database.dart';
+import 'package:az_cash/models/controllers.dart/order_controller.dart';
 import 'package:az_cash/ui/components/delete_order.dart';
 import 'package:az_cash/ui/components/loading.dart';
 import 'package:az_cash/ui/constant.dart';
@@ -24,16 +25,16 @@ class _TranasctionsScreenState extends State<TranasctionsScreen> {
     int totalWd = 0;
 
     return FutureBuilder(
-        future: database.getOrderByRange(start, end),
+        future: database.getOrderWithUserByRange(start, end),
         builder: (context, snap) {
           if (snap.connectionState == ConnectionState.done) {
-            List<Order>? orders = snap.data;
+            List<OrderWithUser>? orders = snap.data;
             if (orders != null) {
               for (var order in orders) {
-                if (order.type == 'deposit') {
-                  totalDepo = totalDepo + order.amount;
+                if (order.order.type == 'deposit') {
+                  totalDepo = totalDepo + order.order.amount;
                 } else {
-                  totalWd = totalWd + order.amount;
+                  totalWd = totalWd + order.order.amount;
                 }
               }
             }
@@ -78,8 +79,8 @@ class _TranasctionsScreenState extends State<TranasctionsScreen> {
                   child: ListView.builder(
                       itemCount: orders == null ? 0 : orders.length,
                       itemBuilder: (context, index) {
-                        index = orders!.length - (index + 1);
-                        Order order = orders[index];
+                        Order order = orders![index].order;
+                        User user = orders[index].user;
                         return GestureDetector(
                           behavior: HitTestBehavior.opaque,
                           onLongPress: () async {
@@ -111,14 +112,14 @@ class _TranasctionsScreenState extends State<TranasctionsScreen> {
                                             Row(
                                               children: [
                                                 Text(
-                                                  order.userId,
+                                                  user.userName,
                                                   style: const TextStyle(
                                                     fontSize: 15,
                                                   ),
                                                 ),
                                                 const SizedBox(width: 8),
                                                 Text(
-                                                  "(${order.type})",
+                                                  "(${order.userId})",
                                                   style: const TextStyle(
                                                     color: Colors.grey,
                                                     fontSize: 11,
@@ -130,9 +131,11 @@ class _TranasctionsScreenState extends State<TranasctionsScreen> {
                                             Row(
                                               children: [
                                                 Text(
-                                                  "Status : ${order.status}, ",
-                                                  style: const TextStyle(
-                                                    color: Colors.grey,
+                                                  "Crd : ${order.credit}, ",
+                                                  style: TextStyle(
+                                                    color: order.credit < 0
+                                                        ? Colors.red.shade100
+                                                        : Colors.green.shade100,
                                                     fontSize: 11,
                                                   ),
                                                 ),

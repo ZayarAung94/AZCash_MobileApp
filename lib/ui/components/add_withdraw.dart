@@ -19,10 +19,12 @@ class _AddWithdrawState extends State<AddWithdraw> {
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _codeController = TextEditingController();
+  final TextEditingController _crdController = TextEditingController();
 
   final database = AppDatabase();
   final orderController = OrderController();
   bool isLoading = false;
+  int payType = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -100,11 +102,31 @@ class _AddWithdrawState extends State<AddWithdraw> {
                 ButtonSegment(value: 0, label: Text('Paided')),
                 ButtonSegment(value: 1, label: Text('Payback the Credit')),
               ],
-              selected: const <int>{0},
+              selected: <int>{payType},
               onSelectionChanged: (Set<int> newSelection) {
-                AppMessage.requirePremium();
+                setState(() {
+                  payType = newSelection.first;
+                });
               },
             ),
+            if (payType == 1)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+                child: TextField(
+                  keyboardType: const TextInputType.numberWithOptions(),
+                  controller: _crdController,
+                  decoration: const InputDecoration(
+                    label: Text("Credit Amount :"),
+                    hintText: "If no input, all amount will be Credit Payback.",
+                    hintStyle: TextStyle(
+                      fontSize: 11,
+                      color: Colors.red,
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: MaterialButton(
@@ -122,11 +144,30 @@ class _AddWithdrawState extends State<AddWithdraw> {
                       isLoading = true;
                     });
 
-                    await orderController.addWithdraw(
-                      userId: _userIdController.text.trim(),
-                      amount: int.parse(_amountController.text),
-                      code: _codeController.text.trim(),
-                    );
+                    if (payType == 0) {
+                      await orderController.addWithdraw(
+                        userId: _userIdController.text.trim(),
+                        amount: int.parse(_amountController.text),
+                        code: _codeController.text.trim(),
+                      );
+                    } else if (payType == 1) {
+                      int? crd = int.parse(_amountController.text);
+
+                      if (_crdController.text != "") {
+                        crd = int.tryParse(_crdController.text);
+                        if (crd == null) {
+                          AppMessage.error(
+                            "Enter valid value in Credit Amount!!!",
+                          );
+                          return;
+                        }
+                      }
+                      await orderController.addCreditWd(
+                        userId: _userIdController.text.trim(),
+                        amount: int.parse(_amountController.text),
+                        crdAmount: crd,
+                      );
+                    }
 
                     Get.back();
                     AppMessage.copied();

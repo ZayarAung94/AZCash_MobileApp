@@ -1,3 +1,4 @@
+import 'package:az_cash/models/controllers.dart/order_controller.dart';
 import 'package:az_cash/ui/constant.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
@@ -88,8 +89,28 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<Order>> getOrderByRange(DateTime start, DateTime end) async {
     return await (select(orders)
-          ..where((o) => o.created.isBetweenValues(start, end)))
+          ..where((o) => o.created.isBetweenValues(start, end))
+          ..orderBy([
+            (o) => OrderingTerm(expression: o.created, mode: OrderingMode.desc)
+          ]))
         .get();
+  }
+
+  Future<List<OrderWithUser>> getOrderWithUserByRange(
+      DateTime start, DateTime end) async {
+    final query = select(orders)
+        .join([innerJoin(users, users.userId.isExp(orders.userId))])
+      ..where(orders.created.isBetweenValues(start, end))
+      ..orderBy([
+        OrderingTerm(expression: orders.created, mode: OrderingMode.desc),
+      ]);
+
+    return query.map((row) {
+      return OrderWithUser(
+        order: row.readTable(orders),
+        user: row.readTable(users),
+      );
+    }).get();
   }
 
   Future<List<Payment>> getPaymentOfMonth(DateTime date) async {

@@ -7,9 +7,14 @@ import 'package:intl/intl.dart';
 
 import '../constant.dart';
 
-class ManageCredit extends StatelessWidget {
+class ManageCredit extends StatefulWidget {
   const ManageCredit({super.key});
 
+  @override
+  State<ManageCredit> createState() => _ManageCreditState();
+}
+
+class _ManageCreditState extends State<ManageCredit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,6 +53,8 @@ class ManageCredit extends StatelessWidget {
                                 return PayCredit(user: user);
                               },
                             );
+
+                            setState(() {});
                           },
                           child: Card(
                             margin: const EdgeInsets.only(

@@ -1,5 +1,7 @@
 import 'package:az_cash/database/database.dart';
+import 'package:az_cash/models/controllers.dart/order_controller.dart';
 import 'package:az_cash/ui/helper/btn_helper.dart';
+import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/screens/childs/credit_history.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -12,6 +14,8 @@ class PayCredit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController crdController = TextEditingController();
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -42,31 +46,34 @@ class PayCredit extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Account :"),
-                  Text("Name (123456789)"),
+                  const Text("Account :"),
+                  Text("${user.userName} (${user.userId})"),
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Total Credit :"),
-                  Text("30,000 K"),
+                  const Text("Total Credit :"),
+                  Text("${user.totalCredit} K"),
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
               child: TextField(
-                keyboardType: TextInputType.numberWithOptions(),
-                decoration: InputDecoration(
+                controller: crdController,
+                keyboardType: const TextInputType.numberWithOptions(),
+                decoration: const InputDecoration(
                   labelText: "Pay Amount (K)",
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
@@ -76,9 +83,20 @@ class PayCredit extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: AppBtn.expendedBtn(
-                color: Colors.green,
-                label: "Paid Credit",
-              ),
+                  color: Colors.green,
+                  label: "Paid Credit",
+                  onPressed: () async {
+                    int? crdAmount = int.tryParse(crdController.text.trim());
+
+                    if (crdAmount != null) {
+                      await OrderController().addCreditWd(
+                          userId: user.userId, amount: 0, crdAmount: crdAmount);
+
+                      Get.back();
+                    } else {
+                      AppMessage.error("Enter Valide Amount!");
+                    }
+                  }),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
