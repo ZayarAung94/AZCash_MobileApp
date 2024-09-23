@@ -178,7 +178,6 @@ class OrderController {
       );
 
       await userController.updateCredit(
-        type: "add",
         amount: crdAmount,
         userId: userId,
       );
@@ -226,7 +225,6 @@ class OrderController {
       );
 
       await userController.updateCredit(
-        type: "add",
         amount: crdAmount,
         userId: userId,
       );

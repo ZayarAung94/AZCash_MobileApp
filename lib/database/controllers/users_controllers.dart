@@ -64,18 +64,13 @@ class UsersController {
   }
 
   Future updateCredit({
-    required String type,
     required int amount,
     required String userId,
   }) async {
     User user = await getUser(userId);
 
     int newCrd = user.totalCredit;
-    if (type == "add") {
-      newCrd = amount + user.totalCredit;
-    } else {
-      newCrd = user.totalCredit - amount;
-    }
+    newCrd = amount + user.totalCredit;
 
     db.update(db.users)
       ..where((u) => u.id.equals(user.id))
@@ -85,13 +80,6 @@ class UsersController {
           lastCreditDate: Value(DateTime.now()),
         ),
       );
-  }
-
-  Future updatePromotion({
-    required String userId,
-    required int promoAmount,
-  }) async {
-    User user = await getUser(userId);
   }
 
   Future updateContacts({

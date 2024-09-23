@@ -55,23 +55,7 @@ class Users extends Table {
   TextColumn get telegram => text().nullable()();
 }
 
-class Agents extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get name => text()();
-  TextColumn get agentCode => text()();
-  DateTimeColumn get joinedDate =>
-      dateTime().withDefault(Constant(DateTime.now()))();
-}
-
-class MobCashDepo extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get amount => integer()();
-  DateTimeColumn get created => dateTime()();
-  RealColumn get beforeLimit => real()();
-  RealColumn get afterLimit => real()();
-}
-
-@DriftDatabase(tables: [Orders, Payments, Users, Agents, MobCashDepo])
+@DriftDatabase(tables: [Orders, Payments, Users])
 class AppDatabase extends _$AppDatabase {
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
