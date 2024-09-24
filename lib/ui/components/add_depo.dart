@@ -1,4 +1,5 @@
 import 'package:az_cash/database/controllers/order_controller.dart';
+import 'package:az_cash/database/controllers/promotion_controller.dart';
 import 'package:az_cash/database/controllers/users_controllers.dart';
 import 'package:az_cash/database/database.dart';
 import 'package:az_cash/ui/helper/snack.dart';
@@ -162,12 +163,31 @@ class _AddDepositState extends State<AddDeposit> {
                       isLoading = true;
                     });
 
+                    await userController.addUser(_userIdController.text.trim());
+
                     if (payType == 0) {
                       await orderController.addDeposit(
                         userId: _userIdController.text.trim(),
                         amount: int.parse(_amountController.text),
                       );
                     } else if (payType == 1) {
+                      int? promo = int.parse(_amountController.text);
+
+                      if (_promoController.text != "") {
+                        promo = int.tryParse(_promoController.text);
+
+                        if (promo == null) {
+                          AppMessage.error(
+                              "Enter valid value in Promotion Amount!!!");
+                          return;
+                        }
+                      }
+
+                      await PromotionController().addPromoDepo(
+                        userId: _userIdController.text.trim(),
+                        amount: int.parse(_amountController.text),
+                        promoAmount: promo,
+                      );
                     } else if (payType == 2) {
                       int? crd = int.parse(_amountController.text);
 
@@ -190,7 +210,6 @@ class _AddDepositState extends State<AddDeposit> {
 
                     Get.back();
                     AppMessage.copied();
-                    userController.addUser(_userIdController.text.trim());
                   } else {
                     AppMessage.error(
                       "'User Id' and 'Topup Amount' are required. You must give input both.",

@@ -1,6 +1,7 @@
 import 'package:az_cash/database/controllers/order_controller.dart';
 import 'package:az_cash/database/database.dart';
 import 'package:az_cash/ui/components/loading.dart';
+import 'package:az_cash/ui/helper/widget_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -14,13 +15,19 @@ class ReportByTransactions extends StatefulWidget {
 }
 
 class _ReportByTransactionsState extends State<ReportByTransactions> {
-  DateTime selectedDate = DateTime.now();
   String selectedItem = "Today";
   List<String> dropDownOptions = [
-    'Custom',
+    'Exact Peroid',
     'Today',
     'Yesterday',
+    'Current Month',
+    'Last Month',
   ];
+
+  DateTimeRange selectedDateRange = DateTimeRange(
+    start: DateTime.now(),
+    end: DateTime.now(),
+  );
 
   final database = AppDatabase();
 
@@ -29,10 +36,29 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
 
   @override
   Widget build(BuildContext context) {
+    DateTimeRange dateRange = DateTimeRange(
+      start: DateTime.now(),
+      end: DateTime.now(),
+    );
+
     if (selectedItem == "Yesterday") {
-      selectedDate = DateTime.now().subtract(const Duration(days: 1));
-    } else if (selectedItem == "Today") {
-      selectedDate = DateTime.now();
+      dateRange = DateTimeRange(
+        start: DateTime.now().subtract(const Duration(days: 1)),
+        end: DateTime.now().subtract(const Duration(days: 1)),
+      );
+    } else if (selectedItem == "Current Month") {
+      dateRange = DateTimeRange(
+        start: DateTime(DateTime.now().year, DateTime.now().month, 1),
+        end: DateTime.now(),
+      );
+    } else if (selectedItem == "Last Month") {
+      dateRange = DateTimeRange(
+        start: DateTime(DateTime.now().year, DateTime.now().month - 1, 1),
+        end: DateTime(DateTime.now().year, DateTime.now().month, 1)
+            .subtract(const Duration(days: 1)),
+      );
+    } else if (selectedItem == "Exact Peroid") {
+      dateRange = selectedDateRange;
     }
 
     return Column(
@@ -72,48 +98,43 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: SizedBox(
-                  child: TextField(
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 10),
-                      border: const OutlineInputBorder(),
-                      hintText:
-                          DateFormat("dd/MM/yyyy (EEEE)").format(selectedDate),
-                    ),
-                    onTap: () async {
-                      DateTime? newDate = await showDatePicker(
-                        context: context,
-                        initialDate: selectedDate,
-                        firstDate: DateTime(2023),
-                        lastDate: DateTime.now(),
-                      );
-
-                      if (newDate != null) {
-                        setState(() {
-                          selectedItem = "Custom";
-                          selectedDate = newDate;
-                          totalDepo = 0;
-                          totalWd = 0;
-                        });
-                      }
-                    },
-                  ),
+              child: TextField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                  border: const OutlineInputBorder(),
+                  hintText:
+                      '${DateFormat("dd/MM/yyyy").format(dateRange.start)} - ${DateFormat("dd/MM/yyyy").format(dateRange.end)}',
                 ),
+                onTap: () async {
+                  DateTimeRange? newSelected = await showDateRangePicker(
+                    context: context,
+                    initialDateRange: dateRange,
+                    firstDate: DateTime(2024),
+                    lastDate: DateTime.now(),
+                  );
+
+                  if (newSelected != null) {
+                    setState(() {
+                      selectedItem = "Exact Peroid";
+                      selectedDateRange = newSelected;
+                    });
+                  }
+                },
               ),
             ),
+            const SizedBox(width: 8),
           ],
         ),
+        const SizedBox(height: 10),
         Expanded(
           child: FutureBuilder(
               future: database.getOrderWithUserByRange(
-                  DateTime(selectedDate.year, selectedDate.month,
-                      selectedDate.day, 0, 0, 0),
-                  DateTime(selectedDate.year, selectedDate.month,
-                      selectedDate.day, 23, 59, 59)),
+                DateTime(dateRange.start.year, dateRange.start.month,
+                    dateRange.start.day, 0, 0, 0),
+                DateTime(dateRange.end.year, dateRange.end.month,
+                    dateRange.end.day, 23, 59, 59),
+              ),
               builder: (context, snap) {
                 if (snap.connectionState == ConnectionState.done) {
                   List<OrderWithUser>? orders = snap.data;
@@ -125,6 +146,10 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
                         totalWd = totalWd + order.order.amount;
                       }
                     }
+                  }
+
+                  if (orders == null || orders.isEmpty) {
+                    return AppWidget.noData();
                   }
 
                   return Column(
@@ -140,7 +165,7 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              DateFormat.yMMMMEEEEd().format(selectedDate),
+                              '${DateFormat("dd/MM/yyyy").format(dateRange.start)} - ${DateFormat("dd/MM/yyyy").format(dateRange.end)}',
                             ),
                             Row(
                               children: [
@@ -165,9 +190,9 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
                       ),
                       Expanded(
                         child: ListView.builder(
-                            itemCount: orders == null ? 0 : orders.length,
+                            itemCount: orders.length,
                             itemBuilder: (context, index) {
-                              Order order = orders![index].order;
+                              Order order = orders[index].order;
                               User user = orders[index].user;
                               return Column(
                                 children: [

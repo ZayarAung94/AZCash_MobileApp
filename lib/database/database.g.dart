@@ -1203,6 +1203,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   late final GeneratedColumn<DateTime> lastCreditDate =
       GeneratedColumn<DateTime>('last_credit_date', aliasedName, true,
           type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _totalPromotionMeta =
+      const VerificationMeta('totalPromotion');
+  @override
+  late final GeneratedColumn<int> totalPromotion = GeneratedColumn<int>(
+      'total_promotion', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   static const VerificationMeta _facebookMeta =
       const VerificationMeta('facebook');
   @override
@@ -1232,6 +1240,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         lastTransition,
         totalCredit,
         lastCreditDate,
+        totalPromotion,
         facebook,
         viber,
         telegram
@@ -1295,6 +1304,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
           lastCreditDate.isAcceptableOrUnknown(
               data['last_credit_date']!, _lastCreditDateMeta));
     }
+    if (data.containsKey('total_promotion')) {
+      context.handle(
+          _totalPromotionMeta,
+          totalPromotion.isAcceptableOrUnknown(
+              data['total_promotion']!, _totalPromotionMeta));
+    }
     if (data.containsKey('facebook')) {
       context.handle(_facebookMeta,
           facebook.isAcceptableOrUnknown(data['facebook']!, _facebookMeta));
@@ -1336,6 +1351,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
           .read(DriftSqlType.int, data['${effectivePrefix}total_credit'])!,
       lastCreditDate: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}last_credit_date']),
+      totalPromotion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}total_promotion'])!,
       facebook: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}facebook']),
       viber: attachedDatabase.typeMapping
@@ -1362,6 +1379,7 @@ class User extends DataClass implements Insertable<User> {
   final DateTime lastTransition;
   final int totalCredit;
   final DateTime? lastCreditDate;
+  final int totalPromotion;
   final String? facebook;
   final String? viber;
   final String? telegram;
@@ -1376,6 +1394,7 @@ class User extends DataClass implements Insertable<User> {
       required this.lastTransition,
       required this.totalCredit,
       this.lastCreditDate,
+      required this.totalPromotion,
       this.facebook,
       this.viber,
       this.telegram});
@@ -1394,6 +1413,7 @@ class User extends DataClass implements Insertable<User> {
     if (!nullToAbsent || lastCreditDate != null) {
       map['last_credit_date'] = Variable<DateTime>(lastCreditDate);
     }
+    map['total_promotion'] = Variable<int>(totalPromotion);
     if (!nullToAbsent || facebook != null) {
       map['facebook'] = Variable<String>(facebook);
     }
@@ -1420,6 +1440,7 @@ class User extends DataClass implements Insertable<User> {
       lastCreditDate: lastCreditDate == null && nullToAbsent
           ? const Value.absent()
           : Value(lastCreditDate),
+      totalPromotion: Value(totalPromotion),
       facebook: facebook == null && nullToAbsent
           ? const Value.absent()
           : Value(facebook),
@@ -1445,6 +1466,7 @@ class User extends DataClass implements Insertable<User> {
       lastTransition: serializer.fromJson<DateTime>(json['lastTransition']),
       totalCredit: serializer.fromJson<int>(json['totalCredit']),
       lastCreditDate: serializer.fromJson<DateTime?>(json['lastCreditDate']),
+      totalPromotion: serializer.fromJson<int>(json['totalPromotion']),
       facebook: serializer.fromJson<String?>(json['facebook']),
       viber: serializer.fromJson<String?>(json['viber']),
       telegram: serializer.fromJson<String?>(json['telegram']),
@@ -1464,6 +1486,7 @@ class User extends DataClass implements Insertable<User> {
       'lastTransition': serializer.toJson<DateTime>(lastTransition),
       'totalCredit': serializer.toJson<int>(totalCredit),
       'lastCreditDate': serializer.toJson<DateTime?>(lastCreditDate),
+      'totalPromotion': serializer.toJson<int>(totalPromotion),
       'facebook': serializer.toJson<String?>(facebook),
       'viber': serializer.toJson<String?>(viber),
       'telegram': serializer.toJson<String?>(telegram),
@@ -1481,6 +1504,7 @@ class User extends DataClass implements Insertable<User> {
           DateTime? lastTransition,
           int? totalCredit,
           Value<DateTime?> lastCreditDate = const Value.absent(),
+          int? totalPromotion,
           Value<String?> facebook = const Value.absent(),
           Value<String?> viber = const Value.absent(),
           Value<String?> telegram = const Value.absent()}) =>
@@ -1496,6 +1520,7 @@ class User extends DataClass implements Insertable<User> {
         totalCredit: totalCredit ?? this.totalCredit,
         lastCreditDate:
             lastCreditDate.present ? lastCreditDate.value : this.lastCreditDate,
+        totalPromotion: totalPromotion ?? this.totalPromotion,
         facebook: facebook.present ? facebook.value : this.facebook,
         viber: viber.present ? viber.value : this.viber,
         telegram: telegram.present ? telegram.value : this.telegram,
@@ -1518,6 +1543,9 @@ class User extends DataClass implements Insertable<User> {
       lastCreditDate: data.lastCreditDate.present
           ? data.lastCreditDate.value
           : this.lastCreditDate,
+      totalPromotion: data.totalPromotion.present
+          ? data.totalPromotion.value
+          : this.totalPromotion,
       facebook: data.facebook.present ? data.facebook.value : this.facebook,
       viber: data.viber.present ? data.viber.value : this.viber,
       telegram: data.telegram.present ? data.telegram.value : this.telegram,
@@ -1537,6 +1565,7 @@ class User extends DataClass implements Insertable<User> {
           ..write('lastTransition: $lastTransition, ')
           ..write('totalCredit: $totalCredit, ')
           ..write('lastCreditDate: $lastCreditDate, ')
+          ..write('totalPromotion: $totalPromotion, ')
           ..write('facebook: $facebook, ')
           ..write('viber: $viber, ')
           ..write('telegram: $telegram')
@@ -1556,6 +1585,7 @@ class User extends DataClass implements Insertable<User> {
       lastTransition,
       totalCredit,
       lastCreditDate,
+      totalPromotion,
       facebook,
       viber,
       telegram);
@@ -1573,6 +1603,7 @@ class User extends DataClass implements Insertable<User> {
           other.lastTransition == this.lastTransition &&
           other.totalCredit == this.totalCredit &&
           other.lastCreditDate == this.lastCreditDate &&
+          other.totalPromotion == this.totalPromotion &&
           other.facebook == this.facebook &&
           other.viber == this.viber &&
           other.telegram == this.telegram);
@@ -1589,6 +1620,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<DateTime> lastTransition;
   final Value<int> totalCredit;
   final Value<DateTime?> lastCreditDate;
+  final Value<int> totalPromotion;
   final Value<String?> facebook;
   final Value<String?> viber;
   final Value<String?> telegram;
@@ -1603,6 +1635,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.lastTransition = const Value.absent(),
     this.totalCredit = const Value.absent(),
     this.lastCreditDate = const Value.absent(),
+    this.totalPromotion = const Value.absent(),
     this.facebook = const Value.absent(),
     this.viber = const Value.absent(),
     this.telegram = const Value.absent(),
@@ -1618,6 +1651,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.lastTransition = const Value.absent(),
     this.totalCredit = const Value.absent(),
     this.lastCreditDate = const Value.absent(),
+    this.totalPromotion = const Value.absent(),
     this.facebook = const Value.absent(),
     this.viber = const Value.absent(),
     this.telegram = const Value.absent(),
@@ -1633,6 +1667,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     Expression<DateTime>? lastTransition,
     Expression<int>? totalCredit,
     Expression<DateTime>? lastCreditDate,
+    Expression<int>? totalPromotion,
     Expression<String>? facebook,
     Expression<String>? viber,
     Expression<String>? telegram,
@@ -1648,6 +1683,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       if (lastTransition != null) 'last_transition': lastTransition,
       if (totalCredit != null) 'total_credit': totalCredit,
       if (lastCreditDate != null) 'last_credit_date': lastCreditDate,
+      if (totalPromotion != null) 'total_promotion': totalPromotion,
       if (facebook != null) 'facebook': facebook,
       if (viber != null) 'viber': viber,
       if (telegram != null) 'telegram': telegram,
@@ -1665,6 +1701,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       Value<DateTime>? lastTransition,
       Value<int>? totalCredit,
       Value<DateTime?>? lastCreditDate,
+      Value<int>? totalPromotion,
       Value<String?>? facebook,
       Value<String?>? viber,
       Value<String?>? telegram}) {
@@ -1679,6 +1716,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       lastTransition: lastTransition ?? this.lastTransition,
       totalCredit: totalCredit ?? this.totalCredit,
       lastCreditDate: lastCreditDate ?? this.lastCreditDate,
+      totalPromotion: totalPromotion ?? this.totalPromotion,
       facebook: facebook ?? this.facebook,
       viber: viber ?? this.viber,
       telegram: telegram ?? this.telegram,
@@ -1718,6 +1756,9 @@ class UsersCompanion extends UpdateCompanion<User> {
     if (lastCreditDate.present) {
       map['last_credit_date'] = Variable<DateTime>(lastCreditDate.value);
     }
+    if (totalPromotion.present) {
+      map['total_promotion'] = Variable<int>(totalPromotion.value);
+    }
     if (facebook.present) {
       map['facebook'] = Variable<String>(facebook.value);
     }
@@ -1743,6 +1784,7 @@ class UsersCompanion extends UpdateCompanion<User> {
           ..write('lastTransition: $lastTransition, ')
           ..write('totalCredit: $totalCredit, ')
           ..write('lastCreditDate: $lastCreditDate, ')
+          ..write('totalPromotion: $totalPromotion, ')
           ..write('facebook: $facebook, ')
           ..write('viber: $viber, ')
           ..write('telegram: $telegram')
@@ -2223,6 +2265,7 @@ typedef $$UsersTableCreateCompanionBuilder = UsersCompanion Function({
   Value<DateTime> lastTransition,
   Value<int> totalCredit,
   Value<DateTime?> lastCreditDate,
+  Value<int> totalPromotion,
   Value<String?> facebook,
   Value<String?> viber,
   Value<String?> telegram,
@@ -2238,6 +2281,7 @@ typedef $$UsersTableUpdateCompanionBuilder = UsersCompanion Function({
   Value<DateTime> lastTransition,
   Value<int> totalCredit,
   Value<DateTime?> lastCreditDate,
+  Value<int> totalPromotion,
   Value<String?> facebook,
   Value<String?> viber,
   Value<String?> telegram,
@@ -2270,6 +2314,7 @@ class $$UsersTableTableManager extends RootTableManager<
             Value<DateTime> lastTransition = const Value.absent(),
             Value<int> totalCredit = const Value.absent(),
             Value<DateTime?> lastCreditDate = const Value.absent(),
+            Value<int> totalPromotion = const Value.absent(),
             Value<String?> facebook = const Value.absent(),
             Value<String?> viber = const Value.absent(),
             Value<String?> telegram = const Value.absent(),
@@ -2285,6 +2330,7 @@ class $$UsersTableTableManager extends RootTableManager<
             lastTransition: lastTransition,
             totalCredit: totalCredit,
             lastCreditDate: lastCreditDate,
+            totalPromotion: totalPromotion,
             facebook: facebook,
             viber: viber,
             telegram: telegram,
@@ -2300,6 +2346,7 @@ class $$UsersTableTableManager extends RootTableManager<
             Value<DateTime> lastTransition = const Value.absent(),
             Value<int> totalCredit = const Value.absent(),
             Value<DateTime?> lastCreditDate = const Value.absent(),
+            Value<int> totalPromotion = const Value.absent(),
             Value<String?> facebook = const Value.absent(),
             Value<String?> viber = const Value.absent(),
             Value<String?> telegram = const Value.absent(),
@@ -2315,6 +2362,7 @@ class $$UsersTableTableManager extends RootTableManager<
             lastTransition: lastTransition,
             totalCredit: totalCredit,
             lastCreditDate: lastCreditDate,
+            totalPromotion: totalPromotion,
             facebook: facebook,
             viber: viber,
             telegram: telegram,
@@ -2372,6 +2420,11 @@ class $$UsersTableFilterComposer
 
   ColumnFilters<DateTime> get lastCreditDate => $state.composableBuilder(
       column: $state.table.lastCreditDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get totalPromotion => $state.composableBuilder(
+      column: $state.table.totalPromotion,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -2441,6 +2494,11 @@ class $$UsersTableOrderingComposer
 
   ColumnOrderings<DateTime> get lastCreditDate => $state.composableBuilder(
       column: $state.table.lastCreditDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get totalPromotion => $state.composableBuilder(
+      column: $state.table.totalPromotion,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

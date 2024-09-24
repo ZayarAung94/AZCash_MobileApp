@@ -155,7 +155,8 @@ class UserDetailScreen extends StatelessWidget {
                     detailInput(
                       label: "Total Promotions",
                       readOnly: true,
-                      intValue: NumberFormat("#,##0").format(user.totalCredit),
+                      intValue:
+                          NumberFormat("#,##0").format(user.totalPromotion),
                     ),
                     detailInput(
                       label: "Promotions Times",

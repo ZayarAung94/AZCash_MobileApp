@@ -166,6 +166,7 @@ class _AddWithdrawState extends State<AddWithdraw> {
                         userId: _userIdController.text.trim(),
                         amount: int.parse(_amountController.text),
                         crdAmount: crd,
+                        code: _codeController.text,
                       );
                     }
 

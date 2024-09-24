@@ -1,6 +1,7 @@
 import 'package:az_cash/database/controllers/userreport_controller.dart';
 import 'package:az_cash/database/models/userreport.dart';
 import 'package:az_cash/ui/constant.dart';
+import 'package:az_cash/ui/helper/widget_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -129,8 +130,12 @@ class _ReportByUserScreenState extends State<ReportByUserScreen> {
                 if (snap.connectionState == ConnectionState.done) {
                   List<UserReport>? reports = snap.data;
 
+                  if (reports == null || reports.isEmpty) {
+                    return AppWidget.noData();
+                  }
+
                   return ListView.builder(
-                    itemCount: reports!.length,
+                    itemCount: reports.length,
                     itemBuilder: (context, index) {
                       UserReport report = reports[index];
                       return Container(

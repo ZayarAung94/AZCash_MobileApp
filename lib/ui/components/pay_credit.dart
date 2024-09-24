@@ -90,7 +90,11 @@ class PayCredit extends StatelessWidget {
 
                     if (crdAmount != null) {
                       await OrderController().addCreditWd(
-                          userId: user.userId, amount: 0, crdAmount: crdAmount);
+                        userId: user.userId,
+                        amount: 0,
+                        crdAmount: crdAmount,
+                        code: "",
+                      );
 
                       Get.back();
                     } else {

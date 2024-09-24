@@ -40,6 +40,11 @@ class _ManageCreditState extends State<ManageCredit> {
                 builder: (context, snap) {
                   if (snap.connectionState == ConnectionState.done) {
                     List<User> data = snap.data;
+
+                    if (data.isEmpty) {
+                      return AppWidget.noData();
+                    }
+
                     return ListView.builder(
                       itemCount: data.length,
                       itemBuilder: (context, index) {

@@ -1,4 +1,5 @@
 import 'package:az_cash/database/controllers/order_controller.dart';
+import 'package:az_cash/database/models/payment.dart';
 import 'package:az_cash/ui/constant.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
@@ -18,23 +19,6 @@ class Orders extends Table {
   DateTimeColumn get created => dateTime()();
 }
 
-class Payments extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get deposit => integer()();
-  IntColumn get withdraw => integer()();
-  IntColumn get depositPer => integer()();
-  IntColumn get withdrawPer => integer()();
-  IntColumn get commissionD => integer().withDefault(const Constant(0))();
-  IntColumn get commissionW => integer().withDefault(const Constant(0))();
-  IntColumn get credit => integer().withDefault(const Constant(0))();
-  IntColumn get creditCarryover => integer().withDefault(const Constant(0))();
-  IntColumn get payout => integer().withDefault(const Constant(0))();
-  IntColumn get realPayout => integer().withDefault(const Constant(0))();
-  IntColumn get overallCommission => integer().withDefault(const Constant(0))();
-  DateTimeColumn get created =>
-      dateTime().withDefault(Constant(DateTime.now()))();
-}
-
 class Users extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text()();
@@ -49,6 +33,7 @@ class Users extends Table {
       dateTime().withDefault(Constant(DateTime.now()))();
   IntColumn get totalCredit => integer().withDefault(const Constant(0))();
   DateTimeColumn get lastCreditDate => dateTime().nullable()();
+  IntColumn get totalPromotion => integer().withDefault(const Constant(0))();
 
   TextColumn get facebook => text().nullable()();
   TextColumn get viber => text().nullable()();

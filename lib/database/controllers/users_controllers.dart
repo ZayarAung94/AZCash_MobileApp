@@ -4,7 +4,7 @@ import 'package:drift/drift.dart';
 class UsersController {
   final db = AppDatabase();
 
-  Future getUser(String userId) async {
+  Future<User?> getUser(String userId) async {
     return await (db.select(db.users)..where((u) => u.userId.equals(userId)))
         .getSingleOrNull();
   }
@@ -67,19 +67,21 @@ class UsersController {
     required int amount,
     required String userId,
   }) async {
-    User user = await getUser(userId);
+    User? user = await getUser(userId);
 
-    int newCrd = user.totalCredit;
-    newCrd = amount + user.totalCredit;
+    if (user != null) {
+      int newCrd = user.totalCredit;
+      newCrd = amount + user.totalCredit;
 
-    db.update(db.users)
-      ..where((u) => u.id.equals(user.id))
-      ..write(
-        UsersCompanion(
-          totalCredit: Value(newCrd),
-          lastCreditDate: Value(DateTime.now()),
-        ),
-      );
+      db.update(db.users)
+        ..where((u) => u.id.equals(user.id))
+        ..write(
+          UsersCompanion(
+            totalCredit: Value(newCrd),
+            lastCreditDate: Value(DateTime.now()),
+          ),
+        );
+    }
   }
 
   Future updateContacts({

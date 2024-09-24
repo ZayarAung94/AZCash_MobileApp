@@ -191,4 +191,25 @@ class AppWidget {
       ],
     );
   }
+
+  static Widget noData({String? message}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 50.0),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.error_outline,
+            color: Colors.grey,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            message ?? "There is no data !!!",
+            style: const TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

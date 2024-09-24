@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:az_cash/ui/constant.dart';
 import 'package:az_cash/ui/screens/history.dart';
 import 'package:az_cash/ui/screens/manage_credit.dart';
@@ -54,22 +56,27 @@ class _MainScreenState extends State<MainScreen> {
       canPop: false,
       onPopInvokedWithResult: (b, result) {
         if (!Get.isSnackbarOpen) {
-          canAppClose = true;
+          if (activeMenu == 0) {
+            canAppClose = true;
 
-
-          Get.snackbar(
-            'Are you sure to close app?',
-            'You want to close application click back button next time before this missage dismiss.',
-            margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-            duration: const Duration(milliseconds: 3000),
-          );
-          Future.delayed(
-            const Duration(milliseconds: 3000),
-            () => {canAppClose = false},
-          );
+            Get.snackbar(
+              'Are you sure to close app?',
+              'You want to close application click back button next time before this missage dismiss.',
+              margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              duration: const Duration(milliseconds: 3000),
+            );
+            Future.delayed(
+              const Duration(milliseconds: 3000),
+              () => {canAppClose = false},
+            );
+          } else {
+            setState(() {
+              activeMenu = 0;
+            });
+          }
         } else {
           if (canAppClose) {
-            //TODO: app close code
+            exit(0);
           }
         }
       },
