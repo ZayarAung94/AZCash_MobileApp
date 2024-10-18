@@ -45,83 +45,114 @@ class _ManageCreditState extends State<ManageCredit> {
                       return AppWidget.noData();
                     }
 
-                    return ListView.builder(
-                      itemCount: data.length,
-                      itemBuilder: (context, index) {
-                        User user = data[index];
-                        return GestureDetector(
-                          onTap: () async {
-                            await showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (context) {
-                                return PayCredit(user: user);
-                              },
-                            );
-
-                            setState(() {});
-                          },
-                          child: Card(
-                            margin: const EdgeInsets.only(
-                              left: 8.0,
-                              right: 8,
-                              bottom: 8,
-                            ),
-                            color: AppColors.background,
-                            child: Container(
-                              padding: const EdgeInsets.all(15),
-                              width: double.infinity,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            user.userName,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Text("(${user.userId})"),
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            NumberFormat("#,##0").format(
-                                              user.totalCredit,
-                                            ),
-                                            style: const TextStyle(
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                          Text(
-                                            DateFormat("dd/MM/yyyy hh:mm a")
-                                                .format(user.lastCreditDate!),
-                                            style: const TextStyle(
-                                              fontSize: 11,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
+                    return Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            color: AppColors.softBg,
                           ),
-                        );
-                      },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Total Credit : ",
+                              ),
+                              Text(
+                                NumberFormat('#,##0').format(2000),
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              User user = data[index];
+                              return GestureDetector(
+                                onTap: () async {
+                                  await showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    builder: (context) {
+                                      return PayCredit(user: user);
+                                    },
+                                  );
+
+                                  setState(() {});
+                                },
+                                child: Card(
+                                  margin: const EdgeInsets.only(
+                                    left: 8.0,
+                                    right: 8,
+                                    bottom: 8,
+                                  ),
+                                  color: AppColors.background,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(15),
+                                    width: double.infinity,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  user.userName,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 10),
+                                                Text("(${user.userId})"),
+                                              ],
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  NumberFormat("#,##0").format(
+                                                    user.totalCredit,
+                                                  ),
+                                                  style: const TextStyle(
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  DateFormat(
+                                                          "dd/MM/yyyy hh:mm a")
+                                                      .format(
+                                                          user.lastCreditDate!),
+                                                  style: const TextStyle(
+                                                    fontSize: 11,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     );
                   } else {
                     return AppWidget.loading();

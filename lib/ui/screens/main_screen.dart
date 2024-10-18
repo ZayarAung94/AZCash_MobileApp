@@ -31,8 +31,8 @@ class _MainScreenState extends State<MainScreen> {
     'Payment History',
     'User Management',
     'Credit Manage',
-    'Master Mod',
     'Promotions',
+    'Master Mod',
     'App Setting',
   ];
   List<Widget> pages = [
@@ -43,8 +43,8 @@ class _MainScreenState extends State<MainScreen> {
     const HistoryScreen(),
     const UserManageScreen(),
     const ManageCredit(),
-    const MasterReportScreen(),
     const PromotionScreen(),
+    const MasterReportScreen(),
     const SettingScreen(),
   ];
   @override

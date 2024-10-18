@@ -126,53 +126,55 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
               MaterialButton(
                 onPressed: () async {
-                  if (Validator.isEmail(_emailController.text) &&
-                      Validator.isPassword(_passwdController.text)) {
-                    setState(() {
-                      isLoading = false;
-                    });
-
-                    try {
-                      await FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                        email: _emailController.text.trim(),
-                        password: _passwdController.text.trim(),
-                      )
-                          .then((_) async {
-                        FUser user = await FUserController.getUser(
-                            _emailController.text.trim());
-
-                        if (user.device == null || user.device == "") {
-                          FUserController.setDevice(user.email);
-                        } else {
-                          if (!await FUserController.checkDevice(user)) {
-                            await FirebaseAuth.instance.signOut();
-                            AppMessage.error(
-                                "This account is login on Other Device. ${user.device}.");
-                            return;
-                          }
-                        }
-
-                        AppData.email = _emailController.text.trim();
-                        AppData.phone = user.phone;
-                        AppData.userName = user.name;
-                        AppData.device = user.device ?? "Unverified";
-                        AppData.level = user.level;
-
-                        saveAccount();
-                        Get.offAll(() => const MainScreen());
-                      });
-                    } on FirebaseAuthException catch (e) {
-                      AppMessage.error(e.message ?? "Login Error");
-                    } finally {
+                  if (isLoading) {
+                    if (Validator.isEmail(_emailController.text) &&
+                        Validator.isPassword(_passwdController.text)) {
                       setState(() {
-                        isLoading = true;
+                        isLoading = false;
                       });
+
+                      try {
+                        await FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                          email: _emailController.text.trim(),
+                          password: _passwdController.text.trim(),
+                        )
+                            .then((_) async {
+                          FUser user = await FUserController.getUser(
+                              _emailController.text.trim());
+
+                          if (user.device == null || user.device == "") {
+                            FUserController.setDevice(user.email);
+                          } else {
+                            if (!await FUserController.checkDevice(user)) {
+                              await FirebaseAuth.instance.signOut();
+                              AppMessage.error(
+                                  "This account is login on Other Device. ${user.device}.");
+                              return;
+                            }
+                          }
+
+                          AppData.email = _emailController.text.trim();
+                          AppData.phone = user.phone;
+                          AppData.userName = user.name;
+                          AppData.device = user.device ?? "Unverified";
+                          AppData.level = user.level;
+
+                          saveAccount();
+                          Get.offAll(() => const MainScreen());
+                        });
+                      } on FirebaseAuthException catch (e) {
+                        AppMessage.error(e.message ?? "Login Error");
+                      } finally {
+                        setState(() {
+                          isLoading = true;
+                        });
+                      }
+                    } else {
+                      AppMessage.error(
+                        'Enter validate data or Created New Account!!!',
+                      );
                     }
-                  } else {
-                    AppMessage.error(
-                      'Enter validate data or Created New Account!!!',
-                    );
                   }
                 },
                 color: Colors.green,

@@ -23,7 +23,7 @@ class OrderController {
             (o) => o.userId.equals(userId) & o.credit.isNotValue(0),
           )
           ..orderBy([
-            (o) => OrderingTerm(expression: o.created, mode: OrderingMode.desc)
+            (o) => OrderingTerm(expression: o.credit, mode: OrderingMode.desc)
           ])
           ..limit(15))
         .get();

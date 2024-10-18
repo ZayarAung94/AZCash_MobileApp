@@ -133,91 +133,122 @@ class _PromotionScreenState extends State<PromotionScreen> {
                 if (orders == null || orders.isEmpty) {
                   return AppWidget.noData();
                 }
-                return ListView.builder(
-                  itemCount: orders.length,
-                  itemBuilder: (context, index) {
-                    Order order = orders[index].order;
-                    User user = orders[index].user;
-                    return Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            user.userName,
-                                            style: const TextStyle(
-                                              fontSize: 15,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            "(${order.userId})",
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 11,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        "Order Trans (K) : ${order.amount}",
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        NumberFormat('#,##0')
-                                            .format(order.promotion),
-                                        style: TextStyle(
-                                          color: order.credit > 0
-                                              ? Colors.red
-                                              : Colors.green,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        DateFormat("dd/MM/yy hh:mm a")
-                                            .format(order.created),
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                            ],
+                return Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: AppColors.softBg,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Total : ${DateFormat("dd/MM/yyyy").format(dateRange.start)} - ${DateFormat("dd/MM/yyyy").format(dateRange.end)}",
                           ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: AppColors.softBg,
-                        )
-                      ],
-                    );
-                  },
+                          Text(
+                            NumberFormat('#,##0').format(2000),
+                            style: const TextStyle(
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: orders.length,
+                        itemBuilder: (context, index) {
+                          Order order = orders[index].order;
+                          User user = orders[index].user;
+                          return Column(
+                            children: [
+                              Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  user.userName,
+                                                  style: const TextStyle(
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  "(${order.userId})",
+                                                  style: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 11,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              "Order Trans (K) : ${order.amount}",
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 11,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              NumberFormat('#,##0')
+                                                  .format(order.promotion),
+                                              style: TextStyle(
+                                                color: order.credit > 0
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              DateFormat("dd/MM/yy hh:mm a")
+                                                  .format(order.created),
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 11,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: double.infinity,
+                                height: 1,
+                                color: AppColors.softBg,
+                              )
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 );
               } else {
                 return AppWidget.loading();

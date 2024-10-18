@@ -10,7 +10,14 @@ class UsersController {
   }
 
   Future getAll() async {
-    var data = db.select(db.users).get();
+    var data = (db.select(db.users)
+          ..orderBy([
+            (u) => OrderingTerm(
+                  expression: u.lastTransition,
+                  mode: OrderingMode.desc,
+                )
+          ]))
+        .get();
     return data;
   }
 
