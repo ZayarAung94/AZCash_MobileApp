@@ -2,7 +2,9 @@ import 'package:az_cash/database/controllers/users_controllers.dart';
 import 'package:az_cash/database/database.dart';
 import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:az_cash/ui/helper/input_helper.dart';
+import 'package:az_cash/ui/screens/childs/credit_history.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 
 import '../../constant.dart';
@@ -102,7 +104,7 @@ class UserDetailScreen extends StatelessWidget {
                           .format(user.lastTransition),
                     ),
                     const SizedBox(height: 25),
-                    AppBtn.normalBtn(
+                    AppBtn.expendedBtn(
                         color: Colors.green.shade800,
                         label: "Update Profile",
                         onPressed: () async {
@@ -163,7 +165,19 @@ class UserDetailScreen extends StatelessWidget {
                       readOnly: true,
                       intValue: NumberFormat("#,##0").format(user.totalCredit),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 25),
+                    AppBtn.expendedBtn(
+                      color: Colors.red.shade800,
+                      label: "Add Credit Amount",
+                      onPressed: () {},
+                    ),
+                    AppBtn.expendedBtn(
+                      color: Colors.grey,
+                      label: "View Credit History",
+                      onPressed: () {
+                        Get.to(() => CreditHistory(user: user));
+                      },
+                    )
                   ],
                 ),
               ),
@@ -200,7 +214,7 @@ class UserDetailScreen extends StatelessWidget {
                       linkOpen: true,
                     ),
                     const SizedBox(height: 25),
-                    AppBtn.normalBtn(
+                    AppBtn.expendedBtn(
                       color: Colors.blue.shade800,
                       label: "Update Contacts",
                     )
