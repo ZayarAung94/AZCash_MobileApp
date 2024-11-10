@@ -22,9 +22,7 @@ class OrderController {
           ..where(
             (o) => o.userId.equals(userId) & o.credit.isNotValue(0),
           )
-          ..orderBy([
-            (o) => OrderingTerm(expression: o.credit, mode: OrderingMode.asc)
-          ])
+          ..orderBy([(o) => OrderingTerm(expression: o.credit, mode: OrderingMode.asc)])
           ..limit(15))
         .get();
   }
@@ -70,9 +68,7 @@ class OrderController {
         DateTime today = DateTime.now();
         AppData.totalDepo = amount;
         AppData.totalWd = 0;
-        AppData.activeSession =
-            DateTime(today.year, today.month + 1, 1, 23, 59, 59)
-                .subtract(const Duration(days: 1));
+        AppData.activeSession = DateTime(today.year, today.month + 1, 1, 23, 59, 59).subtract(const Duration(days: 1));
       } else {
         AppData.totalDepo = AppData.totalDepo + amount;
       }
@@ -112,9 +108,7 @@ class OrderController {
         DateTime today = DateTime.now();
         AppData.totalWd = amount;
         AppData.totalDepo = 0;
-        AppData.activeSession =
-            DateTime(today.year, today.month + 1, 1, 23, 59, 59)
-                .subtract(const Duration(days: 1));
+        AppData.activeSession = DateTime(today.year, today.month + 1, 1, 23, 59, 59).subtract(const Duration(days: 1));
       } else {
         AppData.totalWd = AppData.totalWd + amount;
       }
@@ -144,8 +138,6 @@ class OrderController {
       amount: crdAmount,
       userId: userId,
     );
-
-    await paymentController.depoAdd(amount);
   }
 
   Future addCreditWd({
@@ -166,8 +158,6 @@ class OrderController {
       amount: crdAmount,
       userId: userId,
     );
-
-    await paymentController.wdAdd(amount);
   }
 }
 

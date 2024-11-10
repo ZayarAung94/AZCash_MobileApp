@@ -1,7 +1,9 @@
 import 'package:az_cash/database/controllers/users_controllers.dart';
 import 'package:az_cash/database/database.dart';
+import 'package:az_cash/ui/components/add_credit.dart';
 import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:az_cash/ui/helper/input_helper.dart';
+import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/screens/childs/credit_history.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -119,7 +121,12 @@ class UserDetailScreen extends StatelessWidget {
                         )
                             .then(
                           (v) {
-                            Get.back(result: "updated");
+                            Future.delayed(
+                              const Duration(milliseconds: 500),
+                              () {
+                                Get.back(result: "updated");
+                              },
+                            );
                           },
                         );
                       },
@@ -169,7 +176,13 @@ class UserDetailScreen extends StatelessWidget {
                       color: Colors.red.shade800,
                       label: "Add Credit Amount",
                       onPressed: () {
-                        //TODO: To add Credit code
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return const AddCredit();
+                          },
+                        );
                       },
                     ),
                     AppBtn.expendedBtn(
@@ -218,6 +231,9 @@ class UserDetailScreen extends StatelessWidget {
                     AppBtn.expendedBtn(
                       color: Colors.blue.shade800,
                       label: "Update Contacts",
+                      onPressed: () {
+                        AppMessage.requirePremium();
+                      },
                     )
                   ],
                 ),
@@ -229,6 +245,9 @@ class UserDetailScreen extends StatelessWidget {
               child: AppBtn.expendedBtn(
                 color: Colors.yellow.shade800,
                 label: "Warning User",
+                onPressed: () {
+                  AppMessage.requirePremium();
+                },
               ),
             ),
             Padding(
@@ -236,6 +255,9 @@ class UserDetailScreen extends StatelessWidget {
               child: AppBtn.expendedBtn(
                 color: Colors.red.shade800,
                 label: "Block User",
+                onPressed: () {
+                  AppMessage.requirePremium();
+                },
               ),
             ),
             Padding(
@@ -243,6 +265,9 @@ class UserDetailScreen extends StatelessWidget {
               child: AppBtn.expendedBtn(
                 color: Colors.red.shade800,
                 label: "Report to Server",
+                onPressed: () {
+                  AppMessage.requirePremium();
+                },
               ),
             ),
             const SizedBox(height: 20),

@@ -113,8 +113,7 @@ class _AddDepositState extends State<AddDeposit> {
             const SizedBox(height: 10),
             if (payType == 1)
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
                 child: TextField(
                   controller: _promoController,
                   keyboardType: const TextInputType.numberWithOptions(),
@@ -131,8 +130,7 @@ class _AddDepositState extends State<AddDeposit> {
               ),
             if (payType == 2)
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
                 child: TextField(
                   keyboardType: const TextInputType.numberWithOptions(),
                   controller: _creditController,
@@ -157,8 +155,7 @@ class _AddDepositState extends State<AddDeposit> {
                   ),
                 ),
                 onPressed: () async {
-                  if (_userIdController.text != "" &&
-                      Validator.isNumber(_amountController.text.trim())) {
+                  if (_userIdController.text != "" && Validator.isNumber(_amountController.text.trim())) {
                     setState(() {
                       isLoading = true;
                     });
@@ -177,8 +174,7 @@ class _AddDepositState extends State<AddDeposit> {
                         promo = int.tryParse(_promoController.text);
 
                         if (promo == null) {
-                          AppMessage.error(
-                              "Enter valid value in Promotion Amount!!!");
+                          AppMessage.error("Enter valid value in Promotion Amount!!!");
                           return;
                         }
                       }

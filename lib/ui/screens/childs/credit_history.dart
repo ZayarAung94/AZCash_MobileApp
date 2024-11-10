@@ -25,91 +25,91 @@ class CreditHistory extends StatelessWidget {
           builder: (context, snap) {
             if (snap.connectionState == ConnectionState.done) {
               List<Order> data = snap.data;
-              return ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  Order order = data[index];
-                  return Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          order.type == "deposit"
-                                              ? "Credit"
-                                              : "Credit Payback",
-                                          style: const TextStyle(
-                                            fontSize: 15,
+              if (data.isEmpty) {
+                return Center(
+                  child: AppWidget.noData(),
+                );
+              } else {
+                return ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    Order order = data[index];
+                    return Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            order.type == "deposit" ? "Credit" : "Credit Payback",
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          "(${order.userId})",
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 11,
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            "(${order.userId})",
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 11,
+                                            ),
                                           ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "Order Trans (K) : ${order.amount}",
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 11,
                                         ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      "Order Trans (K) : ${order.amount}",
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 11,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      NumberFormat('#,##0')
-                                          .format(order.credit),
-                                      style: TextStyle(
-                                        color: order.credit > 0
-                                            ? Colors.red
-                                            : Colors.green,
-                                        fontWeight: FontWeight.bold,
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        NumberFormat('#,##0').format(order.credit),
+                                        style: TextStyle(
+                                          color: order.credit > 0 ? Colors.red : Colors.green,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      DateFormat("dd/MM/yy hh:mm a")
-                                          .format(order.created),
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 11,
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        DateFormat("dd/MM/yy hh:mm a").format(order.created),
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 11,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                          ],
+                                    ],
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        height: 1,
-                        color: AppColors.softBg,
-                      )
-                    ],
-                  );
-                },
-              );
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: AppColors.softBg,
+                        )
+                      ],
+                    );
+                  },
+                );
+              }
             } else {
               return AppWidget.loading();
             }
