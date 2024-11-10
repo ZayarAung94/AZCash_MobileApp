@@ -20,6 +20,7 @@ class _MasterReportScreenState extends State<MasterReportScreen> {
     const MasterModSummary(),
     const MasterModReports(),
     const MasterModAgents(),
+    const MasterModAgents(),
     const MasterModeFinancial(),
     const MasterModeSettings(),
   ];
@@ -28,6 +29,17 @@ class _MasterReportScreenState extends State<MasterReportScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Container(
+          width: double.infinity,
+          color: Colors.amber,
+          child: const Text(
+            "All of this function are not really work. They are developing state !!!",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ),
         Container(
           width: double.infinity,
           height: 80,
@@ -51,11 +63,16 @@ class _MasterReportScreenState extends State<MasterReportScreen> {
               ),
               tabBtn(
                 index: 3,
+                label: "Affiliate",
+                icon: Icons.group_add_outlined,
+              ),
+              tabBtn(
+                index: 4,
                 label: "Financial",
                 icon: Icons.monetization_on_outlined,
               ),
               tabBtn(
-                index: 4,
+                index: 5,
                 label: "Settings",
                 icon: Icons.settings,
               ),

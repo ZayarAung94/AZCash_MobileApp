@@ -6,9 +6,14 @@ import 'package:get/get.dart';
 
 import '../constant.dart';
 
-class UserManageScreen extends StatelessWidget {
+class UserManageScreen extends StatefulWidget {
   const UserManageScreen({super.key});
 
+  @override
+  State<UserManageScreen> createState() => _UserManageScreenState();
+}
+
+class _UserManageScreenState extends State<UserManageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,8 +48,10 @@ class UserManageScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         User user = data[index];
                         return GestureDetector(
-                          onTap: () {
-                            Get.to(() => UserDetailScreen(user: user));
+                          onTap: () async {
+                            var result = await Get.to(() => UserDetailScreen(user: user));
+
+                            if (result == "updated") setState(() {});
                           },
                           child: Card(
                             margin: const EdgeInsets.only(
@@ -59,12 +66,10 @@ class UserManageScreen extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             user.userName,

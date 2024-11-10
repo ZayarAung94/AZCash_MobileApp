@@ -44,7 +44,7 @@ class AppMessage {
         "This Furture can be use Premium VIP User only.",
         margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
         duration: const Duration(milliseconds: 3000),
-        backgroundColor: Colors.red.withOpacity(0.3),
+        backgroundColor: Colors.amber.withOpacity(0.3),
         colorText: Colors.white,
         mainButton: TextButton(
           onPressed: () {},

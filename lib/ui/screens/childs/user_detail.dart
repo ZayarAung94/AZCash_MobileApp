@@ -94,35 +94,36 @@ class UserDetailScreen extends StatelessWidget {
                     detailInput(
                       label: "Joind Date",
                       readOnly: true,
-                      intValue:
-                          DateFormat("dd MMMM, yyyy").format(user.joinedDate),
+                      intValue: DateFormat("dd MMMM, yyyy").format(user.joinedDate),
                     ),
                     detailInput(
                       label: "Last Transition",
                       readOnly: true,
-                      intValue: DateFormat("dd MMMM, yyyy")
-                          .format(user.lastTransition),
+                      intValue: DateFormat("dd MMMM, yyyy").format(user.lastTransition),
                     ),
                     const SizedBox(height: 25),
                     AppBtn.expendedBtn(
-                        color: Colors.green.shade800,
-                        label: "Update Profile",
-                        onPressed: () async {
-                          String name = userName.text.trim() == ""
-                              ? user.userName
-                              : userName.text.trim();
-                          String phone = phoneC.text.trim() == ""
-                              ? user.phone
-                              : phoneC.text.trim();
-                          bool isPartner = partner ?? user.isPartner;
+                      color: Colors.green.shade800,
+                      label: "Update Profile",
+                      onPressed: () async {
+                        String name = userName.text.trim() == "" ? user.userName : userName.text.trim();
+                        String phone = phoneC.text.trim() == "" ? user.phone : phoneC.text.trim();
+                        bool isPartner = partner ?? user.isPartner;
 
-                          UsersController().updateUserProfile(
-                            id: user.id,
-                            name: name,
-                            phone: phone,
-                            isPartner: isPartner,
-                          );
-                        })
+                        UsersController()
+                            .updateUserProfile(
+                          id: user.id,
+                          name: name,
+                          phone: phone,
+                          isPartner: isPartner,
+                        )
+                            .then(
+                          (v) {
+                            Get.back(result: "updated");
+                          },
+                        );
+                      },
+                    )
                   ],
                 ),
               ),
@@ -151,14 +152,12 @@ class UserDetailScreen extends StatelessWidget {
                     detailInput(
                       label: "Last Credit Date",
                       readOnly: true,
-                      intValue: DateFormat("dd MMMM, yyyy")
-                          .format(user.lastCreditDate ?? user.joinedDate),
+                      intValue: DateFormat("dd MMMM, yyyy").format(user.lastCreditDate ?? user.joinedDate),
                     ),
                     detailInput(
                       label: "Total Promotions",
                       readOnly: true,
-                      intValue:
-                          NumberFormat("#,##0").format(user.totalPromotion),
+                      intValue: NumberFormat("#,##0").format(user.totalPromotion),
                     ),
                     detailInput(
                       label: "Promotions Times",
@@ -169,7 +168,9 @@ class UserDetailScreen extends StatelessWidget {
                     AppBtn.expendedBtn(
                       color: Colors.red.shade800,
                       label: "Add Credit Amount",
-                      onPressed: () {},
+                      onPressed: () {
+                        //TODO: To add Credit code
+                      },
                     ),
                     AppBtn.expendedBtn(
                       color: Colors.grey,

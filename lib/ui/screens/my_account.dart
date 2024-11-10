@@ -1,6 +1,7 @@
 import 'package:az_cash/ui/components/add_depo.dart';
 import 'package:az_cash/ui/components/add_withdraw.dart';
 import 'package:az_cash/ui/constant.dart';
+import 'package:az_cash/ui/helper/snack.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -30,8 +31,7 @@ class _MyAccountState extends State<MyAccount> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -47,8 +47,7 @@ class _MyAccountState extends State<MyAccount> {
                       children: [
                         mainDataCard(
                           label: "Total Deposit",
-                          value:
-                              NumberFormat("#,##0").format(AppData.totalDepo),
+                          value: NumberFormat("#,##0").format(AppData.totalDepo),
                         ),
                         mainDataCard(
                           label: "Total Withdraw",
@@ -61,13 +60,11 @@ class _MyAccountState extends State<MyAccount> {
                       children: [
                         mainDataCard(
                           label: "Deposit Commission",
-                          value: NumberFormat("#,##0").format(
-                              AppData.totalDepo * AppData.depoCommission),
+                          value: NumberFormat("#,##0").format(AppData.totalDepo * AppData.depoCommission),
                         ),
                         mainDataCard(
                           label: "Withdraw Commission",
-                          value: NumberFormat("#,##0")
-                              .format(AppData.totalWd * AppData.wdCommission),
+                          value: NumberFormat("#,##0").format(AppData.totalWd * AppData.wdCommission),
                         ),
                       ],
                     ),
@@ -157,7 +154,9 @@ class _MyAccountState extends State<MyAccount> {
                 Radius.circular(10),
               ),
             ),
-            onPressed: () async {},
+            onPressed: () {
+              AppMessage.requirePremium();
+            },
             child: const SizedBox(
               width: double.infinity,
               height: 60,

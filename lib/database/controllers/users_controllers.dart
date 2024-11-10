@@ -5,8 +5,7 @@ class UsersController {
   final db = AppDatabase();
 
   Future<User?> getUser(String userId) async {
-    return await (db.select(db.users)..where((u) => u.userId.equals(userId)))
-        .getSingleOrNull();
+    return await (db.select(db.users)..where((u) => u.userId.equals(userId))).getSingleOrNull();
   }
 
   Future getAll() async {
@@ -16,7 +15,8 @@ class UsersController {
                   expression: u.lastTransition,
                   mode: OrderingMode.desc,
                 )
-          ]))
+          ])
+          ..limit(30))
         .get();
     return data;
   }
@@ -26,21 +26,20 @@ class UsersController {
           ..where(
             (u) => u.totalCredit.isBiggerThanValue(0),
           )
-          ..orderBy([
-            (u) =>
-                OrderingTerm(expression: u.totalCredit, mode: OrderingMode.desc)
-          ]))
+          ..orderBy([(u) => OrderingTerm(expression: u.totalCredit, mode: OrderingMode.desc)]))
         .get();
   }
 
   Future addUser(String userId) async {
-    User? data = await (db.select(db.users)
-          ..where((u) => u.userId.equals(userId)))
-        .getSingleOrNull();
+    User? data = await (db.select(db.users)..where((u) => u.userId.equals(userId))).getSingleOrNull();
 
     if (data == null) {
       await db.into(db.users).insert(
-            UsersCompanion.insert(userId: userId),
+            UsersCompanion.insert(
+              userId: userId,
+              joinedDate: Value(DateTime.now()),
+              lastTransition: Value(DateTime.now()),
+            ),
           );
     } else {
       db.update(db.users)
