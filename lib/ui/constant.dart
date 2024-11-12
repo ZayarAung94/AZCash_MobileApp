@@ -7,7 +7,7 @@ class AppColors {
 }
 
 class AppData {
-  static double version = 1.002;
+  static double version = 1.003;
   static bool isUpdate = false;
 
   static DateTime activeSession = DateTime.now();
@@ -23,9 +23,8 @@ class AppData {
   static String device = "Unverified";
   static String deviceSerie = "";
   static String level = "Free";
-  static String expireDate = DateFormat("dd-MM-yyyy").format(
-      DateTime(DateTime.now().year, DateTime.now().month + 1, 1)
-          .subtract(const Duration(days: 1)));
+  static String expireDate = DateFormat("dd-MM-yyyy")
+      .format(DateTime(DateTime.now().year, DateTime.now().month + 1, 1).subtract(const Duration(days: 1)));
 }
 
 class AppSetting {

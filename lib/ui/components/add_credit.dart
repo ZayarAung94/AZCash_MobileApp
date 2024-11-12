@@ -14,9 +14,7 @@ class AddCredit extends StatefulWidget {
 
 class _AddCreditState extends State<AddCredit> {
   int payType = 0;
-  final TextEditingController _userIdController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _promoController = TextEditingController();
+
   final TextEditingController _creditController = TextEditingController();
 
   final database = AppDatabase();
@@ -59,7 +57,7 @@ class _AddCreditState extends State<AddCredit> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: TextField(
-                controller: _amountController,
+                controller: _creditController,
                 keyboardType: const TextInputType.numberWithOptions(),
                 decoration: const InputDecoration(
                   label: Text("Amount :"),
@@ -76,7 +74,11 @@ class _AddCreditState extends State<AddCredit> {
                     Radius.circular(10),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    isLoading = true;
+                  });
+                },
                 child: SizedBox(
                   height: 40,
                   width: double.infinity,

@@ -1,6 +1,5 @@
 import 'package:az_cash/database/controllers/users_controllers.dart';
 import 'package:az_cash/database/database.dart';
-import 'package:az_cash/ui/components/add_credit.dart';
 import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:az_cash/ui/helper/input_helper.dart';
 import 'package:az_cash/ui/helper/snack.dart';
@@ -172,19 +171,19 @@ class UserDetailScreen extends StatelessWidget {
                       intValue: NumberFormat("#,##0").format(user.totalCredit),
                     ),
                     const SizedBox(height: 25),
-                    AppBtn.expendedBtn(
-                      color: Colors.red.shade800,
-                      label: "Add Credit Amount",
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) {
-                            return const AddCredit();
-                          },
-                        );
-                      },
-                    ),
+                    // AppBtn.expendedBtn(
+                    //   color: Colors.red.shade800,
+                    //   label: "Add Credit Amount",
+                    //   onPressed: () {
+                    //     showModalBottomSheet(
+                    //       context: context,
+                    //       isScrollControlled: true,
+                    //       builder: (context) {
+                    //         return const AddCredit();
+                    //       },
+                    //     );
+                    //   },
+                    // ),
                     AppBtn.expendedBtn(
                       color: Colors.grey,
                       label: "View Credit History",
