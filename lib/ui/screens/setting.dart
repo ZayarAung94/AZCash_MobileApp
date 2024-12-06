@@ -1,10 +1,10 @@
+import 'package:az_cash/auth/auth.dart';
 import 'package:az_cash/ui/components/under_develop.dart';
 import 'package:az_cash/ui/constant.dart';
 import 'package:az_cash/ui/dialogs/clear_all_data.dart';
 import 'package:az_cash/ui/dialogs/commission_setting.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/screens/auth/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,7 +35,7 @@ class _SettingScreenState extends State<SettingScreen> {
           settingValue(
             icon: Icons.phone_android,
             label: "Phone Number",
-            value: AppData.phone,
+            value: "${AppData.user?.phone}",
           ),
           settingValue(
             icon: Icons.lock,
@@ -43,29 +43,24 @@ class _SettingScreenState extends State<SettingScreen> {
             value: "",
           ),
           settingValue(
-            icon: Icons.device_unknown_outlined,
-            label: "Active Device",
-            value: AppData.device,
-          ),
-          settingValue(
             icon: Icons.star,
-            label: "Account Level",
-            value: AppData.level,
+            label: "Account Role",
+            value: "${AppData.user?.role}",
           ),
           settingValue(
-            icon: Icons.star_outline_sharp,
-            label: "Expire Date",
-            value: AppData.expireDate,
+            icon: Icons.logout_rounded,
+            label: "Log Out",
+            value: "",
+            onTap: () async {
+              try {
+                await Auth().logout();
+                AppData.user = null;
+                Get.offAll(() => const LoginScreen());
+              } catch (e) {
+                AppMessage.error("Something is wrong!");
+              }
+            },
           ),
-          settingValue(
-              icon: Icons.logout_rounded,
-              label: "Log Out",
-              value: "",
-              onTap: () {
-                FirebaseAuth.instance.signOut().then((_) {
-                  Get.offAll(() => const LoginScreen());
-                });
-              }),
           settingTitle("Master Settings"),
           settingValue(
             icon: Icons.group_outlined,
@@ -226,13 +221,13 @@ class _SettingScreenState extends State<SettingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppData.userName,
+                    "${AppData.user?.name}",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    AppData.email,
+                    "${AppData.user?.email}",
                     style: const TextStyle(fontSize: 11),
                   )
                 ],

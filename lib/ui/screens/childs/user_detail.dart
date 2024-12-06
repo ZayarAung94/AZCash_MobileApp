@@ -1,7 +1,4 @@
-import 'package:az_cash/database/controllers/users_controllers.dart';
-import 'package:az_cash/database/database.dart';
 import 'package:az_cash/ui/helper/btn_helper.dart';
-import 'package:az_cash/ui/helper/input_helper.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/screens/childs/credit_history.dart';
 import 'package:flutter/material.dart';
@@ -11,14 +8,12 @@ import 'package:intl/intl.dart';
 import '../../constant.dart';
 
 class UserDetailScreen extends StatelessWidget {
-  final User user;
-  const UserDetailScreen({super.key, required this.user});
+  const UserDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final userName = TextEditingController();
     final phoneC = TextEditingController();
-    bool? partner;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -41,16 +36,16 @@ class UserDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              "User ID : ${user.userId}",
-              style: const TextStyle(
+            const Text(
+              "User ID : 11111",
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
             ),
-            Text(
-              user.status,
-              style: const TextStyle(
+            const Text(
+              "Normal",
+              style: TextStyle(
                 color: Colors.green,
               ),
             ),
@@ -72,62 +67,50 @@ class UserDetailScreen extends StatelessWidget {
                     const SizedBox(height: 15),
                     detailInput(
                       label: "User Name",
-                      intValue: user.userName,
+                      intValue: "Name",
                       controller: userName,
                     ),
                     detailInput(
                       label: "Phone Number",
-                      intValue: user.phone,
+                      intValue: "user.phone",
                       controller: phoneC,
-                    ),
-                    AppInput.selectedMenu(
-                      label: "Is Your Partner",
-                      list: ["Yes", "No"],
-                      onChange: (value) {
-                        if (value == "Yes") {
-                          partner = true;
-                        } else {
-                          partner = false;
-                        }
-                      },
-                      value: user.isPartner ? "Yes" : "No",
                     ),
                     detailInput(
                       label: "Joind Date",
                       readOnly: true,
-                      intValue: DateFormat("dd MMMM, yyyy").format(user.joinedDate),
+                      intValue: DateFormat("dd MMMM, yyyy").format(DateTime.now()),
                     ),
                     detailInput(
                       label: "Last Transition",
                       readOnly: true,
-                      intValue: DateFormat("dd MMMM, yyyy").format(user.lastTransition),
+                      intValue: DateFormat("dd MMMM, yyyy").format(DateTime.now()),
                     ),
                     const SizedBox(height: 25),
                     AppBtn.expendedBtn(
                       color: Colors.green.shade800,
                       label: "Update Profile",
                       onPressed: () async {
-                        String name = userName.text.trim() == "" ? user.userName : userName.text.trim();
-                        String phone = phoneC.text.trim() == "" ? user.phone : phoneC.text.trim();
-                        bool isPartner = partner ?? user.isPartner;
+                        // String name = userName.text.trim() == "" ? user.userName : userName.text.trim();
+                        // String phone = phoneC.text.trim() == "" ? user.phone : phoneC.text.trim();
+                        // bool isPartner = partner ?? user.isPartner;
 
-                        UsersController()
-                            .updateUserProfile(
-                          id: user.id,
-                          name: name,
-                          phone: phone,
-                          isPartner: isPartner,
-                        )
-                            .then(
-                          (v) {
-                            Future.delayed(
-                              const Duration(milliseconds: 500),
-                              () {
-                                Get.back(result: "updated");
-                              },
-                            );
-                          },
-                        );
+                        // UsersController()
+                        //     .updateUserProfile(
+                        //   id: user.id,
+                        //   name: name,
+                        //   phone: phone,
+                        //   isPartner: isPartner,
+                        // )
+                        //     .then(
+                        //   (v) {
+                        //     Future.delayed(
+                        //       const Duration(milliseconds: 500),
+                        //       () {
+                        //         Get.back(result: "updated");
+                        //       },
+                        //     );
+                        //   },
+                        // );
                       },
                     )
                   ],
@@ -153,22 +136,22 @@ class UserDetailScreen extends StatelessWidget {
                     detailInput(
                       label: "Total Credit",
                       readOnly: true,
-                      intValue: NumberFormat("#,##0").format(user.totalCredit),
+                      intValue: NumberFormat("#,##0").format(100000),
                     ),
                     detailInput(
                       label: "Last Credit Date",
                       readOnly: true,
-                      intValue: DateFormat("dd MMMM, yyyy").format(user.lastCreditDate ?? user.joinedDate),
+                      intValue: DateFormat("dd MMMM, yyyy").format(DateTime.now()),
                     ),
                     detailInput(
                       label: "Total Promotions",
                       readOnly: true,
-                      intValue: NumberFormat("#,##0").format(user.totalPromotion),
+                      intValue: NumberFormat("#,##0").format(1000),
                     ),
                     detailInput(
                       label: "Promotions Times",
                       readOnly: true,
-                      intValue: NumberFormat("#,##0").format(user.totalCredit),
+                      intValue: NumberFormat("#,##0").format(10000),
                     ),
                     const SizedBox(height: 25),
                     // AppBtn.expendedBtn(
@@ -188,7 +171,7 @@ class UserDetailScreen extends StatelessWidget {
                       color: Colors.grey,
                       label: "View Credit History",
                       onPressed: () {
-                        Get.to(() => CreditHistory(user: user));
+                        Get.to(() => const CreditHistory());
                       },
                     )
                   ],
@@ -196,48 +179,48 @@ class UserDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            Card(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    const Text(
-                      "Contacts Data",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    detailInput(
-                      label: "Facebook Profile",
-                      intValue: user.facebook ?? "Null",
-                      linkOpen: true,
-                    ),
-                    detailInput(
-                      label: "Viber Number",
-                      intValue: user.viber ?? "Null",
-                      linkOpen: true,
-                    ),
-                    detailInput(
-                      label: "Telegram Link",
-                      intValue: user.telegram ?? "Null",
-                      linkOpen: true,
-                    ),
-                    const SizedBox(height: 25),
-                    AppBtn.expendedBtn(
-                      color: Colors.blue.shade800,
-                      label: "Update Contacts",
-                      onPressed: () {
-                        AppMessage.requirePremium();
-                      },
-                    )
-                  ],
-                ),
-              ),
-            ),
+            // Card(
+            //   margin: const EdgeInsets.symmetric(horizontal: 10),
+            //   child: Container(
+            //     padding: const EdgeInsets.all(20),
+            //     width: double.infinity,
+            //     child: Column(
+            //       children: [
+            //         const Text(
+            //           "Contacts Data",
+            //           style: TextStyle(
+            //             fontSize: 18,
+            //             color: Colors.grey,
+            //           ),
+            //         ),
+            //         const SizedBox(height: 15),
+            //         detailInput(
+            //           label: "Facebook Profile",
+            //           intValue: "Null",
+            //           linkOpen: true,
+            //         ),
+            //         detailInput(
+            //           label: "Viber Number",
+            //           intValue: "Null",
+            //           linkOpen: true,
+            //         ),
+            //         detailInput(
+            //           label: "Telegram Link",
+            //           intValue: "Null",
+            //           linkOpen: true,
+            //         ),
+            //         const SizedBox(height: 25),
+            //         AppBtn.expendedBtn(
+            //           color: Colors.blue.shade800,
+            //           label: "Update Contacts",
+            //           onPressed: () {
+            //             AppMessage.requirePremium();
+            //           },
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

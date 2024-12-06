@@ -1,6 +1,3 @@
-import 'package:az_cash/database/controllers/order_controller.dart';
-import 'package:az_cash/database/controllers/payment_controller.dart';
-import 'package:az_cash/database/database.dart';
 import 'package:az_cash/ui/constant.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class DeleteOrder extends StatefulWidget {
-  final Order order;
-  const DeleteOrder({super.key, required this.order});
+  const DeleteOrder({super.key});
 
   @override
   State<DeleteOrder> createState() => _DeleteOrderState();
@@ -59,35 +55,31 @@ class _DeleteOrderState extends State<DeleteOrder> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
+                            const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   "User Name",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                Text("(${widget.order.userId})"),
+                                Text("(11111"),
                               ],
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  NumberFormat('#,##0')
-                                      .format(widget.order.amount),
-                                  style: TextStyle(
-                                    color: widget.order.type == "withdraw"
-                                        ? Colors.red
-                                        : Colors.green,
+                                  NumberFormat('#,##0').format(20000),
+                                  style: const TextStyle(
+                                    color: 'withdraw' == "withdraw" ? Colors.red : Colors.green,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  DateFormat("hh:mm a")
-                                      .format(widget.order.created),
+                                  DateFormat("hh:mm a").format(DateTime.now()),
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 11,
@@ -118,8 +110,7 @@ class _DeleteOrderState extends State<DeleteOrder> {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
               child: MaterialButton(
                 color: Colors.red,
                 shape: const RoundedRectangleBorder(
@@ -131,16 +122,10 @@ class _DeleteOrderState extends State<DeleteOrder> {
                   setState(() {
                     deleteLoading = true;
                   });
-                  OrderController().drop(widget.order.id);
-                  if (widget.order.type == "deposit") {
-                    AppData.totalDepo = AppData.totalDepo - widget.order.amount;
-                  } else {
-                    AppData.totalWd = AppData.totalWd - widget.order.amount;
-                  }
+                  //TODO remove order
 
                   Future.delayed(const Duration(seconds: 1), () {
                     Get.back();
-                    PaymentController().appStartCheck();
                   });
                 },
                 child: SizedBox(
@@ -159,8 +144,7 @@ class _DeleteOrderState extends State<DeleteOrder> {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
               child: MaterialButton(
                 color: Colors.amber,
                 shape: const RoundedRectangleBorder(
@@ -181,8 +165,7 @@ class _DeleteOrderState extends State<DeleteOrder> {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
               child: MaterialButton(
                 color: Colors.grey,
                 shape: const RoundedRectangleBorder(

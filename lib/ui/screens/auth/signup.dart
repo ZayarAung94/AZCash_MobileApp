@@ -1,9 +1,8 @@
-import 'package:az_cash/firebase/models/f_user.dart';
-import 'package:az_cash/firebase/models/f_user_controller.dart';
+import 'package:az_cash/auth/auth.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/helper/validator.dart';
 import 'package:az_cash/ui/screens/auth/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:az_cash/ui/screens/auth/opt_login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -79,8 +78,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: phoneController,
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 40),
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 40),
                 child: TextField(
                   controller: passwdController,
                   obscureText: showPasswd,
@@ -101,8 +99,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     hintText: "Password",
                     border: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                        borderSide: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
                 ),
               ),
@@ -115,34 +112,23 @@ class _SignupScreenState extends State<SignupScreen> {
                     });
 
                     try {
-                      await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
+                      await Auth().register(
                         email: emailController.text.trim(),
-                        password: passwdController.text.trim(),
-                      )
-                          .then(
-                        (_) {
-                          FUserController.addUser(
-                            FUser(
-                              name: nameController.text.trim(),
-                              email: emailController.text.trim(),
-                              phone: phoneController.text.trim(),
-                            ),
-                          );
-
-                          Get.offAll(() => const LoginScreen());
-                        },
+                        passwd: passwdController.text.trim(),
+                        name: nameController.text.trim(),
+                        phone: phoneController.text.trim(),
                       );
-                    } on FirebaseAuthException catch (e) {
-                      AppMessage.error(e.message ?? "Account Created Error!");
+
+                      Get.to(() => OptLogin(email: emailController.text.trim()));
+                    } catch (e) {
+                      AppMessage.error(e.toString());
                     } finally {
                       setState(() {
                         isLoading = true;
                       });
                     }
                   } else {
-                    AppMessage.error(
-                        "Enter valide value in required input field.");
+                    AppMessage.error("Enter valide value in required input field.");
                   }
                 },
                 color: Colors.blue,
@@ -152,8 +138,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 40.0, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10),
                   child: isLoading
                       ? const Text("SIGN UP")
                       : const SizedBox(
@@ -207,8 +192,7 @@ class _SignupScreenState extends State<SignupScreen> {
           prefixIcon: Icon(icon),
           hintText: hintText,
           border: const OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.all(Radius.circular(10))),
+              borderSide: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(10))),
         ),
       ),
     );

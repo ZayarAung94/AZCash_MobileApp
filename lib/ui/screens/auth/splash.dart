@@ -1,6 +1,3 @@
-import 'package:az_cash/database/controllers/payment_controller.dart';
-import 'package:az_cash/database/database.dart';
-import 'package:az_cash/firebase/controllers/appdata_controller.dart';
 import 'package:az_cash/ui/constant.dart';
 import 'package:az_cash/ui/helper/widget_helper.dart';
 import 'package:az_cash/ui/screens/auth/appupdate.dart';
@@ -13,13 +10,9 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final database = AppDatabase();
     DateTime today = DateTime.now();
-    DateTime start = DateTime(today.year, today.month, 1, 0, 0, 0);
-    DateTime end = DateTime(today.year, today.month, today.day, 23, 59, 59);
 
-    AppData.activeSession = DateTime(today.year, today.month + 1, 1, 23, 59, 59)
-        .subtract(const Duration(days: 1));
+    AppData.activeSession = DateTime(today.year, today.month + 1, 1, 23, 59, 59).subtract(const Duration(days: 1));
 
     Future getCommissionPer() async {
       final SharedPreferences spStore = await SharedPreferences.getInstance();
@@ -29,21 +22,19 @@ class SplashScreen extends StatelessWidget {
     }
 
     Future<void> loadData() async {
-      await FirebaseAppData().checkUpdate();
-
-      await database.getOrderByRange(start, end).then((orders) {
-        for (var order in orders) {
-          if (order.type == "deposit" && order.status == "done") {
-            AppData.totalDepo = AppData.totalDepo + order.amount;
-          } else if (order.type == 'withdraw' && order.status == 'done') {
-            AppData.totalWd = AppData.totalWd + order.amount;
-          }
-        }
-      });
+      // await database.getOrderByRange(start, end).then((orders) {
+      //   for (var order in orders) {
+      //     if (order.type == "deposit" && order.status == "done") {
+      //       AppData.totalDepo = AppData.totalDepo + order.amount;
+      //     } else if (order.type == 'withdraw' && order.status == 'done') {
+      //       AppData.totalWd = AppData.totalWd + order.amount;
+      //     }
+      //   }
+      // });
 
       await getCommissionPer();
 
-      await PaymentController().appStartCheck();
+      // await PaymentController().appStartCheck();
     }
 
     return Scaffold(

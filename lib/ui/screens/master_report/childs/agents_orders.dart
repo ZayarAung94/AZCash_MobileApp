@@ -1,4 +1,3 @@
-import 'package:az_cash/database/database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -9,19 +8,6 @@ class AgentsOrders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Order order = Order(
-      id: 1,
-      userId: '111111',
-      amount: 100000,
-      type: "Deposit",
-      code: '',
-      status: "done",
-      credit: 0,
-      promotion: 0,
-      agentCode: '',
-      created: DateTime.now(),
-    );
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -40,45 +26,45 @@ class AgentsOrders extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
+                        const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
-                                const Text(
+                                Text(
                                   "User Name",
                                   style: TextStyle(
                                     fontSize: 15,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Text(
-                                  "(${order.userId})",
-                                  style: const TextStyle(
+                                  "(order.userId)",
+                                  style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 11,
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8),
                             Row(
                               children: [
                                 Text(
-                                  "Status : ${order.status}, ",
-                                  style: const TextStyle(
+                                  "Status : order.status, ",
+                                  style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 11,
                                   ),
                                 ),
-                                if (order.code != "")
-                                  Text(
-                                    "WD Code : ${order.code},",
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 11,
-                                    ),
-                                  ),
+                                // if (order.code != "")
+                                //   Text(
+                                //     "WD Code : ${order.code},",
+                                //     style: const TextStyle(
+                                //       color: Colors.grey,
+                                //       fontSize: 11,
+                                //     ),
+                                //   ),
                               ],
                             ),
                           ],
@@ -87,17 +73,15 @@ class AgentsOrders extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              NumberFormat('#,##0').format(order.amount),
-                              style: TextStyle(
-                                color: order.type == "withdraw"
-                                    ? Colors.red
-                                    : Colors.green,
+                              NumberFormat('#,##0').format(10000),
+                              style: const TextStyle(
+                                color: "type" == "withdraw" ? Colors.red : Colors.green,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              DateFormat("hh:mm a").format(order.created),
+                              DateFormat("hh:mm a").format(DateTime.now()),
                               style: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 11,

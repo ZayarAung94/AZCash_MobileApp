@@ -1,3 +1,4 @@
+import 'package:az_cash/database/models/agent.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +17,8 @@ class AppData {
   static int totalWd = 0;
   static double depoCommission = 0.02;
   static double wdCommission = 0.02;
+
+  static AgentModel? user;
 
   static String email = "";
   static String userName = "Unverified";

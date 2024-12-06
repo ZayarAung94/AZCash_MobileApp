@@ -1,7 +1,4 @@
-import 'package:az_cash/database/controllers/userreport_controller.dart';
-import 'package:az_cash/database/models/userreport.dart';
 import 'package:az_cash/ui/constant.dart';
-import 'package:az_cash/ui/helper/widget_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -47,8 +44,7 @@ class _ReportByUserScreenState extends State<ReportByUserScreen> {
     } else if (selectedItem == "Last Month") {
       dateRange = DateTimeRange(
         start: DateTime(DateTime.now().year, DateTime.now().month - 1, 1),
-        end: DateTime(DateTime.now().year, DateTime.now().month, 1)
-            .subtract(const Duration(days: 1)),
+        end: DateTime(DateTime.now().year, DateTime.now().month, 1).subtract(const Duration(days: 1)),
       );
     } else if (selectedItem == "Exact Peroid") {
       dateRange = selectedDateRange;
@@ -119,119 +115,73 @@ class _ReportByUserScreenState extends State<ReportByUserScreen> {
         ),
         const SizedBox(height: 10),
         Expanded(
-          child: FutureBuilder(
-              future: UserReportController().calcUserReport(
-                DateTime(dateRange.start.year, dateRange.start.month,
-                    dateRange.start.day, 0, 0, 0),
-                DateTime(dateRange.end.year, dateRange.end.month,
-                    dateRange.end.day, 23, 59, 59),
-              ),
-              builder: (context, snap) {
-                if (snap.connectionState == ConnectionState.done) {
-                  List<UserReport>? reports = snap.data;
-
-                  if (reports == null || reports.isEmpty) {
-                    return AppWidget.noData();
-                  }
-
-                  return ListView.builder(
-                    itemCount: reports.length,
-                    itemBuilder: (context, index) {
-                      UserReport report = reports[index];
-                      return Container(
-                        padding: const EdgeInsets.only(
-                          bottom: 10,
-                        ),
-                        child: Column(
+          child: ListView.builder(
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return Container(
+                padding: const EdgeInsets.only(
+                  bottom: 10,
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      color: AppColors.softBg,
+                      width: double.infinity,
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              color: AppColors.softBg,
-                              width: double.infinity,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(report.userName),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          "(${report.userId})",
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 11,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      "${report.totalDepo * AppData.depoCommission + report.totalWd * AppData.depoCommission}",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.green,
-                                      ),
-                                    )
-                                  ],
+                            Row(
+                              children: [
+                                Text("report.userName"),
+                                SizedBox(width: 10),
+                                Text(
+                                  "({report.userId})",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 11,
+                                  ),
                                 ),
+                              ],
+                            ),
+                            Text(
+                              "Hello",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
                               ),
-                            ),
-                            reportDataRow(
-                              label1: "Total Deposit :",
-                              label2: "Total Withdraw :",
-                              value1: NumberFormat("#,##0")
-                                  .format(report.totalDepo),
-                              value2:
-                                  NumberFormat("#,##0").format(report.totalWd),
-                              value1Color: Colors.green[200],
-                              value2Color: Colors.red[200],
-                            ),
-                            reportDataRow(
-                              label1: 'Commission (D) :',
-                              label2: 'Commission (W) :',
-                              value1: NumberFormat("#,##0").format(
-                                  report.totalDepo * AppData.depoCommission),
-                              value2: NumberFormat("#,##0").format(
-                                  report.totalWd * AppData.depoCommission),
-                            ),
-                            reportDataRow(
-                              label1: 'Depo Times :',
-                              label2: 'Wd Times :',
-                              value1: "${report.deopTimes}",
-                              value2: "${report.wdTimes}",
-                            ),
+                            )
                           ],
                         ),
-                      );
-                    },
-                  );
-                } else {
-                  return const SizedBox(
-                    height: 300,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              color: AppColors.softBg,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text("Calculating..."),
-                          Text("Paitent...It may take some time."),
-                          SizedBox(height: 200)
-                        ],
                       ),
                     ),
-                  );
-                }
-              }),
+                    reportDataRow(
+                      label1: "Total Deposit :",
+                      label2: "Total Withdraw :",
+                      value1: NumberFormat("#,##0").format(1000),
+                      value2: NumberFormat("#,##0").format(1000),
+                      value1Color: Colors.green[200],
+                      value2Color: Colors.red[200],
+                    ),
+                    reportDataRow(
+                      label1: 'Commission (D) :',
+                      label2: 'Commission (W) :',
+                      value1: NumberFormat("#,##0").format(10),
+                      value2: NumberFormat("#,##0").format(10),
+                    ),
+                    reportDataRow(
+                      label1: 'Depo Times :',
+                      label2: 'Wd Times :',
+                      value1: "100",
+                      value2: "200",
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         )
       ],
     );

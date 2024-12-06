@@ -1,7 +1,6 @@
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/helper/validator.dart';
 import 'package:az_cash/ui/screens/auth/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -54,18 +53,8 @@ class _ForgetpasswdScreenState extends State<ForgetpasswdScreen> {
                     setState(() {
                       isLoading = false;
                     });
-                    try {
-                      await FirebaseAuth.instance
-                          .sendPasswordResetEmail(
-                              email: _emailController.text.trim())
-                          .then((_) {
-                        AppMessage.normal(
-                            title: "Email has been send!!",
-                            message:
-                                "Email has been send to ${_emailController.text}. Please Check and Change Password.");
-                      });
-                    } on FirebaseAuthException catch (e) {
-                      AppMessage.error(e.message ?? "Request Error");
+                    try {} catch (e) {
+                      AppMessage.error(e.toString());
                     } finally {
                       setState(() {
                         isLoading = true;
@@ -82,8 +71,7 @@ class _ForgetpasswdScreenState extends State<ForgetpasswdScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 40.0, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10),
                   child: isLoading
                       ? const Text("Request")
                       : const SizedBox(
@@ -136,8 +124,7 @@ class _ForgetpasswdScreenState extends State<ForgetpasswdScreen> {
           prefixIcon: Icon(icon),
           hintText: hintText,
           border: const OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.all(Radius.circular(10))),
+              borderSide: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(10))),
         ),
       ),
     );

@@ -1,6 +1,3 @@
-import 'package:az_cash/database/controllers/order_controller.dart';
-import 'package:az_cash/database/controllers/users_controllers.dart';
-import 'package:az_cash/database/database.dart';
 import 'package:flutter/material.dart';
 
 import '../constant.dart';
@@ -16,10 +13,6 @@ class _AddCreditState extends State<AddCredit> {
   int payType = 0;
 
   final TextEditingController _creditController = TextEditingController();
-
-  final database = AppDatabase();
-  final userController = UsersController();
-  final orderController = OrderController();
 
   bool isLoading = false;
   @override

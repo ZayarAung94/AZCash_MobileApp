@@ -1,15 +1,14 @@
-import 'package:az_cash/firebase/models/f_user.dart';
-import 'package:az_cash/firebase/models/f_user_controller.dart';
+import 'package:az_cash/auth/auth.dart';
 import 'package:az_cash/ui/constant.dart';
-import 'package:az_cash/ui/helper/snack.dart';
-import 'package:az_cash/ui/helper/validator.dart';
 import 'package:az_cash/ui/screens/auth/forgetpasswd.dart';
 import 'package:az_cash/ui/screens/auth/signup.dart';
 import 'package:az_cash/ui/screens/main_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../helper/snack.dart';
+import '../../helper/validator.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -80,8 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const Text("Welcome Back! And Enjoy!"),
               const SizedBox(height: 50),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 40),
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 40),
                 child: TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -90,14 +88,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.email),
                     hintText: "Email",
                     border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                        borderSide: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 40),
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 40),
                 child: TextField(
                   controller: _passwdController,
                   obscureText: showPasswd,
@@ -118,8 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     hintText: "Password",
                     border: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                        borderSide: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
                 ),
               ),
@@ -127,44 +122,26 @@ class _LoginScreenState extends State<LoginScreen> {
               MaterialButton(
                 onPressed: () async {
                   if (isLoading) {
-                    if (Validator.isEmail(_emailController.text) &&
-                        Validator.isPassword(_passwdController.text)) {
+                    if (Validator.isEmail(_emailController.text) && Validator.isPassword(_passwdController.text)) {
                       setState(() {
                         isLoading = false;
                       });
 
                       try {
-                        await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
+                        final res = await Auth().login(
                           email: _emailController.text.trim(),
-                          password: _passwdController.text.trim(),
-                        )
-                            .then((_) async {
-                          FUser user = await FUserController.getUser(
-                              _emailController.text.trim());
+                          passwd: _passwdController.text.trim(),
+                        );
 
-                          if (user.device == null || user.device == "") {
-                            FUserController.setDevice(user.email);
-                          } else {
-                            if (!await FUserController.checkDevice(user)) {
-                              await FirebaseAuth.instance.signOut();
-                              AppMessage.error(
-                                  "This account is login on Other Device. ${user.device}.");
-                              return;
-                            }
-                          }
-
-                          AppData.email = _emailController.text.trim();
-                          AppData.phone = user.phone;
-                          AppData.userName = user.name;
-                          AppData.device = user.device ?? "Unverified";
-                          AppData.level = user.level;
-
+                        if (res) {
                           saveAccount();
+
                           Get.offAll(() => const MainScreen());
-                        });
-                      } on FirebaseAuthException catch (e) {
-                        AppMessage.error(e.message ?? "Login Error");
+                        } else {
+                          throw ("Somethins is wrong");
+                        }
+                      } catch (e) {
+                        AppMessage.error("Login Error");
                       } finally {
                         setState(() {
                           isLoading = true;
@@ -184,8 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 40.0, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10),
                   child: isLoading
                       ? const Text("LOGIN")
                       : const SizedBox(

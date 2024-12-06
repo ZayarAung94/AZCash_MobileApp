@@ -1,5 +1,3 @@
-import 'package:az_cash/database/controllers/order_controller.dart';
-import 'package:az_cash/database/database.dart';
 import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/screens/childs/credit_history.dart';
@@ -9,8 +7,7 @@ import 'package:get/route_manager.dart';
 import '../constant.dart';
 
 class PayCredit extends StatelessWidget {
-  final User user;
-  const PayCredit({super.key, required this.user});
+  const PayCredit({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,30 +43,28 @@ class PayCredit extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Account :"),
-                  Text("${user.userName} (${user.userId})"),
+                  Text("Account :"),
+                  Text("Name (11111)"),
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Total Credit :"),
+                  Text("10000 K"),
                 ],
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Total Credit :"),
-                  Text("${user.totalCredit} K"),
-                ],
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
               child: TextField(
                 controller: crdController,
                 keyboardType: const TextInputType.numberWithOptions(),
@@ -89,12 +84,7 @@ class PayCredit extends StatelessWidget {
                     int? crdAmount = int.tryParse(crdController.text.trim());
 
                     if (crdAmount != null) {
-                      await OrderController().addCreditWd(
-                        userId: user.userId,
-                        amount: 0,
-                        crdAmount: crdAmount,
-                        code: "",
-                      );
+                      // Add Credit
 
                       Get.back();
                     } else {
@@ -108,7 +98,7 @@ class PayCredit extends StatelessWidget {
                   color: Colors.grey,
                   label: 'View Credit History',
                   onPressed: () {
-                    Get.to(() => CreditHistory(user: user));
+                    Get.to(() => const CreditHistory());
                   }),
             ),
             const SizedBox(height: 20),

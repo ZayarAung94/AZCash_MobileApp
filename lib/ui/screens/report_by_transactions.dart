@@ -1,7 +1,3 @@
-import 'package:az_cash/database/controllers/order_controller.dart';
-import 'package:az_cash/database/database.dart';
-import 'package:az_cash/ui/components/loading.dart';
-import 'package:az_cash/ui/helper/widget_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -29,8 +25,6 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
     end: DateTime.now(),
   );
 
-  final database = AppDatabase();
-
   int totalDepo = 0;
   int totalWd = 0;
 
@@ -54,8 +48,7 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
     } else if (selectedItem == "Last Month") {
       dateRange = DateTimeRange(
         start: DateTime(DateTime.now().year, DateTime.now().month - 1, 1),
-        end: DateTime(DateTime.now().year, DateTime.now().month, 1)
-            .subtract(const Duration(days: 1)),
+        end: DateTime(DateTime.now().year, DateTime.now().month, 1).subtract(const Duration(days: 1)),
       );
     } else if (selectedItem == "Exact Peroid") {
       dateRange = selectedDateRange;
@@ -128,174 +121,126 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
         ),
         const SizedBox(height: 10),
         Expanded(
-          child: FutureBuilder(
-              future: database.getOrderWithUserByRange(
-                DateTime(dateRange.start.year, dateRange.start.month,
-                    dateRange.start.day, 0, 0, 0),
-                DateTime(dateRange.end.year, dateRange.end.month,
-                    dateRange.end.day, 23, 59, 59),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: AppColors.softBg,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${DateFormat("dd/MM/yyyy").format(dateRange.start)} - ${DateFormat("dd/MM/yyyy").format(dateRange.end)}',
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          NumberFormat('#,##0').format(totalDepo),
+                          style: const TextStyle(
+                            color: Colors.green,
+                          ),
+                        ),
+                        const Text(" / "),
+                        Text(
+                          NumberFormat('#,##0').format(totalWd),
+                          style: const TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              builder: (context, snap) {
-                if (snap.connectionState == ConnectionState.done) {
-                  List<OrderWithUser>? orders = snap.data;
-                  if (orders != null) {
-                    for (var order in orders) {
-                      if (order.order.type == 'deposit') {
-                        totalDepo = totalDepo + order.order.amount;
-                      } else {
-                        totalWd = totalWd + order.order.amount;
-                      }
-                    }
-                  }
-
-                  if (orders == null || orders.isEmpty) {
-                    return AppWidget.noData();
-                  }
-
-                  return Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        width: double.infinity,
-                        decoration: const BoxDecoration(
-                          color: AppColors.softBg,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '${DateFormat("dd/MM/yyyy").format(dateRange.start)} - ${DateFormat("dd/MM/yyyy").format(dateRange.end)}',
-                            ),
-                            Row(
+              Expanded(
+                child: ListView.builder(
+                    itemCount: 10,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Column(
                               children: [
-                                Text(
-                                  NumberFormat('#,##0').format(totalDepo),
-                                  style: const TextStyle(
-                                    color: Colors.green,
-                                  ),
-                                ),
-                                const Text(" / "),
-                                Text(
-                                  NumberFormat('#,##0').format(totalWd),
-                                  style: const TextStyle(
-                                    color: Colors.red,
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                            itemCount: orders.length,
-                            itemBuilder: (context, index) {
-                              Order order = orders[index].order;
-                              User user = orders[index].user;
-                              return Column(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    child: Column(
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      user.userName,
-                                                      style: const TextStyle(
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 8),
-                                                    Text(
-                                                      "(${order.userId})",
-                                                      style: const TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 11,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizedBox(height: 8),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      "Crd : ${order.credit}, ",
-                                                      style: const TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 11,
-                                                      ),
-                                                    ),
-                                                    if (order.code != "")
-                                                      Text(
-                                                        "WD Code : ${order.code}, ",
-                                                        style: const TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 11,
-                                                        ),
-                                                      ),
-                                                  ],
-                                                ),
-                                              ],
+                                            Text(
+                                              "user.userName",
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                              ),
                                             ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                  NumberFormat('#,##0')
-                                                      .format(order.amount),
-                                                  style: TextStyle(
-                                                    color:
-                                                        order.type == "withdraw"
-                                                            ? Colors.red
-                                                            : Colors.green,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 8),
-                                                Text(
-                                                  DateFormat("hh:mm a")
-                                                      .format(order.created),
-                                                  style: const TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 11,
-                                                  ),
-                                                ),
-                                              ],
-                                            )
+                                            SizedBox(width: 8),
+                                            Text(
+                                              "({order.userId})",
+                                              style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 11,
+                                              ),
+                                            ),
                                           ],
                                         ),
-                                        const SizedBox(height: 8),
+                                        SizedBox(height: 8),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Crd : {order.credit}, ",
+                                              style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 11,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ),
-                                  Container(
-                                    width: double.infinity,
-                                    height: 1,
-                                    color: AppColors.softBg,
-                                  )
-                                ],
-                              );
-                            }),
-                      ),
-                    ],
-                  );
-                } else {
-                  return const Loading();
-                }
-              }),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          NumberFormat('#,##0').format(10000),
+                                          style: const TextStyle(
+                                            color: "type" == "withdraw" ? Colors.red : Colors.green,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          DateFormat("hh:mm a").format(DateTime.now()),
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 11,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            height: 1,
+                            color: AppColors.softBg,
+                          )
+                        ],
+                      );
+                    }),
+              ),
+            ],
+          ),
         )
       ],
     );

@@ -100,8 +100,7 @@ class _MainScreenState extends State<MainScreen> {
             child: Column(
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   width: double.infinity,
                   child: const Text(
                     "AZ_CASH",
@@ -126,16 +125,13 @@ class _MainScreenState extends State<MainScreen> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: index == activeMenu
-                                ? AppColors.softBg
-                                : Colors.transparent,
+                            color: index == activeMenu ? AppColors.softBg : Colors.transparent,
                             borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(50),
                               bottomRight: Radius.circular(50),
                             ),
                           ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 15),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                           margin: const EdgeInsets.only(right: 8),
                           child: Text(menu[index]),
                         ),

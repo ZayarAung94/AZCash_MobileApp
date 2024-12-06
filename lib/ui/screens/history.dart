@@ -1,10 +1,5 @@
-import 'package:az_cash/database/database.dart';
-import 'package:az_cash/ui/components/loading.dart';
 import 'package:az_cash/ui/constant.dart';
-import 'package:az_cash/ui/dialogs/payment_manage.dart';
-import 'package:az_cash/ui/helper/snack.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -15,19 +10,9 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  final database = AppDatabase();
-
-  String getStatus(Payment p) {
-    DateTime now = DateTime.now();
-    if (now.month == p.created.month) {
-      return "Ongoing...";
-    } else {
-      if (p.realPayout > 0) {
-        return "Payout";
-      } else {
-        return "Processing...";
-      }
-    }
+  String getStatus() {
+    //
+    return "null";
   }
 
   Color getPaymentColor(String s) {
@@ -42,159 +27,113 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: database.select(database.payments).get(),
-        builder: (context, snap) {
-          if (snap.connectionState == ConnectionState.done) {
-            var payments = snap.data;
-            return ListView.builder(
-              itemCount: payments!.length,
-              itemBuilder: (context, index) {
-                index = payments.length - (index + 1);
-                Payment payment = payments[index];
-                String title = getStatus(payment);
+    return ListView.builder(
+      itemCount: 10,
+      itemBuilder: (context, index) {
+        String depositPer = " %";
+        String withdrawPer = " %";
+        String commissionD = NumberFormat("#,##0").format(100);
+        String commissionW = NumberFormat("#,##0").format(10);
+        String payout = NumberFormat("#,##0").format(1000);
+        String realPayout = NumberFormat("#,##0").format(200);
+        String overallCommission = " %";
 
-                String depositPer = "${payment.depositPer} %";
-                String withdrawPer = "${payment.withdrawPer} %";
-                String commissionD = NumberFormat("#,##0")
-                    .format(payment.deposit * payment.depositPer / 100);
-                String commissionW = NumberFormat("#,##0")
-                    .format(payment.withdraw * payment.withdrawPer / 100);
-                String payout = NumberFormat("#,##0").format(
-                    (payment.deposit * payment.depositPer / 100) +
-                        (payment.withdraw * payment.withdrawPer / 100));
-                String realPayout =
-                    NumberFormat("#,##0").format(payment.realPayout);
-                String overallCommission =
-                    "${NumberFormat("#,##0.0").format((payment.realPayout / (payment.deposit + payment.withdraw)) * 100)} %";
-
-                if (title != "Payout") {
-                  depositPer = "${AppData.depoCommission * 100} %";
-                  withdrawPer = "${AppData.wdCommission * 100} %";
-                  commissionD = NumberFormat("#,##0")
-                      .format(payment.deposit * AppData.depoCommission);
-                  commissionW = NumberFormat("#,##0")
-                      .format(payment.withdraw * AppData.wdCommission);
-                  payout = NumberFormat("#,##0").format(
-                      (payment.deposit * AppData.depoCommission) +
-                          (payment.withdraw * AppData.wdCommission));
-                }
-                return Card(
-                  elevation: 5,
-                  margin: const EdgeInsets.all(8),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  DateFormat("dd/MM/yyy (EEEE)")
-                                      .format(payment.created),
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                  ),
-                                ),
-                                Text(
-                                  title,
-                                  style: TextStyle(
-                                    color: getPaymentColor(title),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            IconButton(
-                              padding: const EdgeInsets.all(0),
-                              onPressed: () async {
-                                if (payment.created.month !=
-                                    DateTime.now().month) {
-                                  if (payment.realPayout == 0) {
-                                    await Get.dialog(
-                                      Dialog(
-                                        backgroundColor: AppColors.background,
-                                        child: PaymentManage(payment: payment),
-                                      ),
-                                    );
-
-                                    setState(() {});
-                                  } else {
-                                    AppMessage.error(
-                                        "This Payment is already payout. You can't edit it!!!");
-                                  }
-                                } else {
-                                  AppMessage.error(
-                                      "This payemnt is Ongoing. You can't Payout right now.");
-                                }
-                              },
-                              icon: const Icon(
-                                Icons.settings_outlined,
-                                color: Colors.grey,
-                              ),
-                            )
-                          ],
+        if ("title" != "Payout") {
+          depositPer = "${AppData.depoCommission * 100} %";
+          withdrawPer = "${AppData.wdCommission * 100} %";
+          commissionD = NumberFormat("#,##0").format(1000);
+          commissionW = NumberFormat("#,##0").format(100);
+          payout = NumberFormat("#,##0").format(10000);
+        }
+        return Card(
+          elevation: 5,
+          margin: const EdgeInsets.all(8),
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.only(left: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          DateFormat("dd/MM/yyy (EEEE)").format(DateTime.now()),
+                          style: const TextStyle(
+                            fontSize: 11,
+                          ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        color: AppColors.softBg,
-                        child: Column(
-                          children: [
-                            reportDataRow(
-                              label1: 'Deposit :',
-                              label2: 'Withdraw :',
-                              value1:
-                                  NumberFormat("#,###").format(payment.deposit),
-                              value2: NumberFormat("#,###")
-                                  .format(payment.withdraw),
-                            ),
-                            reportDataRow(
-                              label1: 'Deposit (%) :',
-                              label2: 'Withdraw (%) :',
-                              value1: depositPer,
-                              value2: withdrawPer,
-                            ),
-                            reportDataRow(
-                              label1: 'Commission (D) :',
-                              label2: 'Commission (W) :',
-                              value1: commissionD,
-                              value2: commissionW,
-                            ),
-                            reportDataRow(
-                              label1: 'Credit :',
-                              label2: 'Credit Carryover :',
-                              value1: '0',
-                              value2: '0',
-                            ),
-                            reportDataRow(
-                              label1: 'Payout (K) :',
-                              label2: 'Real Payout :',
-                              value1: payout,
-                              value2: realPayout,
-                            ),
-                            reportDataRow(
-                              label1: 'Overall Comm.. (%) :',
-                              label2: '',
-                              value1: overallCommission,
-                              value2: '',
-                            ),
-                          ],
+                        Text(
+                          "title",
+                          style: TextStyle(
+                            color: getPaymentColor("title"),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
+                      ],
+                    ),
+                    IconButton(
+                      padding: const EdgeInsets.all(0),
+                      onPressed: () async {},
+                      icon: const Icon(
+                        Icons.settings_outlined,
+                        color: Colors.grey,
                       ),
-                    ],
-                  ),
-                );
-              },
-            );
-          } else {
-            return const Loading();
-          }
-        });
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                color: AppColors.softBg,
+                child: Column(
+                  children: [
+                    reportDataRow(
+                      label1: 'Deposit :',
+                      label2: 'Withdraw :',
+                      value1: NumberFormat("#,###").format(10000),
+                      value2: NumberFormat("#,###").format(10000),
+                    ),
+                    reportDataRow(
+                      label1: 'Deposit (%) :',
+                      label2: 'Withdraw (%) :',
+                      value1: depositPer,
+                      value2: withdrawPer,
+                    ),
+                    reportDataRow(
+                      label1: 'Commission (D) :',
+                      label2: 'Commission (W) :',
+                      value1: commissionD,
+                      value2: commissionW,
+                    ),
+                    reportDataRow(
+                      label1: 'Credit :',
+                      label2: 'Credit Carryover :',
+                      value1: '0',
+                      value2: '0',
+                    ),
+                    reportDataRow(
+                      label1: 'Payout (K) :',
+                      label2: 'Real Payout :',
+                      value1: payout,
+                      value2: realPayout,
+                    ),
+                    reportDataRow(
+                      label1: 'Overall Comm.. (%) :',
+                      label2: '',
+                      value1: overallCommission,
+                      value2: '',
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Container reportDataRow({

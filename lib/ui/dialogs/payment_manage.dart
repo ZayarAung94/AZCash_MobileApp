@@ -1,13 +1,10 @@
-import 'package:az_cash/database/controllers/payment_controller.dart';
-import 'package:az_cash/database/database.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/helper/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
 class PaymentManage extends StatefulWidget {
-  final Payment payment;
-  const PaymentManage({super.key, required this.payment});
+  const PaymentManage({super.key});
 
   @override
   State<PaymentManage> createState() => _PaymentManageState();
@@ -60,14 +57,11 @@ class _PaymentManageState extends State<PaymentManage> {
                       setState(() {
                         isLoading = !isLoading;
                       });
-                      if (Validator.isNumber(
-                          realPayoutController.text.trim())) {
-                        int realPayout =
-                            int.parse(realPayoutController.text.trim());
-                        await PaymentController().payout(
-                          id: widget.payment.id,
-                          realPayout: realPayout,
-                        );
+                      if (Validator.isNumber(realPayoutController.text.trim())) {
+                        // await PaymentController().payout(
+                        //   id: widget.payment.id,
+                        //   realPayout: realPayout,
+                        // );
 
                         Future.delayed(
                           const Duration(seconds: 1),

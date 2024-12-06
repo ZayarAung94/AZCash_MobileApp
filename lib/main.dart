@@ -1,14 +1,17 @@
-import 'package:az_cash/firebase_options.dart';
 import 'package:az_cash/ui/screens/auth/splash.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/route_manager.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+  await dotenv.load(fileName: '.env');
+
+  await Supabase.initialize(
+    url: dotenv.env['API_URL']!,
+    anonKey: dotenv.env['API_KEY']!,
   );
 
   runApp(const MyApp());

@@ -1,6 +1,3 @@
-import 'package:az_cash/database/controllers/order_controller.dart';
-import 'package:az_cash/database/controllers/users_controllers.dart';
-import 'package:az_cash/database/database.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/helper/validator.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +18,6 @@ class _AddWithdrawState extends State<AddWithdraw> {
   final TextEditingController _codeController = TextEditingController();
   final TextEditingController _crdController = TextEditingController();
 
-  final database = AppDatabase();
-  final orderController = OrderController();
   bool isLoading = false;
   int payType = 0;
 
@@ -111,8 +106,7 @@ class _AddWithdrawState extends State<AddWithdraw> {
             ),
             if (payType == 1)
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
                 child: TextField(
                   keyboardType: const TextInputType.numberWithOptions(),
                   controller: _crdController,
@@ -145,11 +139,7 @@ class _AddWithdrawState extends State<AddWithdraw> {
                     });
 
                     if (payType == 0) {
-                      await orderController.addWithdraw(
-                        userId: _userIdController.text.trim(),
-                        amount: int.parse(_amountController.text),
-                        code: _codeController.text.trim(),
-                      );
+                      //TODO: Add Withdraw
                     } else if (payType == 1) {
                       int? crd = int.parse(_amountController.text);
 
@@ -162,17 +152,12 @@ class _AddWithdrawState extends State<AddWithdraw> {
                           return;
                         }
                       }
-                      await orderController.addCreditWd(
-                        userId: _userIdController.text.trim(),
-                        amount: int.parse(_amountController.text),
-                        crdAmount: crd,
-                        code: _codeController.text,
-                      );
+                      //TODO: Add credit withdraw
                     }
 
                     Get.back();
                     AppMessage.copied();
-                    UsersController().addUser(_userIdController.text.trim());
+                    //TODO: Add User
                   } else {
                     AppMessage.error(
                         '"User ID", "Withdraw Amount" and "Code" are required. You must type this all data.');

@@ -21,18 +21,13 @@ dependencies:
   flutter_native_splash: ^2.4.1
 
   #Database
-  sqlite3: ^2.4.5
-  path: ^1.9.0
-  drift: ^2.19.1+1
-  drift_flutter: ^0.1.0
+
   shared_preferences: ^2.3.1
 
-  #Firebase
-  firebase_core: ^2.24.2
-  firebase_auth: ^4.16.0
-  cloud_firestore: ^4.14.0
   url_launcher: ^6.3.0
   device_info_plus: ^10.1.2
+  flutter_dotenv: ^5.2.1
+  supabase_flutter: ^2.8.1
 
 flutter_native_splash:
   color: "#0d2645"
@@ -43,8 +38,6 @@ flutter_native_splash:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  drift_dev: ^2.19.1
-  build_runner: ^2.4.12
 
   flutter_lints: ^4.0.0
 
@@ -53,6 +46,7 @@ flutter:
 
   assets:
     - lib/assets/images/under_matainance.png
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
