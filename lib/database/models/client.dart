@@ -1,8 +1,9 @@
 class ClientModel {
-  final int id;
+  final String id;
   final String name;
   final String phone;
   final String agentCode;
+  final String status;
   final DateTime jointDate;
   final DateTime lastTransition;
   final int totalCredit;
@@ -15,6 +16,7 @@ class ClientModel {
     required this.name,
     required this.phone,
     this.agentCode = "",
+    this.status = "Normal",
     DateTime? jointDate,
     DateTime? lastTransition,
     this.totalCredit = 0,
@@ -31,6 +33,8 @@ class ClientModel {
       id: json['id'],
       name: json['name'],
       phone: json['phone'],
+      agentCode: json['agent_code'],
+      status: json['status'],
       jointDate: DateTime.parse(json['joint_date']),
       lastTransition: DateTime.parse(json['last_transition']),
       totalCredit: json['total_credit'],
@@ -46,6 +50,8 @@ class ClientModel {
       'id': id,
       'name': name,
       'phone': phone,
+      'agent_code': agentCode,
+      'status': status,
       'joint_date': jointDate.toIso8601String(),
       'last_transition': lastTransition.toIso8601String(),
       'total_credit': totalCredit,

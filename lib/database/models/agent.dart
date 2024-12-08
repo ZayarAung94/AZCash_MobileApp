@@ -3,8 +3,8 @@ class AgentModel {
   final String name;
   final String email;
   final String phone;
-  final String? role; // Nullable role
-  final String? agentCode; // Nullable agentCode
+  final String role; // Nullable role
+  final String agentCode; // Nullable agentCode
   final DateTime created; // Creation timestamp
 
   AgentModel({
@@ -12,8 +12,8 @@ class AgentModel {
     required this.name,
     required this.email,
     required this.phone,
-    this.role,
-    this.agentCode,
+    this.role = "Agent",
+    this.agentCode = "",
     required this.created,
   });
 
@@ -25,7 +25,7 @@ class AgentModel {
       email: json['email'],
       phone: json['phone'],
       role: json['role'],
-      agentCode: json['agentCode'],
+      agentCode: json['agent_code'],
       created: DateTime.parse(json['created']),
     );
   }
@@ -38,7 +38,7 @@ class AgentModel {
       'email': email,
       'phone': phone,
       'role': role,
-      'agentCode': agentCode,
+      'agent_code': agentCode,
       'created': created.toIso8601String(),
     };
   }

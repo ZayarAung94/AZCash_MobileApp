@@ -1,3 +1,4 @@
+import 'package:az_cash/database/models/client.dart';
 import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/screens/childs/credit_history.dart';
@@ -8,7 +9,11 @@ import 'package:intl/intl.dart';
 import '../../constant.dart';
 
 class UserDetailScreen extends StatelessWidget {
-  const UserDetailScreen({super.key});
+  final ClientModel user;
+  const UserDetailScreen({
+    super.key,
+    required this.user,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,16 +41,16 @@ class UserDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              "User ID : 11111",
-              style: TextStyle(
+            Text(
+              "User ID : ${user.id}",
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
             ),
-            const Text(
-              "Normal",
-              style: TextStyle(
+            Text(
+              user.status,
+              style: const TextStyle(
                 color: Colors.green,
               ),
             ),
@@ -67,23 +72,28 @@ class UserDetailScreen extends StatelessWidget {
                     const SizedBox(height: 15),
                     detailInput(
                       label: "User Name",
-                      intValue: "Name",
+                      intValue: user.name,
                       controller: userName,
                     ),
                     detailInput(
                       label: "Phone Number",
-                      intValue: "user.phone",
+                      intValue: user.phone,
+                      controller: phoneC,
+                    ),
+                    detailInput(
+                      label: "Agent Code",
+                      intValue: user.agentCode,
                       controller: phoneC,
                     ),
                     detailInput(
                       label: "Joind Date",
                       readOnly: true,
-                      intValue: DateFormat("dd MMMM, yyyy").format(DateTime.now()),
+                      intValue: DateFormat("dd MMMM, yyyy").format(user.jointDate),
                     ),
                     detailInput(
                       label: "Last Transition",
                       readOnly: true,
-                      intValue: DateFormat("dd MMMM, yyyy").format(DateTime.now()),
+                      intValue: DateFormat("dd MMMM, yyyy").format(user.lastTransition),
                     ),
                     const SizedBox(height: 25),
                     AppBtn.expendedBtn(
@@ -136,22 +146,22 @@ class UserDetailScreen extends StatelessWidget {
                     detailInput(
                       label: "Total Credit",
                       readOnly: true,
-                      intValue: NumberFormat("#,##0").format(100000),
+                      intValue: NumberFormat("#,##0").format(user.totalCredit),
                     ),
                     detailInput(
                       label: "Last Credit Date",
                       readOnly: true,
-                      intValue: DateFormat("dd MMMM, yyyy").format(DateTime.now()),
+                      intValue: DateFormat("dd MMMM, yyyy").format(user.lastCredit),
                     ),
                     detailInput(
                       label: "Total Promotions",
                       readOnly: true,
-                      intValue: NumberFormat("#,##0").format(1000),
+                      intValue: NumberFormat("#,##0").format(user.totalPromotion),
                     ),
                     detailInput(
                       label: "Promotions Times",
                       readOnly: true,
-                      intValue: NumberFormat("#,##0").format(10000),
+                      intValue: NumberFormat("#,##0").format(user.promotionTimes),
                     ),
                     const SizedBox(height: 25),
                     // AppBtn.expendedBtn(

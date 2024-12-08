@@ -12,8 +12,8 @@ class UserController {
       await userTb.insert(user.toJson());
 
       AppData.user = user;
-    } catch (e) {
-      AppMessage.error("Something is wrong on created account!");
+    } on AuthException catch (e) {
+      AppMessage.error(e.message);
     }
   }
 

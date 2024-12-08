@@ -1,10 +1,8 @@
 import 'package:az_cash/auth/auth.dart';
 import 'package:az_cash/ui/components/under_develop.dart';
 import 'package:az_cash/ui/constant.dart';
-import 'package:az_cash/ui/dialogs/clear_all_data.dart';
 import 'package:az_cash/ui/dialogs/commission_setting.dart';
 import 'package:az_cash/ui/helper/snack.dart';
-import 'package:az_cash/ui/screens/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -43,6 +41,11 @@ class _SettingScreenState extends State<SettingScreen> {
             value: "",
           ),
           settingValue(
+            icon: Icons.lock,
+            label: "Agent Code",
+            value: "${AppData.user?.agentCode}",
+          ),
+          settingValue(
             icon: Icons.star,
             label: "Account Role",
             value: "${AppData.user?.role}",
@@ -54,8 +57,6 @@ class _SettingScreenState extends State<SettingScreen> {
             onTap: () async {
               try {
                 await Auth().logout();
-                AppData.user = null;
-                Get.offAll(() => const LoginScreen());
               } catch (e) {
                 AppMessage.error("Something is wrong!");
               }
@@ -108,31 +109,8 @@ class _SettingScreenState extends State<SettingScreen> {
           settingValue(
             icon: Icons.verified_user_outlined,
             label: "Master Mod",
-            value: AppSetting.masterMod ? "ON" : "OFF",
+            value: AppData.user!.role == "Master" ? "ON" : "OFF",
           ),
-          settingTitle("Data Settings"),
-          settingValue(
-            icon: Icons.data_exploration,
-            label: "Data Migrations",
-            value: "",
-          ),
-          settingValue(
-            icon: Icons.cloud_done,
-            label: "Cloud Data Backup",
-            value: "OFF",
-          ),
-          settingValue(
-            icon: Icons.donut_small_sharp,
-            label: "Backup/Restore",
-            value: "",
-          ),
-          settingValue(
-              icon: Icons.clear_all,
-              label: "Clear all Data",
-              value: "",
-              onTap: () {
-                Get.dialog(const ClearAllData());
-              }),
           const SizedBox(height: 30),
         ],
       ),

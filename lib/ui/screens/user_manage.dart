@@ -1,3 +1,7 @@
+import 'package:az_cash/database/controllers/client_controller.dart';
+import 'package:az_cash/database/models/client.dart';
+import 'package:az_cash/ui/dialogs/add_user.dart';
+import 'package:az_cash/ui/helper/widget_helper.dart';
 import 'package:az_cash/ui/screens/childs/user_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,7 +21,13 @@ class _UserManageScreenState extends State<UserManageScreen> {
     return Scaffold(
       backgroundColor: AppColors.softBg,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          var res = await Get.dialog(const AddUserDialog());
+
+          if (res == "reload") {
+            setState(() {});
+          }
+        },
         child: const Icon(Icons.group_add),
       ),
       body: Column(
@@ -42,52 +52,63 @@ class _UserManageScreenState extends State<UserManageScreen> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () async {
-                    var result = await Get.to(() => const UserDetailScreen());
+            child: FutureBuilder(
+              future: ClientController().getClient(),
+              builder: (context, snap) {
+                if (snap.connectionState == ConnectionState.done) {
+                  List<ClientModel>? clients = snap.data;
+                  return ListView.builder(
+                    itemCount: clients?.length,
+                    itemBuilder: (context, index) {
+                      ClientModel user = clients![index];
+                      return GestureDetector(
+                        onTap: () async {
+                          var result = await Get.to(() => UserDetailScreen(user: user));
 
-                    if (result == "updated") setState(() {});
-                  },
-                  child: Card(
-                    margin: EdgeInsets.only(
-                      left: 8.0,
-                      right: 8,
-                      bottom: index == 9 ? 50 : 8,
-                    ),
-                    color: AppColors.background,
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      width: double.infinity,
-                      child: const Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "user.userName",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                          if (result == "updated") setState(() {});
+                        },
+                        child: Card(
+                          margin: EdgeInsets.only(
+                            left: 8.0,
+                            right: 8,
+                            bottom: index == 9 ? 50 : 8,
+                          ),
+                          color: AppColors.background,
+                          child: Container(
+                            padding: const EdgeInsets.all(15),
+                            width: double.infinity,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          user.name,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text("(${user.id})")
+                                      ],
                                     ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text("({user.userId})")
-                                ],
-                              ),
-                              Text("Normal")
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                                    Text(user.agentCode),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return AppWidget.loading();
+                }
               },
             ),
           ),

@@ -1,9 +1,11 @@
 import 'package:az_cash/auth/user_controller.dart';
 import 'package:az_cash/database/models/agent.dart';
+import 'package:az_cash/ui/constant.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../ui/helper/snack.dart';
+import '../ui/screens/auth/login.dart';
 import '../ui/screens/auth/opt_login.dart';
 
 class Auth {
@@ -42,9 +44,11 @@ class Auth {
 
   Future logout() async {
     await _client.auth.signOut();
+    AppData.user = null;
+    Get.offAll(() => const LoginScreen());
   }
 
-  Future register({
+  Future<bool> register({
     required String email,
     required String passwd,
     required String name,
@@ -70,9 +74,12 @@ class Auth {
         );
 
         await _userController.create(user);
+
+        return true;
       }
     } on AuthException catch (e) {
       AppMessage.error(e.message);
+      return false;
     }
   }
 
@@ -97,6 +104,11 @@ class Auth {
     await _client.auth.resend(
       type: OtpType.signup,
       email: email,
+    );
+
+    AppMessage.normal(
+      title: "Request OTP Success",
+      message: "Please check your email. OTP code have send to your email.",
     );
   }
 }

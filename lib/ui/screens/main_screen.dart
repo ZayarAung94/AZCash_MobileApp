@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:az_cash/ui/constant.dart';
+import 'package:az_cash/ui/screens/agent_account.dart';
 import 'package:az_cash/ui/screens/history.dart';
 import 'package:az_cash/ui/screens/manage_credit.dart';
 import 'package:az_cash/ui/screens/master_report/master_report.dart';
@@ -23,6 +24,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int activeMenu = 0;
+
   List<String> menu = [
     'My Account',
     'Transactions on EPOS',
@@ -30,27 +32,48 @@ class _MainScreenState extends State<MainScreen> {
     'Report by User',
     'Payment History',
     'User Management',
-    'Credit Manage',
-    'Promotions',
-    'Master Mod',
     'App Setting',
   ];
   List<Widget> pages = [
-    const MyAccount(),
+    const AgentAccount(),
     const TranasctionsScreen(),
     const ReportByTransactions(),
     const ReportByUserScreen(),
     const HistoryScreen(),
     const UserManageScreen(),
-    const ManageCredit(),
-    const PromotionScreen(),
-    const MasterReportScreen(),
     const SettingScreen(),
   ];
+
   @override
   Widget build(BuildContext context) {
     var mainScaffoldKey = GlobalKey<ScaffoldState>();
     bool canAppClose = false;
+    if (AppData.user?.role == "Master") {
+      menu = [
+        'My Account',
+        'Transactions on EPOS',
+        'Report by Transactions',
+        'Report by User',
+        'Payment History',
+        'User Management',
+        'Credit Manage',
+        'Promotions',
+        'Master Mod',
+        'App Setting',
+      ];
+      pages = [
+        const MyAccount(),
+        const TranasctionsScreen(),
+        const ReportByTransactions(),
+        const ReportByUserScreen(),
+        const HistoryScreen(),
+        const UserManageScreen(),
+        const ManageCredit(),
+        const PromotionScreen(),
+        const MasterReportScreen(),
+        const SettingScreen(),
+      ];
+    }
 
     return PopScope(
       canPop: false,

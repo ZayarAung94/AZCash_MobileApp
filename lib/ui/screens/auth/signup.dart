@@ -112,14 +112,16 @@ class _SignupScreenState extends State<SignupScreen> {
                     });
 
                     try {
-                      await Auth().register(
+                      final res = await Auth().register(
                         email: emailController.text.trim(),
                         passwd: passwdController.text.trim(),
                         name: nameController.text.trim(),
                         phone: phoneController.text.trim(),
                       );
 
-                      Get.to(() => OptLogin(email: emailController.text.trim()));
+                      if (res) {
+                        Get.to(() => OptLogin(email: emailController.text.trim()));
+                      }
                     } catch (e) {
                       AppMessage.error(e.toString());
                     } finally {

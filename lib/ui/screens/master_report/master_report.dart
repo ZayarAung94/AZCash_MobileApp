@@ -31,17 +31,6 @@ class _MasterReportScreenState extends State<MasterReportScreen> {
       children: [
         Container(
           width: double.infinity,
-          color: Colors.amber,
-          child: const Text(
-            "All of this function are not really work. They are developing state !!!",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-        ),
-        Container(
-          width: double.infinity,
           height: 80,
           color: AppColors.background,
           child: ListView(
