@@ -1,5 +1,5 @@
-import 'package:az_cash/ui/components/delete_order.dart';
 import 'package:az_cash/ui/constant.dart';
+import 'package:az_cash/ui/screens/transactions/components/delete_order.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

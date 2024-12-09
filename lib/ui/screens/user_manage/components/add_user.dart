@@ -1,7 +1,7 @@
 import 'package:az_cash/database/controllers/client_controller.dart';
 import 'package:az_cash/database/models/client.dart';
+import 'package:az_cash/ui/components/dialog_helper.dart';
 import 'package:az_cash/ui/constant.dart';
-import 'package:az_cash/ui/dialogs/dialog_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

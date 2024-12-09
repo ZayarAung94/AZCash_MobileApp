@@ -1,4 +1,4 @@
-import 'package:az_cash/ui/dialogs/dialog_helper.dart';
+import 'package:az_cash/ui/components/dialog_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

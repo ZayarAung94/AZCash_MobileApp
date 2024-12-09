@@ -2,7 +2,7 @@ import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../constant.dart';
+import '../../../constant.dart';
 
 class SettingValueChange extends StatefulWidget {
   final String title;

@@ -3,7 +3,7 @@ import 'package:az_cash/ui/helper/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../constant.dart';
+import '../../../constant.dart';
 
 class AddWithdraw extends StatefulWidget {
   const AddWithdraw({super.key});

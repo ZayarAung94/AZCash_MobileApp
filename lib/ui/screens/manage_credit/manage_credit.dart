@@ -1,8 +1,8 @@
-import 'package:az_cash/ui/components/pay_credit.dart';
+import 'package:az_cash/ui/screens/manage_credit/components/pay_credit.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../constant.dart';
+import '../../constant.dart';
 
 class ManageCredit extends StatefulWidget {
   const ManageCredit({super.key});

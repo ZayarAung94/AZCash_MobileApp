@@ -1,6 +1,6 @@
 import 'package:az_cash/database/controllers/agent_controller.dart';
 import 'package:az_cash/database/models/agent.dart';
-import 'package:az_cash/ui/dialogs/dialog_helper.dart';
+import 'package:az_cash/ui/components/dialog_helper.dart';
 import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:az_cash/ui/helper/widget_helper.dart';
 import 'package:flutter/material.dart';

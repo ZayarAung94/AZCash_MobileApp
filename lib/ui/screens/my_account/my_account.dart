@@ -1,7 +1,7 @@
-import 'package:az_cash/ui/components/add_depo.dart';
-import 'package:az_cash/ui/components/add_withdraw.dart';
 import 'package:az_cash/ui/constant.dart';
 import 'package:az_cash/ui/helper/snack.dart';
+import 'package:az_cash/ui/screens/my_account/components/add_depo.dart';
+import 'package:az_cash/ui/screens/my_account/components/add_withdraw.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

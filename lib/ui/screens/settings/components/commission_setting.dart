@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../constant.dart';
+import '../../../constant.dart';
 
 class CommissionSetting extends StatefulWidget {
   const CommissionSetting({super.key});
@@ -64,8 +64,7 @@ class _CommissionSettingState extends State<CommissionSetting> {
             ),
             const SizedBox(height: 20),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
               child: Row(
                 children: [
                   Expanded(

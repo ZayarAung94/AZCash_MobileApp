@@ -4,7 +4,7 @@ import 'package:az_cash/ui/screens/childs/credit_history.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
-import '../constant.dart';
+import '../../../constant.dart';
 
 class PayCredit extends StatelessWidget {
   const PayCredit({super.key});

@@ -1,17 +1,17 @@
 import 'dart:io';
 
 import 'package:az_cash/ui/constant.dart';
-import 'package:az_cash/ui/screens/agent_account.dart';
-import 'package:az_cash/ui/screens/history.dart';
-import 'package:az_cash/ui/screens/manage_credit.dart';
+import 'package:az_cash/ui/screens/manage_credit/manage_credit.dart';
 import 'package:az_cash/ui/screens/master_report/master_report.dart';
-import 'package:az_cash/ui/screens/my_account.dart';
-import 'package:az_cash/ui/screens/promotions.dart';
-import 'package:az_cash/ui/screens/report_by_transactions.dart';
-import 'package:az_cash/ui/screens/report_by_user.dart';
-import 'package:az_cash/ui/screens/setting.dart';
-import 'package:az_cash/ui/screens/transactions.dart';
-import 'package:az_cash/ui/screens/user_manage.dart';
+import 'package:az_cash/ui/screens/my_account/agent_account.dart';
+import 'package:az_cash/ui/screens/my_account/my_account.dart';
+import 'package:az_cash/ui/screens/payment_history/history.dart';
+import 'package:az_cash/ui/screens/promotions/promotions.dart';
+import 'package:az_cash/ui/screens/report_by_transactions/report_by_transactions.dart';
+import 'package:az_cash/ui/screens/report_by_user/report_by_user.dart';
+import 'package:az_cash/ui/screens/settings/setting.dart';
+import 'package:az_cash/ui/screens/transactions/transactions.dart';
+import 'package:az_cash/ui/screens/user_manage/user_manage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

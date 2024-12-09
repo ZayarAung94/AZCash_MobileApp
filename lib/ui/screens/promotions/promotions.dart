@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../constant.dart';
+import '../../constant.dart';
 
 class PromotionScreen extends StatefulWidget {
   const PromotionScreen({super.key});

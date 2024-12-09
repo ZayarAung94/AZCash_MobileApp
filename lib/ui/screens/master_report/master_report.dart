@@ -20,7 +20,6 @@ class _MasterReportScreenState extends State<MasterReportScreen> {
     const MasterModSummary(),
     const MasterModReports(),
     const MasterModAgents(),
-    const MasterModAgents(),
     const MasterModeFinancial(),
     const MasterModeSettings(),
   ];
@@ -52,16 +51,11 @@ class _MasterReportScreenState extends State<MasterReportScreen> {
               ),
               tabBtn(
                 index: 3,
-                label: "Affiliate",
-                icon: Icons.group_add_outlined,
-              ),
-              tabBtn(
-                index: 4,
                 label: "Financial",
                 icon: Icons.monetization_on_outlined,
               ),
               tabBtn(
-                index: 5,
+                index: 4,
                 label: "Settings",
                 icon: Icons.settings,
               ),

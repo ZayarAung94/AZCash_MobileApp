@@ -1,12 +1,12 @@
 import 'package:az_cash/database/controllers/client_controller.dart';
 import 'package:az_cash/database/models/client.dart';
-import 'package:az_cash/ui/dialogs/add_user.dart';
 import 'package:az_cash/ui/helper/widget_helper.dart';
 import 'package:az_cash/ui/screens/childs/user_detail.dart';
+import 'package:az_cash/ui/screens/user_manage/components/add_user.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../constant.dart';
+import '../../constant.dart';
 
 class UserManageScreen extends StatefulWidget {
   const UserManageScreen({super.key});

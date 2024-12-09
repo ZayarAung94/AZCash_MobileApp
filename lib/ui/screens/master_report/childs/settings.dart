@@ -1,7 +1,7 @@
-import 'package:az_cash/ui/components/setting_value_change.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/helper/validator.dart';
 import 'package:az_cash/ui/helper/widget_helper.dart';
+import 'package:az_cash/ui/screens/settings/components/setting_value_change.dart';
 import 'package:flutter/material.dart';
 
 class MasterModeSettings extends StatelessWidget {

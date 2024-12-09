@@ -1,8 +1,8 @@
 import 'package:az_cash/auth/auth.dart';
 import 'package:az_cash/ui/components/under_develop.dart';
 import 'package:az_cash/ui/constant.dart';
-import 'package:az_cash/ui/dialogs/commission_setting.dart';
 import 'package:az_cash/ui/helper/snack.dart';
+import 'package:az_cash/ui/screens/settings/components/commission_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
