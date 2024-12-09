@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../constant.dart';
+import '../../../constant.dart';
 
 class CreditHistory extends StatelessWidget {
   const CreditHistory({super.key});

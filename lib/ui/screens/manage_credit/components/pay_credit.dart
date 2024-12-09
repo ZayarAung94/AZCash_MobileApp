@@ -1,6 +1,6 @@
 import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:az_cash/ui/helper/snack.dart';
-import 'package:az_cash/ui/screens/childs/credit_history.dart';
+import 'package:az_cash/ui/screens/manage_credit/childs/credit_history.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
