@@ -18,6 +18,7 @@ class AppMessage {
       Get.snackbar(
         'Opps!!! Something is wrong',
         message,
+        isDismissible: false,
         margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
         duration: const Duration(milliseconds: 3000),
         backgroundColor: Colors.red.withOpacity(0.3),

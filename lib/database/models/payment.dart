@@ -1,57 +1,57 @@
-class PaymentModel {
-  final String id;
-  final String agentCode;
-  final String status;
-  final int deposit;
-  final int withdraw;
-  final double depoComm;
-  final double wdComm;
-  final int credit;
-  final int realPayout;
-  final DateTime createdAt;
+class Payment {
+  int id;
+  String agentId;
+  String agentName;
+  String agentPhone;
+  int deposit;
+  int withdraw;
+  double depoCommission;
+  double wdCommission;
+  int payout;
+  String status;
 
-  PaymentModel({
+  Payment({
     required this.id,
-    required this.agentCode,
-    this.status = "Active Session",
+    required this.agentId,
+    required this.agentName,
+    required this.agentPhone,
     this.deposit = 0,
     this.withdraw = 0,
-    this.depoComm = 1.5,
-    this.wdComm = 1,
-    this.credit = 0,
-    this.realPayout = 0,
-    required this.createdAt,
+    this.depoCommission = 0,
+    this.wdCommission = 0,
+    this.payout = 0,
+    this.status = "active",
   });
 
-  // Factory constructor to create a PaymentModel from a JSON map
-  factory PaymentModel.fromJson(Map<String, dynamic> json) {
-    return PaymentModel(
+  // Factory method to create a Payment instance from a JSON object
+  factory Payment.fromJson(Map<String, dynamic> json) {
+    return Payment(
       id: json['id'],
-      agentCode: json['agent_code'],
-      status: json['status'],
+      agentId: json['agent_id'],
+      agentName: json['agent_name'],
+      agentPhone: json['agent_phone'],
       deposit: json['deposit'],
       withdraw: json['withdraw'],
-      depoComm: json['depo_comm'].toDouble(),
-      wdComm: json['wd_comm'].toDouble(),
-      credit: json['credit'],
-      realPayout: json['real_payout'],
-      createdAt: json['created_at'],
+      depoCommission: json['depo_commission'].toDouble(),
+      wdCommission: json['wd_commission'].toDouble(),
+      payout: json['payout'],
+      status: json['status'],
     );
   }
 
-  // Method to convert a PaymentModel to a JSON map
+  // Method to convert a Payment instance into a JSON object
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'agent_code': agentCode,
-      'status': status,
+      'agent_id': agentId,
+      'agent_name': agentName,
+      'agent_phone': agentPhone,
       'deposit': deposit,
       'withdraw': withdraw,
-      'depo_comm': depoComm,
-      'wd_comm': wdComm,
-      'credit': credit,
-      'real_payout': realPayout,
-      'created_at': createdAt,
+      'depo_commission': depoCommission,
+      'wd_commission': wdCommission,
+      'payout': payout,
+      'status': status,
     };
   }
 }

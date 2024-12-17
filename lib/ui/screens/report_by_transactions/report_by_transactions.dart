@@ -1,7 +1,11 @@
+import 'package:az_cash/database/controllers/transaction_controller.dart';
+import 'package:az_cash/database/models/transaction.dart';
+import 'package:az_cash/ui/components/order_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../constant.dart';
+import '../../helper/widget_helper.dart';
 
 class ReportByTransactions extends StatefulWidget {
   const ReportByTransactions({super.key});
@@ -123,120 +127,61 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
         Expanded(
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: AppColors.softBg,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${DateFormat("dd/MM/yyyy").format(dateRange.start)} - ${DateFormat("dd/MM/yyyy").format(dateRange.end)}',
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          NumberFormat('#,##0').format(totalDepo),
-                          style: const TextStyle(
-                            color: Colors.green,
-                          ),
-                        ),
-                        const Text(" / "),
-                        Text(
-                          NumberFormat('#,##0').format(totalWd),
-                          style: const TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              //   width: double.infinity,
+              //   decoration: const BoxDecoration(
+              //     color: AppColors.softBg,
+              //   ),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Text(
+              //         '${DateFormat("dd/MM/yyyy").format(dateRange.start)} - ${DateFormat("dd/MM/yyyy").format(dateRange.end)}',
+              //       ),
+              //       Row(
+              //         children: [
+              //           Text(
+              //             NumberFormat('#,##0').format(totalDepo),
+              //             style: const TextStyle(
+              //               color: Colors.green,
+              //             ),
+              //           ),
+              //           const Text(" / "),
+              //           Text(
+              //             NumberFormat('#,##0').format(totalWd),
+              //             style: const TextStyle(
+              //               color: Colors.red,
+              //             ),
+              //           ),
+              //           const SizedBox(width: 20),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ),
               Expanded(
-                child: ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "user.userName",
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                            SizedBox(width: 8),
-                                            Text(
-                                              "({order.userId})",
-                                              style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 11,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 8),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Crd : {order.credit}, ",
-                                              style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 11,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          NumberFormat('#,##0').format(10000),
-                                          style: const TextStyle(
-                                            color: "type" == "withdraw" ? Colors.red : Colors.green,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          DateFormat("hh:mm a").format(DateTime.now()),
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 11,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            height: 1,
-                            color: AppColors.softBg,
-                          )
-                        ],
-                      );
+                child: FutureBuilder(
+                    future: TransactionController().getByDateRange(dateRange),
+                    builder: (context, snap) {
+                      if (snap.connectionState == ConnectionState.done) {
+                        List<Transaction?> orders = snap.data;
+                        if (orders.isEmpty) {
+                          return AppWidget.noData();
+                        }
+                        return ListView.builder(
+                            itemCount: orders.length,
+                            itemBuilder: (context, index) {
+                              Transaction? order = orders[index];
+                              if (order != null) {
+                                return OrderWidget(order: order);
+                              } else {
+                                return const SizedBox();
+                              }
+                            });
+                      } else {
+                        return AppWidget.loading();
+                      }
                     }),
               ),
             ],

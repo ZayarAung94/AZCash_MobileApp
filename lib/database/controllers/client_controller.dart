@@ -14,7 +14,7 @@ class ClientController {
     }
   }
 
-  Future<List<ClientModel>?> getClient() async {
+  Future<List<ClientModel>?> getClients() async {
     try {
       late PostgrestList result;
 
@@ -34,5 +34,17 @@ class ClientController {
       AppMessage.error(e.message);
     }
     return null;
+  }
+
+  Future<ClientModel?> getClientWithId(String id) async {
+    try {
+      final result = await _clientTB.select().eq('id', id).single();
+
+      ClientModel client = ClientModel.fromJson(result);
+      return client;
+    } on PostgrestException catch (e) {
+      print(e.message);
+      return null;
+    }
   }
 }

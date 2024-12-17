@@ -1,3 +1,6 @@
+import 'package:az_cash/database/controllers/transaction_controller.dart';
+import 'package:az_cash/database/models/transaction.dart';
+import 'package:az_cash/ui/helper/app_helper.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/helper/validator.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +21,8 @@ class _AddDepositState extends State<AddDeposit> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _promoController = TextEditingController();
   final TextEditingController _creditController = TextEditingController();
+
+  final TransactionController transactionController = TransactionController();
 
   bool isLoading = false;
   @override
@@ -152,23 +157,34 @@ class _AddDepositState extends State<AddDeposit> {
                       isLoading = true;
                     });
 
+                    Transaction order = Transaction(
+                      id: AppHelper.generateUniqueId(),
+                      clientId: _userIdController.text.trim(),
+                      type: "Deposit",
+                      amount: double.parse(_amountController.text.trim()),
+                    );
+
                     if (payType == 0) {
+                      await transactionController.addTransaction(order);
                     } else if (payType == 1) {
-                      int? promo = int.parse(_amountController.text);
+                      double? promo = double.parse(_amountController.text);
 
                       if (_promoController.text != "") {
-                        promo = int.tryParse(_promoController.text);
+                        promo = double.tryParse(_promoController.text);
 
                         if (promo == null) {
                           AppMessage.error("Enter valid value in Promotion Amount!!!");
                           return;
                         }
                       }
+
+                      order.promotion = promo;
+                      await transactionController.addTransaction(order);
                     } else if (payType == 2) {
-                      int? crd = int.parse(_amountController.text);
+                      double? crd = double.parse(_amountController.text);
 
                       if (_creditController.text != "") {
-                        crd = int.tryParse(_creditController.text);
+                        crd = double.tryParse(_creditController.text);
                         if (crd == null) {
                           AppMessage.error(
                             "Enter valid value in Credit Amount!!!",
@@ -176,10 +192,19 @@ class _AddDepositState extends State<AddDeposit> {
                           return;
                         }
                       }
+
+                      order.credit = crd;
+                      await transactionController.addTransaction(order);
                     }
 
-                    Get.back();
-                    AppMessage.copied();
+                    if (!Get.isSnackbarOpen) {
+                      Get.back();
+                      AppMessage.copied();
+                    } else {
+                      setState(() {
+                        isLoading = false;
+                      });
+                    }
                   } else {
                     AppMessage.error(
                       "'User Id' and 'Topup Amount' are required. You must give input both.",

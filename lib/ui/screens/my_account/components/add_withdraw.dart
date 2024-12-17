@@ -1,9 +1,12 @@
+import 'package:az_cash/database/controllers/transaction_controller.dart';
+import 'package:az_cash/database/models/transaction.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/helper/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../constant.dart';
+import '../../../helper/app_helper.dart';
 
 class AddWithdraw extends StatefulWidget {
   const AddWithdraw({super.key});
@@ -17,6 +20,8 @@ class _AddWithdrawState extends State<AddWithdraw> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _codeController = TextEditingController();
   final TextEditingController _crdController = TextEditingController();
+
+  final TransactionController transactionController = TransactionController();
 
   bool isLoading = false;
   int payType = 0;
@@ -80,17 +85,17 @@ class _AddWithdrawState extends State<AddWithdraw> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: TextField(
-                controller: _codeController,
-                decoration: const InputDecoration(
-                  label: Text("Code :"),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                ),
-              ),
-            ),
+            // const SizedBox(height: 10),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            //   child: TextField(
+            //     controller: _codeController,
+            //     decoration: const InputDecoration(
+            //       label: Text("Code :"),
+            //       floatingLabelBehavior: FloatingLabelBehavior.always,
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 20),
             SegmentedButton<int>(
               segments: const [
@@ -131,20 +136,25 @@ class _AddWithdrawState extends State<AddWithdraw> {
                   ),
                 ),
                 onPressed: () async {
-                  if (_userIdController.text != "" &&
-                      Validator.isNumber(_amountController.text.trim()) &&
-                      _codeController.text != "") {
+                  if (_userIdController.text != "" && Validator.isNumber(_amountController.text.trim())) {
                     setState(() {
                       isLoading = true;
                     });
 
+                    Transaction order = Transaction(
+                      id: AppHelper.generateUniqueId(),
+                      clientId: _userIdController.text.trim(),
+                      type: "Withdraw",
+                      amount: double.parse(_amountController.text.trim()),
+                    );
+
                     if (payType == 0) {
-                      //TODO: Add Withdraw
+                      await transactionController.addTransaction(order);
                     } else if (payType == 1) {
-                      int? crd = int.parse(_amountController.text);
+                      double? crd = -double.parse(_amountController.text);
 
                       if (_crdController.text != "") {
-                        crd = int.tryParse(_crdController.text);
+                        crd = double.tryParse(_crdController.text);
                         if (crd == null) {
                           AppMessage.error(
                             "Enter valid value in Credit Amount!!!",
@@ -152,12 +162,19 @@ class _AddWithdrawState extends State<AddWithdraw> {
                           return;
                         }
                       }
-                      //TODO: Add credit withdraw
+
+                      order.credit = crd;
+                      await transactionController.addTransaction(order);
                     }
 
-                    Get.back();
-                    AppMessage.copied();
-                    //TODO: Add User
+                    if (!Get.isSnackbarOpen) {
+                      Get.back();
+                      AppMessage.copied();
+                    } else {
+                      setState(() {
+                        isLoading = false;
+                      });
+                    }
                   } else {
                     AppMessage.error(
                         '"User ID", "Withdraw Amount" and "Code" are required. You must type this all data.');

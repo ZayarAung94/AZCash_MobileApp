@@ -53,7 +53,7 @@ class _UserManageScreenState extends State<UserManageScreen> {
           ),
           Expanded(
             child: FutureBuilder(
-              future: ClientController().getClient(),
+              future: ClientController().getClients(),
               builder: (context, snap) {
                 if (snap.connectionState == ConnectionState.done) {
                   List<ClientModel>? clients = snap.data;

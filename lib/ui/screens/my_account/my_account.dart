@@ -1,18 +1,12 @@
 import 'package:az_cash/ui/constant.dart';
-import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/screens/my_account/components/add_depo.dart';
 import 'package:az_cash/ui/screens/my_account/components/add_withdraw.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class MyAccount extends StatefulWidget {
+class MyAccount extends StatelessWidget {
   const MyAccount({super.key});
 
-  @override
-  State<MyAccount> createState() => _MyAccountState();
-}
-
-class _MyAccountState extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -93,16 +87,14 @@ class _MyAccountState extends State<MyAccount> {
                       Radius.circular(10),
                     ),
                   ),
-                  onPressed: () async {
-                    await showModalBottomSheet(
+                  onPressed: () {
+                    showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
                       builder: (context) {
                         return const AddDeposit();
                       },
                     );
-
-                    setState(() {});
                   },
                   child: const SizedBox(
                     width: double.infinity,
@@ -122,16 +114,14 @@ class _MyAccountState extends State<MyAccount> {
                       Radius.circular(10),
                     ),
                   ),
-                  onPressed: () async {
-                    await showModalBottomSheet(
+                  onPressed: () {
+                    showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
                       builder: (context) {
                         return const AddWithdraw();
                       },
                     );
-
-                    setState(() {});
                   },
                   child: const SizedBox(
                     width: double.infinity,
@@ -145,27 +135,27 @@ class _MyAccountState extends State<MyAccount> {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: MaterialButton(
-            color: AppColors.softBg,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-            onPressed: () {
-              AppMessage.requirePremium();
-            },
-            child: const SizedBox(
-              width: double.infinity,
-              height: 60,
-              child: Center(
-                child: Text("Add Order from Agent"),
-              ),
-            ),
-          ),
-        )
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        //   child: MaterialButton(
+        //     color: AppColors.softBg,
+        //     shape: const RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.all(
+        //         Radius.circular(10),
+        //       ),
+        //     ),
+        //     onPressed: () {
+        //       AppMessage.requirePremium();
+        //     },
+        //     child: const SizedBox(
+        //       width: double.infinity,
+        //       height: 60,
+        //       child: Center(
+        //         child: Text("Add Order from Agent"),
+        //       ),
+        //     ),
+        //   ),
+        // )
       ],
     );
   }
