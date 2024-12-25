@@ -2,6 +2,7 @@ import 'package:az_cash/database/controllers/transaction_controller.dart';
 import 'package:az_cash/database/models/transaction.dart';
 import 'package:az_cash/ui/constant.dart';
 import 'package:az_cash/ui/helper/widget_helper.dart';
+import 'package:az_cash/ui/screens/my_account/components/account_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -17,70 +18,7 @@ class _AgentAccountState extends State<AgentAccount> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            color: AppColors.softBg,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "EPOS ID : ${AppData.user?.name}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        mainDataCard(
-                          label: "Total Deposit",
-                          value: NumberFormat("#,##0").format(AppData.totalDepo),
-                        ),
-                        mainDataCard(
-                          label: "Total Withdraw",
-                          value: NumberFormat("#,##0").format(AppData.totalWd),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        mainDataCard(
-                          label: "Deposit Commission",
-                          value: NumberFormat("#,##0").format(AppData.totalDepo * AppData.depoCommission),
-                        ),
-                        mainDataCard(
-                          label: "Withdraw Commission",
-                          value: NumberFormat("#,##0").format(AppData.totalWd * AppData.wdCommission),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Center(
-                      child: Text(
-                        "Total Commission : ${NumberFormat("#,##0").format(AppData.totalDepo * AppData.depoCommission + AppData.totalWd * AppData.wdCommission)}",
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        const AccountDashboard(),
         Container(
           padding: const EdgeInsets.all(20),
           width: double.infinity,
@@ -98,7 +36,7 @@ class _AgentAccountState extends State<AgentAccount> {
               future: TransactionController().getByLimit(7),
               builder: (context, snap) {
                 if (snap.connectionState == ConnectionState.done) {
-                  List<Transaction> transactions = snap.data;
+                  List<Transaction> transactions = snap.data ?? [];
                   return ListView.builder(
                     itemCount: transactions.length,
                     itemBuilder: (context, index) {
@@ -137,7 +75,7 @@ class _AgentAccountState extends State<AgentAccount> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Crd : ${order.credit}, ",
+                                              "Crd : ${order.creditAmount}, ",
                                               style: const TextStyle(
                                                 color: Colors.grey,
                                                 fontSize: 11,

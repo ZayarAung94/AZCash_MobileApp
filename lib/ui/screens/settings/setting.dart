@@ -43,7 +43,7 @@ class _SettingScreenState extends State<SettingScreen> {
           settingValue(
             icon: Icons.lock,
             label: "Agent Code",
-            value: "${AppData.user?.agentCode}",
+            value: "${AppData.user?.id}",
           ),
           settingValue(
             icon: Icons.star,

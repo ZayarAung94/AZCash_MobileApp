@@ -56,11 +56,11 @@ class _UserManageScreenState extends State<UserManageScreen> {
               future: ClientController().getClients(),
               builder: (context, snap) {
                 if (snap.connectionState == ConnectionState.done) {
-                  List<ClientModel>? clients = snap.data;
+                  List<ClientModel> clients = snap.data ?? [];
                   return ListView.builder(
-                    itemCount: clients?.length,
+                    itemCount: clients.length,
                     itemBuilder: (context, index) {
-                      ClientModel user = clients![index];
+                      ClientModel user = clients[index];
                       return GestureDetector(
                         onTap: () async {
                           var result = await Get.to(() => UserDetailScreen(user: user));
@@ -96,7 +96,7 @@ class _UserManageScreenState extends State<UserManageScreen> {
                                         Text("(${user.id})")
                                       ],
                                     ),
-                                    Text(user.agentCode),
+                                    Text(user.status),
                                   ],
                                 )
                               ],

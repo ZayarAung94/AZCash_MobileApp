@@ -162,6 +162,7 @@ class _AddDepositState extends State<AddDeposit> {
                       clientId: _userIdController.text.trim(),
                       type: "Deposit",
                       amount: double.parse(_amountController.text.trim()),
+                      agent: AppData.user!.id,
                     );
 
                     if (payType == 0) {
@@ -178,7 +179,7 @@ class _AddDepositState extends State<AddDeposit> {
                         }
                       }
 
-                      order.promotion = promo;
+                      order.promotionAmount = promo;
                       await transactionController.addTransaction(order);
                     } else if (payType == 2) {
                       double? crd = double.parse(_amountController.text);
@@ -193,7 +194,7 @@ class _AddDepositState extends State<AddDeposit> {
                         }
                       }
 
-                      order.credit = crd;
+                      order.creditAmount = crd;
                       await transactionController.addTransaction(order);
                     }
 

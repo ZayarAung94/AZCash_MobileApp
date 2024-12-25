@@ -21,6 +21,8 @@ class Auth {
 
       await UserController().loadUser(res.user!.email!);
 
+      // AppData.activePaymentId = await PaymentController().getOwnActivePaymentId();
+
       return true;
     } on AuthException catch (e) {
       if (e.message == "Email not confirmed") {
@@ -70,7 +72,7 @@ class Auth {
           name: name,
           email: email,
           phone: phone,
-          created: DateTime.now(),
+          createdAt: DateTime.now(),
         );
 
         await _userController.create(user);

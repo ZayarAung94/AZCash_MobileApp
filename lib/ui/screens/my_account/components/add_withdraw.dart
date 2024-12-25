@@ -18,7 +18,7 @@ class AddWithdraw extends StatefulWidget {
 class _AddWithdrawState extends State<AddWithdraw> {
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _codeController = TextEditingController();
+  // final TextEditingController _codeController = TextEditingController();
   final TextEditingController _crdController = TextEditingController();
 
   final TransactionController transactionController = TransactionController();
@@ -146,6 +146,7 @@ class _AddWithdrawState extends State<AddWithdraw> {
                       clientId: _userIdController.text.trim(),
                       type: "Withdraw",
                       amount: double.parse(_amountController.text.trim()),
+                      agent: AppData.user!.id,
                     );
 
                     if (payType == 0) {
@@ -163,7 +164,7 @@ class _AddWithdrawState extends State<AddWithdraw> {
                         }
                       }
 
-                      order.credit = crd;
+                      order.creditAmount = crd;
                       await transactionController.addTransaction(order);
                     }
 

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TransactionController {
-  final _db = Supabase.instance.client.from('transactions');
+  final _db = Supabase.instance.client.from('orders');
   final _clientController = ClientController();
 
   Future addTransaction(Transaction order) async {
@@ -15,7 +15,7 @@ class TransactionController {
 
     if (client != null) {
       order.clientName = client.name;
-      order.agentId = client.agentCode;
+      order.agent = client.agent;
 
       try {
         await _db.insert(order.toJson());
@@ -42,7 +42,7 @@ class TransactionController {
     } else {
       final result = _db.stream(primaryKey: ['id']).gte('created_at', today).order("created_at").map((value) {
             return value.map((e) {
-              if (e['agent_id'] == AppData.user?.agentCode) return Transaction.fromJson(e);
+              if (e['agent'] == AppData.user?.id) return Transaction.fromJson(e);
             }).toList();
           });
 
@@ -50,7 +50,7 @@ class TransactionController {
     }
   }
 
-  Future getByLimit(int limit) async {
+  Future<List<Transaction>> getByLimit(int limit) async {
     final result = await _db.select().limit(limit).order('created_at');
 
     List<Transaction> value = result.map((json) {
@@ -60,7 +60,7 @@ class TransactionController {
     return value;
   }
 
-  Future getByDateRange(DateTimeRange dateRange) async {
+  Future<List<Transaction?>> getByDateRange(DateTimeRange dateRange) async {
     DateTime startDate = DateTime(dateRange.start.year, dateRange.start.month, dateRange.start.day, 0, 0);
     DateTime endDate = DateTime(dateRange.end.year, dateRange.end.month, dateRange.end.day, 23, 59);
 
@@ -76,7 +76,7 @@ class TransactionController {
       return value;
     } else {
       final value = result.map((json) {
-        if (json['agent_id'] == AppData.user?.agentCode) return Transaction.fromJson(json);
+        if (json['agent'] == AppData.user?.id) return Transaction.fromJson(json);
       }).toList();
 
       return value;

@@ -18,9 +18,9 @@ class MasterModAgents extends StatelessWidget {
               future: AgentController().getAgents(),
               builder: (context, snap) {
                 if (snap.connectionState == ConnectionState.done) {
-                  List<AgentModel>? agents = snap.data;
+                  List<AgentModel> agents = snap.data ?? [];
                   return ListView.builder(
-                    itemCount: agents!.length,
+                    itemCount: agents.length,
                     itemBuilder: (context, index) {
                       AgentModel agent = agents[index];
                       return GestureDetector(
@@ -84,7 +84,7 @@ class MasterModAgents extends StatelessWidget {
                                 SizedBox(
                                   width: 150,
                                   child: Text(
-                                    "(${agent.agentCode})",
+                                    "(${agent.role})",
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.end,
                                   ),

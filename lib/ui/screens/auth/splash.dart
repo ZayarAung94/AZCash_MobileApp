@@ -22,19 +22,7 @@ class SplashScreen extends StatelessWidget {
     }
 
     Future<void> loadData() async {
-      // await database.getOrderByRange(start, end).then((orders) {
-      //   for (var order in orders) {
-      //     if (order.type == "deposit" && order.status == "done") {
-      //       AppData.totalDepo = AppData.totalDepo + order.amount;
-      //     } else if (order.type == 'withdraw' && order.status == 'done') {
-      //       AppData.totalWd = AppData.totalWd + order.amount;
-      //     }
-      //   }
-      // });
-
       await getCommissionPer();
-
-      // await PaymentController().appStartCheck();
     }
 
     return Scaffold(

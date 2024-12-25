@@ -1,52 +1,59 @@
 class Transaction {
-  int id;
-  String clientId;
+  final int id;
+  final String clientId;
   String clientName;
-  String type;
-  double amount;
-  double credit;
-  double promotion;
-  String agentId;
-  DateTime createdAt;
+  String agent; // UUID as String
+  final double amount;
+  double creditAmount;
+  double promotionAmount;
+  final String type;
+  final DateTime createdAt;
 
   Transaction({
     required this.id,
     required this.clientId,
-    String? clientName,
-    required this.type,
+    this.clientName = "N/A",
+    required this.agent,
     required this.amount,
-    this.credit = 0,
-    this.promotion = 0,
-    this.agentId = "",
+    this.creditAmount = 0,
+    this.promotionAmount = 0,
+    required this.type,
     DateTime? createdAt,
-  })  : clientName = clientName ?? "",
-        createdAt = createdAt ?? DateTime.now();
+  }) : createdAt = DateTime.now();
 
+  // Factory constructor to create a TransactionModel from a JSON map
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
-      id: json["id"],
-      clientId: json['client_id'],
-      clientName: json['client_name'],
-      type: json['type'],
+      id: json['id'] as int,
+      clientId: json['client_id'] as String,
+      clientName: json['client_name'] as String,
+      agent: json['agent'] as String,
       amount: json['amount'].toDouble(),
-      credit: json['credit'].toDouble(),
-      promotion: json['promotion'].toDouble(),
-      agentId: json["agent_id"],
-      createdAt: DateTime.parse(json['created_at']),
+      creditAmount: json['credit_amount'].toDouble(),
+      promotionAmount: json['promotion_amount'].toDouble(),
+      type: json['type'] as String,
+      createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
 
+  // Method to convert the TransactionModel to a JSON map
   Map<String, dynamic> toJson() {
     return {
-      "id": id,
-      "client_id": clientId,
-      "client_name": clientName,
-      "type": type,
-      "amount": amount,
-      "credit": credit,
-      "promotion": promotion,
-      "agent_id": agentId,
-      "created_at": createdAt.toIso8601String(),
+      'id': id,
+      'client_id': clientId,
+      'client_name': clientName,
+      'agent': agent,
+      'amount': amount,
+      'credit_amount': creditAmount,
+      'promotion_amount': promotionAmount,
+      'type': type,
+      'created_at': createdAt.toIso8601String(),
     };
+  }
+
+  // Override toString for easier debugging
+  @override
+  String toString() {
+    return 'TransactionModel(id: $id, clientId: $clientId, clientName: $clientName, agent: $agent, amount: $amount, creditAmount: $creditAmount, promotionAmount: $promotionAmount, type: $type, createdAt: $createdAt)';
   }
 }

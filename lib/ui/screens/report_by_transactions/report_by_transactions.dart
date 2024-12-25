@@ -165,7 +165,7 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
                     future: TransactionController().getByDateRange(dateRange),
                     builder: (context, snap) {
                       if (snap.connectionState == ConnectionState.done) {
-                        List<Transaction?> orders = snap.data;
+                        List<Transaction?> orders = snap.data ?? [];
                         if (orders.isEmpty) {
                           return AppWidget.noData();
                         }
@@ -173,10 +173,10 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
                             itemCount: orders.length,
                             itemBuilder: (context, index) {
                               Transaction? order = orders[index];
-                              if (order != null) {
-                                return OrderWidget(order: order);
-                              } else {
+                              if (order == null) {
                                 return const SizedBox();
+                              } else {
+                                return OrderWidget(order: order);
                               }
                             });
                       } else {

@@ -82,18 +82,18 @@ class UserDetailScreen extends StatelessWidget {
                     ),
                     detailInput(
                       label: "Agent Code",
-                      intValue: user.agentCode,
+                      intValue: user.agent,
                       controller: phoneC,
                     ),
                     detailInput(
                       label: "Joind Date",
                       readOnly: true,
-                      intValue: DateFormat("dd MMMM, yyyy").format(user.jointDate),
+                      intValue: DateFormat("dd MMMM, yyyy").format(user.jointAt),
                     ),
                     detailInput(
                       label: "Last Transition",
                       readOnly: true,
-                      intValue: DateFormat("dd MMMM, yyyy").format(user.lastTransition),
+                      intValue: DateFormat("dd MMMM, yyyy").format(DateTime.now()),
                     ),
                     const SizedBox(height: 25),
                     AppBtn.expendedBtn(
@@ -146,7 +146,7 @@ class UserDetailScreen extends StatelessWidget {
                     detailInput(
                       label: "Total Credit",
                       readOnly: true,
-                      intValue: NumberFormat("#,##0").format(user.totalCredit),
+                      intValue: NumberFormat("#,##0").format(user.credit),
                     ),
                     detailInput(
                       label: "Last Credit Date",
@@ -156,12 +156,12 @@ class UserDetailScreen extends StatelessWidget {
                     detailInput(
                       label: "Total Promotions",
                       readOnly: true,
-                      intValue: NumberFormat("#,##0").format(user.totalPromotion),
+                      intValue: NumberFormat("#,##0").format(10000),
                     ),
                     detailInput(
                       label: "Promotions Times",
                       readOnly: true,
-                      intValue: NumberFormat("#,##0").format(user.promotionTimes),
+                      intValue: NumberFormat("#,##0").format(1),
                     ),
                     const SizedBox(height: 25),
                     // AppBtn.expendedBtn(

@@ -20,12 +20,14 @@ class AppData {
 
   static AgentModel? user;
 
-  static String email = "";
-  static String userName = "Unverified";
-  static String phone = "+95 9999999999";
-  static String device = "Unverified";
-  static String deviceSerie = "";
-  static String level = "Free";
+  static int activePaymentId = 1;
+
+  // static String email = "";
+  // static String userName = "Unverified";
+  // static String phone = "+95 9999999999";
+  // static String device = "Unverified";
+  // static String deviceSerie = "";
+  // static String level = "Free";
   static String expireDate = DateFormat("dd-MM-yyyy")
       .format(DateTime(DateTime.now().year, DateTime.now().month + 1, 1).subtract(const Duration(days: 1)));
 }

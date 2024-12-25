@@ -72,7 +72,7 @@ class MasterProfileController {
       double balance = await getBalance(1);
       double newBalance = balance + amount;
 
-      await changeLimit(1, newBalance);
+      await changeBalance(1, newBalance);
     } on PostgrestException catch (e) {
       AppMessage.error(e.message);
     }
@@ -83,7 +83,7 @@ class MasterProfileController {
       double balance = await getBalance(1);
       double newBalance = balance - amount;
 
-      await changeLimit(1, newBalance);
+      await changeBalance(1, newBalance);
     } on PostgrestException catch (e) {
       AppMessage.error(e.message);
     }

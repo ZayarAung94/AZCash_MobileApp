@@ -3,9 +3,10 @@ class AgentModel {
   final String name;
   final String email;
   final String phone;
-  final String role; // Nullable role
-  final String agentCode; // Nullable agentCode
-  final DateTime created; // Creation timestamp
+  final String role;
+  final int deposit;
+  final int withdraw;
+  final DateTime createdAt;
 
   AgentModel({
     required this.id,
@@ -13,24 +14,26 @@ class AgentModel {
     required this.email,
     required this.phone,
     this.role = "Agent",
-    this.agentCode = "",
-    required this.created,
-  });
+    this.deposit = 0,
+    this.withdraw = 0,
+    DateTime? createdAt,
+  }) : createdAt = DateTime.now();
 
-  // Factory constructor to create an AgentModel from JSON
+  // Factory constructor to create an AgentModel from a JSON map
   factory AgentModel.fromJson(Map<String, dynamic> json) {
     return AgentModel(
-      id: json['id'],
-      name: json['name'],
-      email: json['email'],
-      phone: json['phone'],
-      role: json['role'],
-      agentCode: json['agent_code'],
-      created: DateTime.parse(json['created']),
+      id: json['id'] as String,
+      name: json['name'] as String,
+      email: json['email'] as String,
+      phone: json['phone'] as String,
+      role: json['role'] as String,
+      deposit: json['deposit'] as int,
+      withdraw: json['withdraw'] as int,
+      createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
 
-  // Method to convert AgentModel to JSON
+  // Method to convert the AgentModel to a JSON map
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -38,8 +41,15 @@ class AgentModel {
       'email': email,
       'phone': phone,
       'role': role,
-      'agent_code': agentCode,
-      'created': created.toIso8601String(),
+      'deposit': deposit,
+      'withdraw': withdraw,
+      'created_at': createdAt.toIso8601String(),
     };
+  }
+
+  // Override toString for easier debugging
+  @override
+  String toString() {
+    return 'AgentModel(id: $id, name: $name, email: $email, phone: $phone, role: $role, deposit: $deposit, withdraw: $withdraw, createdAt: $createdAt)';
   }
 }

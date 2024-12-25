@@ -19,9 +19,9 @@ class ClientController {
       late PostgrestList result;
 
       if (AppData.user!.role == "Master") {
-        result = await _clientTB.select().order('last_transition');
+        result = await _clientTB.select().order('joint_at');
       } else {
-        result = await _clientTB.select().eq('agent_code', AppData.user!.agentCode).order('last_transition');
+        result = await _clientTB.select().eq('agent', AppData.user!.id).order('joint_at');
       }
       List<ClientModel> clients = [];
       for (var json in result) {
@@ -43,7 +43,7 @@ class ClientController {
       ClientModel client = ClientModel.fromJson(result);
       return client;
     } on PostgrestException catch (e) {
-      print(e.message);
+      AppMessage.error(e.message);
       return null;
     }
   }

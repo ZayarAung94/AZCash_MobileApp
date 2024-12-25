@@ -85,7 +85,7 @@ class AddUserDialog extends StatelessWidget {
             id: idController.text.trim(),
             name: nameController.text.trim(),
             phone: phoneController.text.trim(),
-            agentCode: AppData.user?.agentCode ?? "",
+            agent: AppData.user?.id ?? "",
           );
 
           await ClientController().addClient(client);

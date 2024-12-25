@@ -55,7 +55,7 @@ class OrderWidget extends StatelessWidget {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: "Crd : ${order.credit}",
+                                    text: "Crd : ${order.creditAmount}",
                                     style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 11,

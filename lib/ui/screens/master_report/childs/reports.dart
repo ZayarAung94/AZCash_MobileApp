@@ -17,11 +17,11 @@ class MasterModReports extends StatelessWidget {
         stream: PaymentController().getActivePayments(),
         builder: (context, snap) {
           if (snap.hasData) {
-            List<Payment> payments = snap.data as List<Payment>;
+            List<PaymentModel> payments = snap.data as List<PaymentModel>;
             return ListView.builder(
               itemCount: payments.length,
               itemBuilder: (context, index) {
-                Payment payment = payments[index];
+                PaymentModel payment = payments[index];
                 double depoComms = 1.5;
                 double wdComms = 0.5;
 
@@ -43,8 +43,8 @@ class MasterModReports extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(payment.agentName),
-                            Text("(${payment.agentPhone})"),
+                            Text(payment.agentId),
+                            const Text("(agent.phone)"),
                           ],
                         ),
                         const Divider(),

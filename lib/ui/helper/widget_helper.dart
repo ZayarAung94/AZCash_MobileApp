@@ -193,7 +193,8 @@ class AppWidget {
   }
 
   static Widget noData({String? message}) {
-    return Padding(
+    return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 50.0),
       child: Column(
         children: [

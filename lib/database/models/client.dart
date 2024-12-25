@@ -2,62 +2,55 @@ class ClientModel {
   final String id;
   final String name;
   final String phone;
-  final String agentCode;
-  final String status;
-  final DateTime jointDate;
-  final DateTime lastTransition;
-  final int totalCredit;
+  final String agent; // UUID as String
+  final int credit;
   final DateTime lastCredit;
-  final int totalPromotion;
-  final int promotionTimes;
+  final String status;
+  final DateTime jointAt;
 
   ClientModel({
     required this.id,
     required this.name,
     required this.phone,
-    this.agentCode = "",
-    this.status = "Normal",
-    DateTime? jointDate,
-    DateTime? lastTransition,
-    this.totalCredit = 0,
+    required this.agent,
+    this.credit = 0,
     DateTime? lastCredit,
-    this.totalPromotion = 0,
-    this.promotionTimes = 0,
-  })  : jointDate = jointDate ?? DateTime.now(),
-        lastTransition = lastTransition ?? DateTime.now(),
-        lastCredit = lastCredit ?? DateTime.now();
+    this.status = "Normal",
+    DateTime? jointAt,
+  })  : lastCredit = DateTime.now(),
+        jointAt = DateTime.now();
 
-  // Factory constructor for creating a UserModel from JSON
+  // Factory constructor to create a ClientModel from a JSON map
   factory ClientModel.fromJson(Map<String, dynamic> json) {
     return ClientModel(
-      id: json['id'],
-      name: json['name'],
-      phone: json['phone'],
-      agentCode: json['agent_code'],
-      status: json['status'],
-      jointDate: DateTime.parse(json['joint_date']),
-      lastTransition: DateTime.parse(json['last_transition']),
-      totalCredit: json['total_credit'],
-      lastCredit: DateTime.parse(json['last_credit']),
-      totalPromotion: json['total_promotion'],
-      promotionTimes: json['promotion_times'],
+      id: json['id'] as String,
+      name: json['name'] as String,
+      phone: json['phone'] as String,
+      agent: json['agent'] as String,
+      credit: json['credit'] as int,
+      lastCredit: DateTime.parse(json['last_credit'] as String),
+      status: json['status'] as String,
+      jointAt: DateTime.parse(json['joint_at'] as String),
     );
   }
 
-  // Method to convert UserModel to JSON
+  // Method to convert the ClientModel to a JSON map
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
       'phone': phone,
-      'agent_code': agentCode,
-      'status': status,
-      'joint_date': jointDate.toIso8601String(),
-      'last_transition': lastTransition.toIso8601String(),
-      'total_credit': totalCredit,
+      'agent': agent,
+      'credit': credit,
       'last_credit': lastCredit.toIso8601String(),
-      'total_promotion': totalPromotion,
-      'promotion_times': promotionTimes,
+      'status': status,
+      'joint_at': jointAt.toIso8601String(),
     };
+  }
+
+  // Override toString for easier debugging
+  @override
+  String toString() {
+    return 'ClientModel(id: $id, name: $name, phone: $phone, agent: $agent, credit: $credit, lastCredit: $lastCredit, status: $status, jointAt: $jointAt)';
   }
 }

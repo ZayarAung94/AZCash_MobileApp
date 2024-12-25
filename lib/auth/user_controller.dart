@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../ui/constant.dart';
 
 class UserController {
-  final userTb = Supabase.instance.client.from("users");
+  final userTb = Supabase.instance.client.from("agents");
 
   Future create(AgentModel user) async {
     try {

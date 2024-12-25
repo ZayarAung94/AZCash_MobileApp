@@ -2,12 +2,16 @@ class MasterProfile {
   final int id;
   final double balance;
   final double limit;
+  final int deposit;
+  final int withdraw;
   final DateTime createdAt;
 
   MasterProfile({
     required this.id,
     required this.balance,
     required this.limit,
+    this.deposit = 0,
+    this.withdraw = 0,
     required this.createdAt,
   });
 
@@ -16,7 +20,9 @@ class MasterProfile {
     return MasterProfile(
       id: json['id'],
       balance: json['balance'].toDouble(),
-      limit: json['limit'].toDouble(),
+      limit: json['limits'].toDouble(),
+      deposit: json['deposit'],
+      withdraw: json['withdraw'],
       createdAt: DateTime.parse(json['created_at']),
     );
   }
@@ -26,7 +32,9 @@ class MasterProfile {
     return {
       'id': id,
       'balance': balance,
-      'limit': limit,
+      'limits': limit,
+      'deposit': deposit,
+      'withdraw': withdraw,
       'created_at': createdAt.toIso8601String(),
     };
   }
