@@ -17,8 +17,8 @@ class ClientModel {
     DateTime? lastCredit,
     this.status = "Normal",
     DateTime? jointAt,
-  })  : lastCredit = DateTime.now(),
-        jointAt = DateTime.now();
+  })  : lastCredit = lastCredit ?? DateTime.now(),
+        jointAt = jointAt ?? DateTime.now();
 
   // Factory constructor to create a ClientModel from a JSON map
   factory ClientModel.fromJson(Map<String, dynamic> json) {

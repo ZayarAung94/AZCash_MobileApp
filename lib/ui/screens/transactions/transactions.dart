@@ -15,6 +15,9 @@ class TranasctionsScreen extends StatelessWidget {
         builder: (context, snap) {
           if (snap.hasData) {
             List<Transaction?> orders = snap.data ?? [];
+            if (orders.isEmpty) {
+              return AppWidget.noData();
+            }
             return ListView.builder(
               itemCount: orders.length,
               itemBuilder: (context, index) {

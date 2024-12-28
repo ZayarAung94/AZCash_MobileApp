@@ -16,29 +16,31 @@ class AgentAccount extends StatefulWidget {
 class _AgentAccountState extends State<AgentAccount> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const AccountDashboard(),
-        Container(
-          padding: const EdgeInsets.all(20),
-          width: double.infinity,
-          child: Text(
-            "Last Transactions",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[700],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const AccountDashboard(),
+          Container(
+            padding: const EdgeInsets.all(20),
+            width: double.infinity,
+            child: Text(
+              "Last Transactions",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[700],
+              ),
             ),
           ),
-        ),
-        Expanded(
-          child: FutureBuilder(
-              future: TransactionController().getByLimit(7),
+          FutureBuilder(
+              future: TransactionController().getByLimit(5),
               builder: (context, snap) {
                 if (snap.connectionState == ConnectionState.done) {
                   List<Transaction> transactions = snap.data ?? [];
                   return ListView.builder(
                     itemCount: transactions.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
                     itemBuilder: (context, index) {
                       Transaction order = transactions[index];
                       return Column(
@@ -124,8 +126,8 @@ class _AgentAccountState extends State<AgentAccount> {
                   return AppWidget.loading();
                 }
               }),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

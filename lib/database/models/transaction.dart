@@ -7,6 +7,7 @@ class Transaction {
   double creditAmount;
   double promotionAmount;
   final String type;
+  int paymentId;
   final DateTime createdAt;
 
   Transaction({
@@ -18,6 +19,7 @@ class Transaction {
     this.creditAmount = 0,
     this.promotionAmount = 0,
     required this.type,
+    this.paymentId = 0,
     DateTime? createdAt,
   }) : createdAt = DateTime.now();
 
@@ -32,6 +34,7 @@ class Transaction {
       creditAmount: json['credit_amount'].toDouble(),
       promotionAmount: json['promotion_amount'].toDouble(),
       type: json['type'] as String,
+      paymentId: json['payment_id'] as int,
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
@@ -47,6 +50,7 @@ class Transaction {
       'credit_amount': creditAmount,
       'promotion_amount': promotionAmount,
       'type': type,
+      'payment_id': paymentId,
       'created_at': createdAt.toIso8601String(),
     };
   }

@@ -1,6 +1,7 @@
 class PaymentModel {
   final int id;
   final String agentId; // UUID as String
+  String agentName;
   final DateTime sessionStart;
   final DateTime sessionEnd;
   final int deposit;
@@ -13,6 +14,7 @@ class PaymentModel {
   PaymentModel({
     required this.id,
     required this.agentId,
+    required this.agentName,
     required this.sessionStart,
     required this.sessionEnd,
     required this.deposit,
@@ -28,6 +30,7 @@ class PaymentModel {
     return PaymentModel(
       id: json['id'] as int,
       agentId: json['agent_id'] as String,
+      agentName: json['agent_name'],
       sessionStart: DateTime.parse(json['session_start'] as String),
       sessionEnd: DateTime.parse(json['session_end'] as String),
       deposit: json['deposit'] as int,
@@ -44,6 +47,7 @@ class PaymentModel {
     return {
       'id': id,
       'agent_id': agentId,
+      'agent_name': agentName,
       'session_start': sessionStart.toIso8601String(),
       'session_end': sessionEnd.toIso8601String(),
       'deposit': deposit,

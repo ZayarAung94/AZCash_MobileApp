@@ -1,6 +1,7 @@
 import 'package:az_cash/database/models/client.dart';
 import 'package:az_cash/ui/constant.dart';
 import 'package:az_cash/ui/helper/snack.dart';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ClientController {
@@ -43,8 +44,19 @@ class ClientController {
       ClientModel client = ClientModel.fromJson(result);
       return client;
     } on PostgrestException catch (e) {
-      AppMessage.error(e.message);
+      if (kDebugMode) {
+        print(e.message);
+      }
       return null;
     }
+  }
+
+  Future<List<ClientModel>> getClientsWithCredit() async {
+    final result = await _clientTB.select().neq("credit", 0).order('last_credit');
+    final clients = result.map((json) {
+      return ClientModel.fromJson(json);
+    }).toList();
+
+    return clients;
   }
 }

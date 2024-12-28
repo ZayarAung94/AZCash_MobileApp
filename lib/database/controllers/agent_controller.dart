@@ -30,4 +30,11 @@ class AgentController {
           }).toList();
         });
   }
+
+  Future getAgentNameById(String id) async {
+    final result = await _agentTB.select().eq("id", id).single();
+
+    String name = result['name'];
+    return name;
+  }
 }

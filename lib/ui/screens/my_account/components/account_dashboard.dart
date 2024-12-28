@@ -1,7 +1,7 @@
-import 'package:az_cash/database/controllers/agent_controller.dart';
 import 'package:az_cash/database/controllers/master_profile_controller.dart';
-import 'package:az_cash/database/models/agent.dart';
+import 'package:az_cash/database/controllers/payment_controller.dart';
 import 'package:az_cash/database/models/master_profile.dart';
+import 'package:az_cash/database/models/payment.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -40,11 +40,11 @@ class AccountDashboard extends StatelessWidget {
           });
     } else {
       return StreamBuilder(
-          stream: AgentController().getAgentById(AppData.user!.id),
+          stream: PaymentController().getActivePayment(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              AgentModel main = snapshot.data.first;
-              return defaultDashboard(main.deposit, main.withdraw, getDepoCom(main.deposit), getWdCom(main.deposit));
+              PaymentModel main = snapshot.data!.first;
+              return defaultDashboard(main.deposit, main.withdraw, getDepoCom(main.deposit), getWdCom(main.withdraw));
             }
             return defaultDashboard(0, 0, 1.5, 0.5);
           });

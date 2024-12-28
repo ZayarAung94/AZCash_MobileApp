@@ -90,11 +90,6 @@ class UserDetailScreen extends StatelessWidget {
                       readOnly: true,
                       intValue: DateFormat("dd MMMM, yyyy").format(user.jointAt),
                     ),
-                    detailInput(
-                      label: "Last Transition",
-                      readOnly: true,
-                      intValue: DateFormat("dd MMMM, yyyy").format(DateTime.now()),
-                    ),
                     const SizedBox(height: 25),
                     AppBtn.expendedBtn(
                       color: Colors.green.shade800,
@@ -153,30 +148,7 @@ class UserDetailScreen extends StatelessWidget {
                       readOnly: true,
                       intValue: DateFormat("dd MMMM, yyyy").format(user.lastCredit),
                     ),
-                    detailInput(
-                      label: "Total Promotions",
-                      readOnly: true,
-                      intValue: NumberFormat("#,##0").format(10000),
-                    ),
-                    detailInput(
-                      label: "Promotions Times",
-                      readOnly: true,
-                      intValue: NumberFormat("#,##0").format(1),
-                    ),
                     const SizedBox(height: 25),
-                    // AppBtn.expendedBtn(
-                    //   color: Colors.red.shade800,
-                    //   label: "Add Credit Amount",
-                    //   onPressed: () {
-                    //     showModalBottomSheet(
-                    //       context: context,
-                    //       isScrollControlled: true,
-                    //       builder: (context) {
-                    //         return const AddCredit();
-                    //       },
-                    //     );
-                    //   },
-                    // ),
                     AppBtn.expendedBtn(
                       color: Colors.grey,
                       label: "View Credit History",
@@ -189,48 +161,6 @@ class UserDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            // Card(
-            //   margin: const EdgeInsets.symmetric(horizontal: 10),
-            //   child: Container(
-            //     padding: const EdgeInsets.all(20),
-            //     width: double.infinity,
-            //     child: Column(
-            //       children: [
-            //         const Text(
-            //           "Contacts Data",
-            //           style: TextStyle(
-            //             fontSize: 18,
-            //             color: Colors.grey,
-            //           ),
-            //         ),
-            //         const SizedBox(height: 15),
-            //         detailInput(
-            //           label: "Facebook Profile",
-            //           intValue: "Null",
-            //           linkOpen: true,
-            //         ),
-            //         detailInput(
-            //           label: "Viber Number",
-            //           intValue: "Null",
-            //           linkOpen: true,
-            //         ),
-            //         detailInput(
-            //           label: "Telegram Link",
-            //           intValue: "Null",
-            //           linkOpen: true,
-            //         ),
-            //         const SizedBox(height: 25),
-            //         AppBtn.expendedBtn(
-            //           color: Colors.blue.shade800,
-            //           label: "Update Contacts",
-            //           onPressed: () {
-            //             AppMessage.requirePremium();
-            //           },
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // ),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

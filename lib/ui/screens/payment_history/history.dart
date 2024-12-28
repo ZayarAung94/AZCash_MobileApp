@@ -19,13 +19,45 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Color getPaymentColor(String s) {
-    if (s == "active") {
+    if (s == "Ongoing...") {
       return Colors.green;
-    } else if (s == "Processing...") {
+    } else if (s == "Payout") {
       return Colors.red;
     } else {
       return Colors.amber;
     }
+  }
+
+  double getDepoCom(int amount) {
+    if (AppData.user!.role == "Master") {
+      return 5;
+    }
+    if (amount > 3000000) {
+      return 2.5;
+    } else {
+      return 1.5;
+    }
+  }
+
+  double getWdCom(int amount) {
+    if (AppData.user!.role == "Master") {
+      return 2;
+    }
+    if (amount > 3000000) {
+      return 1;
+    } else {
+      return 0.5;
+    }
+  }
+
+  String getPaymentStatus(PaymentModel payment) {
+    if (payment.payout > 0) {
+      return "Payout";
+    }
+    if (DateTime.now().isAfter(payment.sessionEnd)) {
+      return "Processing...";
+    }
+    return "Ongoing...";
   }
 
   @override
@@ -48,15 +80,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
               String commissionD = NumberFormat("#,##0").format(100);
               String commissionW = NumberFormat("#,##0").format(10);
               String payout = NumberFormat("#,##0").format(1000);
-              String realPayout = NumberFormat("#,##0").format(200);
+              String realPayout = NumberFormat("#,##0").format(payment.payout);
               String overallCommission = " %";
 
               if ("title" != "Payout") {
-                depositPer = "${AppData.depoCommission * 100} %";
-                withdrawPer = "${AppData.wdCommission * 100} %";
-                commissionD = NumberFormat("#,##0").format(1000);
-                commissionW = NumberFormat("#,##0").format(100);
-                payout = NumberFormat("#,##0").format(10000);
+                depositPer = "${getDepoCom(payment.deposit)} %";
+                withdrawPer = "${getWdCom(payment.deposit)} %";
+                commissionD = NumberFormat("#,##0").format(payment.deposit * getDepoCom(payment.deposit) / 100);
+                commissionW = NumberFormat("#,##0").format(payment.withdraw * getWdCom(payment.deposit) / 100);
+                payout = NumberFormat("#,##0").format((payment.deposit * getDepoCom(payment.deposit) / 100) +
+                    (payment.withdraw * getWdCom(payment.deposit) / 100));
               }
               return Card(
                 elevation: 5,
@@ -79,9 +112,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 ),
                               ),
                               Text(
-                                "Testing",
+                                getPaymentStatus(payment),
                                 style: TextStyle(
-                                  color: getPaymentColor("Active"),
+                                  color: getPaymentColor(getPaymentStatus(payment)),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -120,12 +153,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             label2: 'Commission (W) :',
                             value1: commissionD,
                             value2: commissionW,
-                          ),
-                          reportDataRow(
-                            label1: 'Credit :',
-                            label2: 'Credit Carryover :',
-                            value1: '0',
-                            value2: '0',
                           ),
                           reportDataRow(
                             label1: 'Payout (K) :',

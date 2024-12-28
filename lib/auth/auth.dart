@@ -1,9 +1,14 @@
 import 'package:az_cash/auth/user_controller.dart';
+import 'package:az_cash/database/controllers/master_profile_controller.dart';
 import 'package:az_cash/database/models/agent.dart';
+import 'package:az_cash/database/models/master_profile.dart';
+import 'package:az_cash/database/models/transaction.dart';
 import 'package:az_cash/ui/constant.dart';
+import 'package:az_cash/ui/helper/app_helper.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../database/controllers/payment_controller.dart';
 import '../ui/helper/snack.dart';
 import '../ui/screens/auth/login.dart';
 import '../ui/screens/auth/opt_login.dart';
@@ -21,7 +26,23 @@ class Auth {
 
       await UserController().loadUser(res.user!.email!);
 
-      // AppData.activePaymentId = await PaymentController().getOwnActivePaymentId();
+      AppData.activePaymentId = await PaymentController().checkAndAddPayment(
+        Transaction(
+          id: AppHelper.generateUniqueId(),
+          clientId: 'Testing',
+          agent: AppData.user!.id,
+          amount: 0,
+          type: "Deposit",
+        ),
+      );
+
+      if (AppData.user!.role == "Master") {
+        // Normal Session
+        MasterProfile master = await MasterProfileController().get(1);
+        await PaymentController().masterAgentUpdate(master);
+
+        //Session Expire
+      }
 
       return true;
     } on AuthException catch (e) {

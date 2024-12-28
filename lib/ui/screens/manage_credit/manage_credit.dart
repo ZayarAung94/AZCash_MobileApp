@@ -1,3 +1,6 @@
+import 'package:az_cash/database/controllers/client_controller.dart';
+import 'package:az_cash/database/models/client.dart';
+import 'package:az_cash/ui/helper/widget_helper.dart';
 import 'package:az_cash/ui/screens/manage_credit/components/pay_credit.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -57,75 +60,86 @@ class _ManageCreditState extends State<ManageCredit> {
                 ),
                 const SizedBox(height: 4),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () async {
-                          await showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) {
-                              return const PayCredit();
-                            },
-                          );
+                  child: FutureBuilder(
+                    future: ClientController().getClientsWithCredit(),
+                    builder: (context, snap) {
+                      if (snap.connectionState == ConnectionState.done) {
+                        List<ClientModel> clients = snap.data ?? [];
+                        return ListView.builder(
+                          itemCount: clients.length,
+                          itemBuilder: (context, index) {
+                            ClientModel client = clients[index];
+                            return GestureDetector(
+                              onTap: () async {
+                                await showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (context) {
+                                    return const PayCredit();
+                                  },
+                                );
 
-                          setState(() {});
-                        },
-                        child: Card(
-                          margin: const EdgeInsets.only(
-                            left: 8.0,
-                            right: 8,
-                            bottom: 8,
-                          ),
-                          color: AppColors.background,
-                          child: Container(
-                            padding: const EdgeInsets.all(15),
-                            width: double.infinity,
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "user.userName",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
+                                setState(() {});
+                              },
+                              child: Card(
+                                margin: const EdgeInsets.only(
+                                  left: 8.0,
+                                  right: 8,
+                                  bottom: 8,
+                                ),
+                                color: AppColors.background,
+                                child: Container(
+                                  padding: const EdgeInsets.all(15),
+                                  width: double.infinity,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                client.name,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Text("(${client.id})"),
+                                            ],
                                           ),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text("(user.userId)"),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          NumberFormat("#,##0").format(10000),
-                                          style: const TextStyle(
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                        Text(
-                                          DateFormat("dd/MM/yyyy hh:mm a").format(DateTime.now()),
-                                          style: const TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                NumberFormat("#,##0").format(client.credit),
+                                                style: const TextStyle(
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                              Text(
+                                                DateFormat("dd/MM/yyyy hh:mm a").format(client.lastCredit),
+                                                style: const TextStyle(
+                                                  fontSize: 11,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return AppWidget.loading();
+                      }
                     },
                   ),
                 ),

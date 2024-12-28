@@ -13,10 +13,10 @@ class MasterModReports extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Object>(
-        stream: PaymentController().getActivePayments(),
+    return FutureBuilder(
+        future: PaymentController().getActivePayments(),
         builder: (context, snap) {
-          if (snap.hasData) {
+          if (snap.connectionState == ConnectionState.done) {
             List<PaymentModel> payments = snap.data as List<PaymentModel>;
             return ListView.builder(
               itemCount: payments.length,
@@ -43,7 +43,7 @@ class MasterModReports extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(payment.agentId),
+                            Text(payment.agentName),
                             const Text("(agent.phone)"),
                           ],
                         ),
@@ -88,13 +88,9 @@ class MasterModReports extends StatelessWidget {
                 );
               },
             );
+          } else {
+            return AppWidget.loading();
           }
-
-          if (snap.hasError) {
-            return const Text("Error");
-          }
-
-          return AppWidget.loading();
         });
   }
 }

@@ -1,6 +1,5 @@
 import 'package:az_cash/database/models/agent.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class AppColors {
   static const Color background = Color.fromRGBO(13, 38, 69, 1);
@@ -20,16 +19,7 @@ class AppData {
 
   static AgentModel? user;
 
-  static int activePaymentId = 1;
-
-  // static String email = "";
-  // static String userName = "Unverified";
-  // static String phone = "+95 9999999999";
-  // static String device = "Unverified";
-  // static String deviceSerie = "";
-  // static String level = "Free";
-  static String expireDate = DateFormat("dd-MM-yyyy")
-      .format(DateTime(DateTime.now().year, DateTime.now().month + 1, 1).subtract(const Duration(days: 1)));
+  static int activePaymentId = 0;
 }
 
 class AppSetting {

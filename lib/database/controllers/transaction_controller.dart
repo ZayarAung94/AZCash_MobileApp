@@ -1,4 +1,5 @@
 import 'package:az_cash/database/controllers/client_controller.dart';
+import 'package:az_cash/database/controllers/payment_controller.dart';
 import 'package:az_cash/database/models/client.dart';
 import 'package:az_cash/database/models/transaction.dart';
 import 'package:az_cash/ui/constant.dart';
@@ -17,6 +18,8 @@ class TransactionController {
       order.clientName = client.name;
       order.agent = client.agent;
 
+      int paymentId = await PaymentController().checkAndAddPayment(order);
+      order.paymentId = paymentId;
       try {
         await _db.insert(order.toJson());
       } on PostgrestException catch (e) {

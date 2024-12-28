@@ -15,6 +15,11 @@ class MasterProfileController {
     return result;
   }
 
+  Future<MasterProfile> get(int id) async {
+    final result = await masterPTB.select().eq('id', id).single();
+    return MasterProfile.fromJson(result);
+  }
+
   Future<double> getLimit(int id) async {
     final result = await masterPTB.select().eq('id', id).single();
     MasterProfile profile = MasterProfile.fromJson(result);

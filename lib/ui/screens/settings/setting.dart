@@ -87,25 +87,27 @@ class _SettingScreenState extends State<SettingScreen> {
               AppMessage.requirePremium();
             },
           ),
-          settingValue(
-            icon: Icons.money_outlined,
-            label: "Deposit Commmission",
-            value: "${AppData.depoCommission * 100} %",
-            onTap: () async {
-              await Get.dialog(const CommissionSetting());
+          if (AppData.user!.role == "Master")
+            settingValue(
+              icon: Icons.money_outlined,
+              label: "Deposit Commmission",
+              value: "${AppData.depoCommission * 100} %",
+              onTap: () async {
+                await Get.dialog(const CommissionSetting());
 
-              setState(() {});
-            },
-          ),
-          settingValue(
-            icon: Icons.money_outlined,
-            label: "Withdraw Commmission",
-            value: "${AppData.wdCommission * 100} %",
-            onTap: () async {
-              await Get.dialog(const CommissionSetting());
-              setState(() {});
-            },
-          ),
+                setState(() {});
+              },
+            ),
+          if (AppData.user!.role == "Master")
+            settingValue(
+              icon: Icons.money_outlined,
+              label: "Withdraw Commmission",
+              value: "${AppData.wdCommission * 100} %",
+              onTap: () async {
+                await Get.dialog(const CommissionSetting());
+                setState(() {});
+              },
+            ),
           settingValue(
             icon: Icons.verified_user_outlined,
             label: "Master Mod",
