@@ -21,7 +21,7 @@ class Transaction {
     required this.type,
     this.paymentId = 0,
     DateTime? createdAt,
-  }) : createdAt = DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now();
 
   // Factory constructor to create a TransactionModel from a JSON map
   factory Transaction.fromJson(Map<String, dynamic> json) {

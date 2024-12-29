@@ -1,3 +1,7 @@
+import 'package:az_cash/database/controllers/transaction_controller.dart';
+import 'package:az_cash/database/models/client.dart';
+import 'package:az_cash/database/models/transaction.dart';
+import 'package:az_cash/ui/helper/app_helper.dart';
 import 'package:az_cash/ui/helper/btn_helper.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/screens/manage_credit/childs/credit_history.dart';
@@ -7,7 +11,8 @@ import 'package:get/route_manager.dart';
 import '../../../constant.dart';
 
 class PayCredit extends StatelessWidget {
-  const PayCredit({super.key});
+  final ClientModel client;
+  const PayCredit({super.key, required this.client});
 
   @override
   Widget build(BuildContext context) {
@@ -43,23 +48,23 @@ class PayCredit extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Account :"),
-                  Text("Name (11111)"),
+                  const Text("Account :"),
+                  Text("${client.name} (${client.id})"),
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Total Credit :"),
-                  Text("10000 K"),
+                  const Text("Total Credit :"),
+                  Text("${client.credit} K"),
                 ],
               ),
             ),
@@ -81,10 +86,21 @@ class PayCredit extends StatelessWidget {
                   color: Colors.green,
                   label: "Paid Credit",
                   onPressed: () async {
-                    int? crdAmount = int.tryParse(crdController.text.trim());
+                    double? crdAmount = double.tryParse(crdController.text.trim());
 
                     if (crdAmount != null) {
                       // Add Credit
+                      crdAmount = -double.parse(crdController.text.trim());
+                      Transaction order = Transaction(
+                        id: AppHelper.generateUniqueId(),
+                        clientId: client.id,
+                        agent: client.agent,
+                        amount: 0,
+                        type: "Deposit",
+                        creditAmount: crdAmount,
+                      );
+
+                      await TransactionController().addTransaction(order);
 
                       Get.back();
                     } else {
@@ -98,7 +114,7 @@ class PayCredit extends StatelessWidget {
                   color: Colors.grey,
                   label: 'View Credit History',
                   onPressed: () {
-                    Get.to(() => const CreditHistory());
+                    Get.to(() => CreditHistory(client: client));
                   }),
             ),
             const SizedBox(height: 20),

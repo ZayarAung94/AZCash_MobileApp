@@ -156,11 +156,14 @@ class _AddWithdrawState extends State<AddWithdraw> {
 
                       if (_crdController.text != "") {
                         crd = double.tryParse(_crdController.text);
+
                         if (crd == null) {
                           AppMessage.error(
                             "Enter valid value in Credit Amount!!!",
                           );
                           return;
+                        } else {
+                          crd = -double.parse(_crdController.text.trim());
                         }
                       }
 

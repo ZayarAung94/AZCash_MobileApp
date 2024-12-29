@@ -153,7 +153,7 @@ class UserDetailScreen extends StatelessWidget {
                       color: Colors.grey,
                       label: "View Credit History",
                       onPressed: () {
-                        Get.to(() => const CreditHistory());
+                        Get.to(() => CreditHistory(client: user));
                       },
                     )
                   ],

@@ -75,7 +75,7 @@ class _ManageCreditState extends State<ManageCredit> {
                                   context: context,
                                   isScrollControlled: true,
                                   builder: (context) {
-                                    return const PayCredit();
+                                    return PayCredit(client: client);
                                   },
                                 );
 

@@ -1,4 +1,7 @@
+import 'package:az_cash/database/controllers/transaction_controller.dart';
+import 'package:az_cash/database/models/userreport.dart';
 import 'package:az_cash/ui/constant.dart';
+import 'package:az_cash/ui/helper/widget_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -115,71 +118,87 @@ class _ReportByUserScreenState extends State<ReportByUserScreen> {
         ),
         const SizedBox(height: 10),
         Expanded(
-          child: ListView.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Container(
-                padding: const EdgeInsets.only(
-                  bottom: 10,
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      color: AppColors.softBg,
-                      width: double.infinity,
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text("report.userName"),
-                                SizedBox(width: 10),
-                                Text(
-                                  "({report.userId})",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 11,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              "Hello",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              ),
-                            )
-                          ],
-                        ),
+          child: FutureBuilder(
+            future: TransactionController().getClientReportsByDateRange(dateRange),
+            builder: (context, snap) {
+              if (snap.connectionState == ConnectionState.done) {
+                List<UserReport> reports = snap.data ?? [];
+
+                if (reports.isEmpty) {
+                  return AppWidget.noData();
+                }
+                return ListView.builder(
+                  itemCount: reports.length,
+                  itemBuilder: (context, index) {
+                    UserReport report = reports[index];
+                    return Container(
+                      padding: const EdgeInsets.only(
+                        bottom: 10,
                       ),
-                    ),
-                    reportDataRow(
-                      label1: "Total Deposit :",
-                      label2: "Total Withdraw :",
-                      value1: NumberFormat("#,##0").format(1000),
-                      value2: NumberFormat("#,##0").format(1000),
-                      value1Color: Colors.green[200],
-                      value2Color: Colors.red[200],
-                    ),
-                    reportDataRow(
-                      label1: 'Commission (D) :',
-                      label2: 'Commission (W) :',
-                      value1: NumberFormat("#,##0").format(10),
-                      value2: NumberFormat("#,##0").format(10),
-                    ),
-                    reportDataRow(
-                      label1: 'Depo Times :',
-                      label2: 'Wd Times :',
-                      value1: "100",
-                      value2: "200",
-                    ),
-                  ],
-                ),
-              );
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            color: AppColors.softBg,
+                            width: double.infinity,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(report.userName),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        "(${report.userId})",
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    NumberFormat("#,##0")
+                                        .format((report.totalDepo * 2.5 / 100) + (report.totalWd * 1 / 100)),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          reportDataRow(
+                            label1: "Total Deposit :",
+                            label2: "Total Withdraw :",
+                            value1: NumberFormat("#,##0").format(report.totalDepo),
+                            value2: NumberFormat("#,##0").format(report.totalWd),
+                            value1Color: Colors.green[100],
+                            value2Color: Colors.red[100],
+                          ),
+                          reportDataRow(
+                            label1: 'Commission (D) :',
+                            label2: 'Commission (W) :',
+                            value1: NumberFormat("#,##0").format(report.totalDepo * 2.5 / 100),
+                            value2: NumberFormat("#,##0").format(report.totalWd * 1 / 100),
+                          ),
+                          reportDataRow(
+                            label1: 'Depo Times :',
+                            label2: 'Wd Times :',
+                            value1: "${report.deopTimes}",
+                            value2: "${report.wdTimes}",
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return AppWidget.loading();
+              }
             },
           ),
         )

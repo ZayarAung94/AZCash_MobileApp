@@ -14,7 +14,7 @@ class AgentModel {
     required this.phone,
     this.role = "Agent",
     DateTime? createdAt,
-  }) : createdAt = DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now();
 
   // Factory constructor to create an AgentModel from a JSON map
   factory AgentModel.fromJson(Map<String, dynamic> json) {

@@ -48,20 +48,30 @@ class OrderWidget extends StatelessWidget {
                         children: [
                           RichText(
                             text: TextSpan(
-                                text: "${order.type}, ",
-                                style: TextStyle(
-                                  color: order.type == "Withdraw" ? Colors.red[300] : Colors.green[300],
-                                  fontSize: 11,
-                                ),
-                                children: [
+                              text: "${order.type}, ",
+                              style: TextStyle(
+                                color: order.type == "Withdraw" ? Colors.red[300] : Colors.green[300],
+                                fontSize: 11,
+                              ),
+                              children: [
+                                if (order.creditAmount != 0)
                                   TextSpan(
-                                    text: "Crd : ${order.creditAmount}",
+                                    text: " Crd : ${order.creditAmount}",
                                     style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 11,
                                     ),
                                   ),
-                                ]),
+                                if (order.promotionAmount > 0)
+                                  TextSpan(
+                                    text: " Promo : ${order.promotionAmount}",
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
