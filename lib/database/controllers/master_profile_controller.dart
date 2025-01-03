@@ -5,6 +5,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class MasterProfileController {
   final masterPTB = Supabase.instance.client.from("master_profile");
 
+  Future add(MasterProfile master) async {
+    await masterPTB.insert(master.toJson());
+  }
+
   Stream<List<MasterProfile>> getMaster(int? id) {
     final result = masterPTB.stream(primaryKey: ['id']).map((value) {
       return value.map((e) {
@@ -94,5 +98,8 @@ class MasterProfileController {
     }
   }
 
+  Future sessionEndReset() async {
+    await masterPTB.update({'deposit': 0, 'withdraw': 0}).eq("id", 1);
+  }
   //
 }

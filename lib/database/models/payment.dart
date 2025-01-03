@@ -7,8 +7,7 @@ class PaymentModel {
   final int deposit;
   final int withdraw;
   final int payout;
-  final double depoCom; // Deposit commission
-  final double wdCom; // Withdraw commission
+
   final DateTime createdAt;
 
   PaymentModel({
@@ -20,8 +19,6 @@ class PaymentModel {
     required this.deposit,
     required this.withdraw,
     required this.payout,
-    required this.depoCom,
-    required this.wdCom,
     required this.createdAt,
   });
 
@@ -36,8 +33,6 @@ class PaymentModel {
       deposit: json['deposit'] as int,
       withdraw: json['withdraw'] as int,
       payout: json['payout'] as int,
-      depoCom: (json['depo_com'] as num).toDouble(),
-      wdCom: (json['wd_com'] as num).toDouble(),
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
@@ -53,8 +48,6 @@ class PaymentModel {
       'deposit': deposit,
       'withdraw': withdraw,
       'payout': payout,
-      'depo_com': depoCom,
-      'wd_com': wdCom,
       'created_at': createdAt.toIso8601String(),
     };
   }
@@ -62,6 +55,6 @@ class PaymentModel {
   // Override toString for easier debugging
   @override
   String toString() {
-    return 'PaymentModel(id: $id, agentId: $agentId, sessionStart: $sessionStart, sessionEnd: $sessionEnd, deposit: $deposit, withdraw: $withdraw, payout: $payout, depoCom: $depoCom, wdCom: $wdCom, createdAt: $createdAt)';
+    return 'PaymentModel(id: $id, agentId: $agentId, sessionStart: $sessionStart, sessionEnd: $sessionEnd, deposit: $deposit, withdraw: $withdraw, payout: $payout, createdAt: $createdAt,)';
   }
 }

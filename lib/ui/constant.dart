@@ -18,6 +18,7 @@ class AppData {
   static double wdCommission = 0.02;
 
   static AgentModel? user;
+  static String masterAgentId = '8fe2a50a-648c-4859-aa1b-60c5549e2e4e';
 
   static int activePaymentId = 0;
 }

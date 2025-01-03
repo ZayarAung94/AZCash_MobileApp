@@ -37,4 +37,11 @@ class AgentController {
     String name = result['name'];
     return name;
   }
+
+  Future<List<AgentModel>> getMasterAgents() async {
+    final result = await _agentTB.select().eq('role', "Master");
+    return result.map((json) {
+      return AgentModel.fromJson(json);
+    }).toList();
+  }
 }

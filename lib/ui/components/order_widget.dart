@@ -89,7 +89,7 @@ class OrderWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        DateFormat("hh:mm a").format(order.createdAt),
+                        DateFormat("dd/MM/yy (hh:mm a)").format(order.createdAt),
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 11,

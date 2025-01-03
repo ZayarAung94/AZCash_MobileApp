@@ -1,8 +1,11 @@
 import 'package:az_cash/database/controllers/payment_controller.dart';
 import 'package:az_cash/database/models/payment.dart';
 import 'package:az_cash/ui/constant.dart';
+import 'package:az_cash/ui/helper/snack.dart';
 import 'package:az_cash/ui/helper/widget_helper.dart';
+import 'package:az_cash/ui/screens/payment_history/components/master_payout_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -13,11 +16,6 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  String getStatus() {
-    //
-    return "null";
-  }
-
   Color getPaymentColor(String s) {
     if (s == "Ongoing...") {
       return Colors.green;
@@ -75,22 +73,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
             itemBuilder: (context, index) {
               PaymentModel payment = payments[index];
 
-              String depositPer = " %";
-              String withdrawPer = " %";
-              String commissionD = NumberFormat("#,##0").format(100);
-              String commissionW = NumberFormat("#,##0").format(10);
-              String payout = NumberFormat("#,##0").format(1000);
+              String depositPer = "${getDepoCom(payment.deposit)} %";
+              String withdrawPer = "${getWdCom(payment.deposit)} %";
+              String commissionD = NumberFormat("#,##0").format(payment.deposit * getDepoCom(payment.deposit) / 100);
+              String commissionW = NumberFormat("#,##0").format(payment.withdraw * getWdCom(payment.deposit) / 100);
+              String payout = NumberFormat("#,##0").format((payment.deposit * getDepoCom(payment.deposit) / 100) +
+                  (payment.withdraw * getWdCom(payment.deposit) / 100));
               String realPayout = NumberFormat("#,##0").format(payment.payout);
-              String overallCommission = " %";
 
-              if ("title" != "Payout") {
-                depositPer = "${getDepoCom(payment.deposit)} %";
-                withdrawPer = "${getWdCom(payment.deposit)} %";
-                commissionD = NumberFormat("#,##0").format(payment.deposit * getDepoCom(payment.deposit) / 100);
-                commissionW = NumberFormat("#,##0").format(payment.withdraw * getWdCom(payment.deposit) / 100);
-                payout = NumberFormat("#,##0").format((payment.deposit * getDepoCom(payment.deposit) / 100) +
-                    (payment.withdraw * getWdCom(payment.deposit) / 100));
-              }
               return Card(
                 elevation: 5,
                 margin: const EdgeInsets.all(8),
@@ -122,7 +112,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           ),
                           IconButton(
                             padding: const EdgeInsets.all(0),
-                            onPressed: () async {},
+                            onPressed: () {
+                              if (AppData.user!.role == "Master" && payment.payout == 0) {
+                                if (payment.sessionEnd.isBefore(DateTime.now())) {
+                                  Get.dialog(MasterPayoutDialog(paymentId: payment.id));
+                                } else {
+                                  AppMessage.error("You can't payout Ongoing Payment!");
+                                }
+                              } else {
+                                AppMessage.error("You don't have permission or This payment is already payout!");
+                              }
+                            },
                             icon: const Icon(
                               Icons.settings_outlined,
                               color: Colors.grey,
@@ -159,12 +159,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             label2: 'Real Payout :',
                             value1: payout,
                             value2: realPayout,
-                          ),
-                          reportDataRow(
-                            label1: 'Overall Comm.. (%) :',
-                            label2: '',
-                            value1: overallCommission,
-                            value2: '',
                           ),
                         ],
                       ),
