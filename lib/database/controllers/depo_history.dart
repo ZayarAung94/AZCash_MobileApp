@@ -9,7 +9,7 @@ class DepoHistoryController {
 
   Future getDepoHistory(int limit) async {
     List<DepoHistory> history = [];
-    final result = await _dpHistoryTB.select().limit(limit);
+    final result = await _dpHistoryTB.select().order('created_at').limit(limit);
     for (var e in result) {
       history.add(DepoHistory.fromJson(e));
     }

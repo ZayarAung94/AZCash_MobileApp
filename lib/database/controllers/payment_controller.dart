@@ -127,7 +127,9 @@ class PaymentController {
   }
 
   Future payout(int id, double amount) async {
-    await _payment.update({"payout": amount.toInt()}).eq('id', id);
+    await _payment.update({
+      "payout": amount.toInt(),
+    }).eq('id', id);
   }
 
 //
