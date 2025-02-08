@@ -33,7 +33,8 @@ class MasterProfileController {
 
   Future changeLimit(int id, double limit) async {
     try {
-      await masterPTB.update({'limit': limit}).eq("id", id);
+      await masterPTB.update({'limits': limit}).eq("id", id);
+      return true;
     } on PostgrestException catch (e) {
       AppMessage.error(e.message);
     }

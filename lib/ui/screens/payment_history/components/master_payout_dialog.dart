@@ -1,6 +1,7 @@
 import 'package:az_cash/database/controllers/master_profile_controller.dart';
 import 'package:az_cash/ui/helper/snack.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../database/controllers/payment_controller.dart';
 import '../../../components/dialog_helper.dart';
@@ -36,6 +37,7 @@ class MasterPayoutDialog extends StatelessWidget {
 
             await MasterProfileController().changeLimit(1, newLimit);
             await PaymentController().payout(paymentId, amount);
+            Get.back(result: "reload");
           } else {
             AppMessage.error("Your input value is Wrong!");
           }

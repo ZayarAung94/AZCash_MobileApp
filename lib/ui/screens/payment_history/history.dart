@@ -112,10 +112,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           ),
                           IconButton(
                             padding: const EdgeInsets.all(0),
-                            onPressed: () {
+                            onPressed: () async {
                               if (AppData.user!.role == "Master" && payment.payout == 0) {
                                 if (payment.sessionEnd.isBefore(DateTime.now())) {
-                                  Get.dialog(MasterPayoutDialog(paymentId: payment.id));
+                                  final result = await Get.dialog(MasterPayoutDialog(paymentId: payment.id));
+
+                                  if (result == "reload") {
+                                    setState(() {});
+                                  }
                                 } else {
                                   AppMessage.error("You can't payout Ongoing Payment!");
                                 }
