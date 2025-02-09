@@ -2,6 +2,7 @@ import 'package:az_cash/database/controllers/transaction_controller.dart';
 import 'package:az_cash/database/models/transaction.dart';
 import 'package:az_cash/ui/components/order_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../constant.dart';
@@ -29,8 +30,8 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
     end: DateTime.now(),
   );
 
-  int totalDepo = 0;
-  int totalWd = 0;
+  var totalDepo = 0.0.obs;
+  var totalWd = 0.0.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +79,8 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
                     onChanged: (newValue) {
                       setState(() {
                         selectedItem = newValue ?? "Today";
-                        totalDepo = 0;
-                        totalWd = 0;
+                        totalDepo.value = 0;
+                        totalWd.value = 0;
                       });
                     },
                     items: dropDownOptions.map<DropdownMenuItem<String>>(
@@ -123,66 +124,81 @@ class _ReportByTransactionsState extends State<ReportByTransactions> {
             const SizedBox(width: 8),
           ],
         ),
-        const SizedBox(height: 10),
         Expanded(
           child: Column(
             children: [
-              // Container(
-              //   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              //   width: double.infinity,
-              //   decoration: const BoxDecoration(
-              //     color: AppColors.softBg,
-              //   ),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Text(
-              //         '${DateFormat("dd/MM/yyyy").format(dateRange.start)} - ${DateFormat("dd/MM/yyyy").format(dateRange.end)}',
-              //       ),
-              //       Row(
-              //         children: [
-              //           Text(
-              //             NumberFormat('#,##0').format(totalDepo),
-              //             style: const TextStyle(
-              //               color: Colors.green,
-              //             ),
-              //           ),
-              //           const Text(" / "),
-              //           Text(
-              //             NumberFormat('#,##0').format(totalWd),
-              //             style: const TextStyle(
-              //               color: Colors.red,
-              //             ),
-              //           ),
-              //           const SizedBox(width: 20),
-              //         ],
-              //       ),
-              //     ],
-              //   ),
-              // ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: AppColors.softBg,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Total Transactions ',
+                    ),
+                    Row(
+                      children: [
+                        Obx(
+                          () => Text(
+                            NumberFormat('#,##0').format(totalDepo.value),
+                            style: TextStyle(
+                              color: Colors.green[800],
+                            ),
+                          ),
+                        ),
+                        const Text(" / "),
+                        Obx(
+                          () => Text(
+                            NumberFormat('#,##0').format(totalWd.value),
+                            style: TextStyle(
+                              color: Colors.red[900],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               Expanded(
                 child: FutureBuilder(
-                    future: TransactionController().getByDateRange(dateRange),
-                    builder: (context, snap) {
-                      if (snap.connectionState == ConnectionState.done) {
-                        List<Transaction?> orders = snap.data ?? [];
-                        if (orders.isEmpty) {
-                          return AppWidget.noData();
-                        }
-                        return ListView.builder(
-                            itemCount: orders.length,
-                            itemBuilder: (context, index) {
-                              Transaction? order = orders[index];
-                              if (order == null) {
-                                return const SizedBox();
-                              } else {
-                                return OrderWidget(order: order);
-                              }
-                            });
-                      } else {
-                        return AppWidget.loading();
+                  future: TransactionController().getByDateRange(dateRange),
+                  builder: (context, snap) {
+                    if (snap.connectionState == ConnectionState.done) {
+                      List<Transaction?> orders = snap.data ?? [];
+                      if (orders.isEmpty) {
+                        return AppWidget.noData();
                       }
-                    }),
+
+                      for (var order in orders) {
+                        if (order != null) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (order.type == 'Deposit') {
+                              totalDepo.value += order.amount.toInt();
+                            } else {
+                              totalWd.value += order.amount.toInt();
+                            }
+                          });
+                        }
+                      }
+                      return ListView.builder(
+                          itemCount: orders.length,
+                          itemBuilder: (context, index) {
+                            Transaction? order = orders[index];
+                            if (order == null) {
+                              return const SizedBox();
+                            } else {
+                              return OrderWidget(order: order);
+                            }
+                          });
+                    } else {
+                      return AppWidget.loading();
+                    }
+                  },
+                ),
               ),
             ],
           ),
