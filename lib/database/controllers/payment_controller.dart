@@ -1,6 +1,5 @@
 import 'package:az_cash/database/controllers/agent_controller.dart';
 import 'package:az_cash/database/controllers/master_profile_controller.dart';
-import 'package:az_cash/database/models/agent.dart';
 import 'package:az_cash/database/models/payment.dart';
 import 'package:az_cash/database/models/transaction.dart';
 import 'package:az_cash/ui/constant.dart';
@@ -13,7 +12,7 @@ import '../models/master_profile.dart';
 class PaymentController {
   final _payment = Supabase.instance.client.from('payments');
 
-  Future add(PaymentModel payment) async {
+  Future<void> add(PaymentModel payment) async {
     try {
       await _payment.insert(payment.toJson());
     } on PostgrestException catch (e) {
@@ -22,41 +21,25 @@ class PaymentController {
   }
 
   Stream<List<PaymentModel>> getActivePayment() {
-    final result = _payment.stream(primaryKey: ['id']).eq('id', AppData.activePaymentId).map((value) {
-          return value.map((e) {
-            return PaymentModel.fromJson(e);
-          }).toList();
+    return _payment.stream(primaryKey: ['id']).eq('id', AppData.activePaymentId).map((value) {
+          return value.map(PaymentModel.fromJson).toList();
         });
-
-    return result;
   }
 
-  Future getActivePayments() async {
-    String now = DateTime.now().toIso8601String();
+  Future<List<PaymentModel>> getActivePayments() async {
+    final now = DateTime.now().toIso8601String();
     final result = await _payment.select().lte('session_start', now).gte('session_end', now);
-
-    return result.map((json) {
-      return PaymentModel.fromJson(json);
-    }).toList();
+    return result.map(PaymentModel.fromJson).toList();
   }
 
   Future<List<PaymentModel>> getOwnPayments() async {
     final results = await _payment.select().eq('agent_id', AppData.user!.id).order('created_at').limit(12);
-
-    List<PaymentModel> result = results.map((json) {
-      return PaymentModel.fromJson(json);
-    }).toList();
-
-    return result;
+    return results.map(PaymentModel.fromJson).toList();
   }
 
   Future<List<PaymentModel>> getPaymentsById(String id) async {
     final results = await _payment.select().eq('agent_id', id).order('created_at').limit(12);
-    List<PaymentModel> result = results.map((json) {
-      return PaymentModel.fromJson(json);
-    }).toList();
-
-    return result;
+    return results.map(PaymentModel.fromJson).toList();
   }
 
   Future<PaymentModel?> getActivePaymentOfAgent(String id) async {
@@ -64,25 +47,21 @@ class PaymentController {
     try {
       final result =
           await _payment.select().eq("agent_id", id).lte('session_start', now).gte('session_end', now).single();
-      PaymentModel payment = PaymentModel.fromJson(result);
-
-      return payment;
+      return PaymentModel.fromJson(result);
     } catch (e) {
       return null;
     }
   }
 
-  // Check Session and Create Payout
   Future<int> checkAndAddPayment(Transaction order) async {
-    PaymentModel? agentPayment = await getActivePaymentOfAgent(order.agent);
-
+    final agentPayment = await getActivePaymentOfAgent(order.agent);
     if (agentPayment == null) {
       final now = DateTime.now();
       final sessionStart = DateTime(now.year, now.month, 1);
       final sessionEnd = DateTime(now.year, now.month + 1, 1);
-      String agentName = await AgentController().getAgentNameById(order.agent);
+      final agentName = await AgentController().getAgentNameById(order.agent);
 
-      PaymentModel newPayment = PaymentModel(
+      final newPayment = PaymentModel(
         id: AppHelper.generateUniqueId(),
         agentId: order.agent,
         agentName: agentName,
@@ -95,7 +74,7 @@ class PaymentController {
       );
 
       if (order.agent == AppData.user!.id) {
-        MasterProfile master = await MasterProfileController().get(1);
+        final master = await MasterProfileController().get(1);
         await sessionEndMasterUpdate(master);
         await MasterProfileController().sessionEndReset();
       }
@@ -106,31 +85,23 @@ class PaymentController {
     }
   }
 
-  Future masterAgentUpdate(MasterProfile master) async {
+  Future<void> masterAgentUpdate(MasterProfile master) async {
     await _payment.update({'deposit': master.deposit, 'withdraw': master.withdraw}).eq("id", AppData.activePaymentId);
   }
 
-  Future sessionEndMasterUpdate(MasterProfile master) async {
+  Future<void> sessionEndMasterUpdate(MasterProfile master) async {
     final masters = await AgentController().getMasterAgents();
-    DateTime now = DateTime.now();
-    DateTime endTime = DateTime(now.year, now.month, 1);
-    String endIso = endTime.toIso8601String();
+    final endTime = DateTime(DateTime.now().year, DateTime.now().month, 1).toIso8601String();
 
-    if (masters.isNotEmpty) {
-      for (AgentModel agent in masters) {
-        await _payment
-            .update({'deposit': master.deposit, 'withdraw': master.withdraw})
-            .eq("agent_id", agent.id)
-            .eq('session_end', endIso);
-      }
+    for (final agent in masters) {
+      await _payment
+          .update({'deposit': master.deposit, 'withdraw': master.withdraw})
+          .eq("agent_id", agent.id)
+          .eq('session_end', endTime);
     }
   }
 
-  Future payout(int id, double amount) async {
-    await _payment.update({
-      "payout": amount.toInt(),
-    }).eq('id', id);
+  Future<void> payout(int id, double amount) async {
+    await _payment.update({"payout": amount.toInt()}).eq('id', id);
   }
-
-//
 }

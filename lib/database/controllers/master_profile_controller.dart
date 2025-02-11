@@ -5,18 +5,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class MasterProfileController {
   final masterPTB = Supabase.instance.client.from("master_profile");
 
-  Future add(MasterProfile master) async {
+  Future<void> add(MasterProfile master) async {
     await masterPTB.insert(master.toJson());
   }
 
   Stream<List<MasterProfile>> getMaster(int? id) {
-    final result = masterPTB.stream(primaryKey: ['id']).map((value) {
-      return value.map((e) {
-        return MasterProfile.fromJson(e);
-      }).toList();
+    return masterPTB.stream(primaryKey: ['id']).map((value) {
+      return value.map(MasterProfile.fromJson).toList();
     });
-
-    return result;
   }
 
   Future<MasterProfile> get(int id) async {
@@ -25,82 +21,64 @@ class MasterProfileController {
   }
 
   Future<double> getLimit(int id) async {
-    final result = await masterPTB.select().eq('id', id).single();
-    MasterProfile profile = MasterProfile.fromJson(result);
-
-    return profile.limit;
+    return (await get(id)).limit;
   }
 
-  Future changeLimit(int id, double limit) async {
-    try {
-      await masterPTB.update({'limits': limit}).eq("id", id);
-      return true;
-    } on PostgrestException catch (e) {
-      AppMessage.error(e.message);
-    }
+  Future<void> changeLimit(int id, double limit) async {
+    await _updateField(id, 'limits', limit);
   }
 
-  Future addLimit(double amount) async {
-    try {
-      double limit = await getLimit(1);
-      double newLimit = limit + amount;
-
-      await changeLimit(1, newLimit);
-    } on PostgrestException catch (e) {
-      AppMessage.error(e.message);
-    }
+  Future<void> addLimit(double amount) async {
+    await _changeLimitBy(amount);
   }
 
-  Future reduceLimit(double amount) async {
-    try {
-      double limit = await getLimit(1);
-      double newLimit = limit - amount;
-
-      await changeLimit(1, newLimit);
-    } on PostgrestException catch (e) {
-      AppMessage.error(e.message);
-    }
+  Future<void> reduceLimit(double amount) async {
+    await _changeLimitBy(-amount);
   }
 
   Future<double> getBalance(int id) async {
-    final result = await masterPTB.select().eq('id', id).single();
-    MasterProfile profile = MasterProfile.fromJson(result);
-
-    return profile.balance;
+    return (await get(id)).balance;
   }
 
-  Future changeBalance(int id, double balance) async {
-    try {
-      await masterPTB.update({'balance': balance}).eq("id", id);
-    } on PostgrestException catch (e) {
-      AppMessage.error(e.message);
-    }
+  Future<void> changeBalance(int id, double balance) async {
+    await _updateField(id, 'balance', balance);
   }
 
-  Future addBalance(double amount) async {
-    try {
-      double balance = await getBalance(1);
-      double newBalance = balance + amount;
-
-      await changeBalance(1, newBalance);
-    } on PostgrestException catch (e) {
-      AppMessage.error(e.message);
-    }
+  Future<void> addBalance(double amount) async {
+    await _changeBalanceBy(amount);
   }
 
-  Future reduceBalance(double amount) async {
-    try {
-      double balance = await getBalance(1);
-      double newBalance = balance - amount;
-
-      await changeBalance(1, newBalance);
-    } on PostgrestException catch (e) {
-      AppMessage.error(e.message);
-    }
+  Future<void> reduceBalance(double amount) async {
+    await _changeBalanceBy(-amount);
   }
 
-  Future sessionEndReset() async {
+  Future<void> sessionEndReset() async {
     await masterPTB.update({'deposit': 0, 'withdraw': 0}).eq("id", 1);
   }
-  //
+
+  Future<void> _updateField(int id, String field, double value) async {
+    try {
+      await masterPTB.update({field: value}).eq("id", id);
+    } on PostgrestException catch (e) {
+      AppMessage.error(e.message);
+    }
+  }
+
+  Future<void> _changeLimitBy(double amount) async {
+    try {
+      double limit = await getLimit(1);
+      await changeLimit(1, limit + amount);
+    } on PostgrestException catch (e) {
+      AppMessage.error(e.message);
+    }
+  }
+
+  Future<void> _changeBalanceBy(double amount) async {
+    try {
+      double balance = await getBalance(1);
+      await changeBalance(1, balance + amount);
+    } on PostgrestException catch (e) {
+      AppMessage.error(e.message);
+    }
+  }
 }

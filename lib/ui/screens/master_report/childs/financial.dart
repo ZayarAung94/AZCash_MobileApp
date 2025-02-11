@@ -32,7 +32,7 @@ class _MasterModeFinancialState extends State<MasterModeFinancial> {
               future: DepoHistoryController().getDepoHistory(10),
               builder: (context, snap) {
                 if (snap.connectionState == ConnectionState.done) {
-                  List<DepoHistory> histories = snap.data;
+                  List<DepoHistory> histories = snap.data ?? [];
                   if (histories.isEmpty) {
                     return AppWidget.noData();
                   }

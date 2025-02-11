@@ -7,7 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class ClientController {
   final _clientTB = Supabase.instance.client.from('clients');
 
-  Future addClient(ClientModel client) async {
+  Future<void> addClient(ClientModel client) async {
     try {
       await _clientTB.insert(client.toJson());
     } on PostgrestException catch (e) {
@@ -17,20 +17,11 @@ class ClientController {
 
   Future<List<ClientModel>?> getClients() async {
     try {
-      late PostgrestList result;
+      final result = AppData.user!.role == "Master"
+          ? await _clientTB.select().order('joint_at')
+          : await _clientTB.select().eq('agent', AppData.user!.id).order('joint_at');
 
-      if (AppData.user!.role == "Master") {
-        result = await _clientTB.select().order('joint_at');
-      } else {
-        result = await _clientTB.select().eq('agent', AppData.user!.id).order('joint_at');
-      }
-      List<ClientModel> clients = [];
-      for (var json in result) {
-        ClientModel client = ClientModel.fromJson(json);
-        clients.add(client);
-      }
-
-      return clients;
+      return result.map((json) => ClientModel.fromJson(json)).toList();
     } on PostgrestException catch (e) {
       AppMessage.error(e.message);
     }
@@ -40,9 +31,7 @@ class ClientController {
   Future<ClientModel?> getClientWithId(String id) async {
     try {
       final result = await _clientTB.select().eq('id', id).single();
-
-      ClientModel client = ClientModel.fromJson(result);
-      return client;
+      return ClientModel.fromJson(result);
     } on PostgrestException catch (e) {
       if (kDebugMode) {
         print(e.message);
@@ -53,10 +42,6 @@ class ClientController {
 
   Future<List<ClientModel>> getClientsWithCredit() async {
     final result = await _clientTB.select().neq("credit", 0).order('last_credit');
-    final clients = result.map((json) {
-      return ClientModel.fromJson(json);
-    }).toList();
-
-    return clients;
+    return result.map((json) => ClientModel.fromJson(json)).toList();
   }
 }

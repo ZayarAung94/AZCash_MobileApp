@@ -10,7 +10,6 @@ import 'package:az_cash/ui/screens/promotions/promotions.dart';
 import 'package:az_cash/ui/screens/report_by_transactions/report_by_transactions.dart';
 import 'package:az_cash/ui/screens/report_by_user/report_by_user.dart';
 import 'package:az_cash/ui/screens/settings/setting.dart';
-import 'package:az_cash/ui/screens/transactions/transactions.dart';
 import 'package:az_cash/ui/screens/user_manage/user_manage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,7 +26,6 @@ class _MainScreenState extends State<MainScreen> {
 
   List<String> menu = [
     'My Account',
-    'Transactions on EPOS',
     'Report by Transactions',
     'Report by User',
     'Payment History',
@@ -36,7 +34,6 @@ class _MainScreenState extends State<MainScreen> {
   ];
   List<Widget> pages = [
     const AgentAccount(),
-    const TranasctionsScreen(),
     const ReportByTransactions(),
     const ReportByUserScreen(),
     const HistoryScreen(),
@@ -51,7 +48,6 @@ class _MainScreenState extends State<MainScreen> {
     if (AppData.user?.role == "Master") {
       menu = [
         'My Account',
-        'Transactions on EPOS',
         'Report by Transactions',
         'Report by User',
         'Payment History',
@@ -63,7 +59,6 @@ class _MainScreenState extends State<MainScreen> {
       ];
       pages = [
         const MyAccount(),
-        const TranasctionsScreen(),
         const ReportByTransactions(),
         const ReportByUserScreen(),
         const HistoryScreen(),

@@ -7,20 +7,14 @@ import '../models/depo_history.dart';
 class DepoHistoryController {
   final _dpHistoryTB = Supabase.instance.client.from('deposit_history');
 
-  Future getDepoHistory(int limit) async {
-    List<DepoHistory> history = [];
+  Future<List<DepoHistory>> getDepoHistory(int limit) async {
     final result = await _dpHistoryTB.select().order('created_at').limit(limit);
-    for (var e in result) {
-      history.add(DepoHistory.fromJson(e));
-    }
-
-    return history;
+    return result.map((e) => DepoHistory.fromJson(e)).toList();
   }
 
   Future<bool> addDepo(DepoHistory data) async {
-    double limit = await MasterProfileController().getLimit(1);
-    data.beforeLimit = limit;
     try {
+      data.beforeLimit = await MasterProfileController().getLimit(1);
       await _dpHistoryTB.insert(data.toJson());
       await MasterProfileController().changeLimit(1, data.afterLimit);
       return true;

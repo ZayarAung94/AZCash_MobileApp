@@ -9,39 +9,27 @@ class AgentController {
   Future<List<AgentModel>?> getAgents() async {
     try {
       final result = await _agentTB.select().eq('role', "Agent").order('created_at');
-
-      List<AgentModel> clients = [];
-      for (var json in result) {
-        AgentModel client = AgentModel.fromJson(json);
-        clients.add(client);
-      }
-
-      return clients;
+      return result.map((json) => AgentModel.fromJson(json)).toList();
     } on PostgrestException catch (e) {
       AppMessage.error(e.message);
     }
     return null;
   }
 
-  Stream getAgentById(String id) {
-    return _agentTB.stream(primaryKey: ['id']).eq('id', id).map((e) {
-          return e.map((json) {
-            return AgentModel.fromJson(json);
-          }).toList();
-        });
+  Stream<List<AgentModel>> getAgentById(String id) {
+    return _agentTB
+        .stream(primaryKey: ['id'])
+        .eq('id', id)
+        .map((e) => e.map((json) => AgentModel.fromJson(json)).toList());
   }
 
-  Future getAgentNameById(String id) async {
+  Future<String> getAgentNameById(String id) async {
     final result = await _agentTB.select().eq("id", id).single();
-
-    String name = result['name'];
-    return name;
+    return result['name'];
   }
 
   Future<List<AgentModel>> getMasterAgents() async {
     final result = await _agentTB.select().eq('role', "Master");
-    return result.map((json) {
-      return AgentModel.fromJson(json);
-    }).toList();
+    return result.map((json) => AgentModel.fromJson(json)).toList();
   }
 }

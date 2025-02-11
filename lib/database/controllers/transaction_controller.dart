@@ -35,33 +35,20 @@ class TransactionController {
     DateTime now = DateTime.now();
     String today = DateTime(now.year, now.month, now.day).toIso8601String();
 
+    final query = _db.stream(primaryKey: ['id']).gte('created_at', today).order("created_at");
+
     if (AppData.user!.role == "Master") {
-      final result = _db.stream(primaryKey: ['id']).gte('created_at', today).order("created_at").map((value) {
-            return value.map((e) {
-              return Transaction.fromJson(e);
-            }).toList();
-          });
-
-      return result;
+      return query.map((value) => value.map((e) => Transaction.fromJson(e)).toList());
     } else {
-      final result = _db.stream(primaryKey: ['id']).gte('created_at', today).order("created_at").map((value) {
-            return value.map((e) {
-              if (e['agent'] == AppData.user?.id) return Transaction.fromJson(e);
-            }).toList();
-          });
-
-      return result;
+      return query.map((value) => value.map((e) {
+            if (e['agent'] == AppData.user?.id) return Transaction.fromJson(e);
+          }).toList());
     }
   }
 
   Future<List<Transaction>> getByLimit(int limit) async {
     final result = await _db.select().limit(limit).order('created_at');
-
-    List<Transaction> value = result.map((json) {
-      return Transaction.fromJson(json);
-    }).toList();
-
-    return value;
+    return result.map((json) => Transaction.fromJson(json)).toList();
   }
 
   Future<List<Transaction?>> getByDateRange(DateTimeRange dateRange) async {
@@ -73,17 +60,11 @@ class TransactionController {
     final result = await _db.select().gte("created_at", startIso).lte("created_at", endIso).order("created_at");
 
     if (AppData.user!.role == "Master") {
-      List<Transaction> value = result.map((json) {
-        return Transaction.fromJson(json);
-      }).toList();
-
-      return value;
+      return result.map((json) => Transaction.fromJson(json)).toList();
     } else {
-      final value = result.map((json) {
+      return result.map((json) {
         if (json['agent'] == AppData.user?.id) return Transaction.fromJson(json);
       }).toList();
-
-      return value;
     }
   }
 
@@ -119,10 +100,10 @@ class TransactionController {
           Transaction order = Transaction.fromJson(json);
           if (order.type == "Deposit") {
             report.deopTimes++;
-            report.totalDepo = report.totalDepo + order.amount.toInt();
+            report.totalDepo += order.amount.toInt();
           } else {
             report.wdTimes++;
-            report.totalWd = report.totalWd + order.amount.toInt();
+            report.totalWd += order.amount.toInt();
           }
         }
 
@@ -135,19 +116,11 @@ class TransactionController {
 
   Future<List<Transaction>> getPromotionOrder(int? limit) async {
     final result = await _db.select().gt('promotion_amount', 0).order('created_at').limit(limit ?? 20);
-
-    return result.map((json) {
-      return Transaction.fromJson(json);
-    }).toList();
+    return result.map((json) => Transaction.fromJson(json)).toList();
   }
 
   Future<List<Transaction>> getCreditOrdersByClientId(String id) async {
     final result = await _db.select().eq('client_id', id).neq('credit_amount', 0).order('created_at').limit(20);
-
-    return result.map((json) {
-      return Transaction.fromJson(json);
-    }).toList();
+    return result.map((json) => Transaction.fromJson(json)).toList();
   }
-
-  //
 }
